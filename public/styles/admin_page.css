@@ -1,0 +1,45 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+.top-bar {
+    background-color: #fff;
+    color: black;
+    height: 60px; /* Adjust height as needed */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+.left-section,
+.center-section,
+.right-section {
+    display: flex;
+    align-items: center;
+}
+
+.icon {
+    height: 40px; /* Adjust the size of your icons */
+    margin-right: 10px;
+}
+
+.logo {
+    height: 50px; /* Adjust the size of your logo */
+}
+
+.text {
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.content {
+    margin-top: 70px; /* Add enough margin to push content below the fixed top bar */
+    padding: 20px;
+}

@@ -21,6 +21,15 @@ const customerSchema = new mongoose.Schema({
     birtdate: {
         type: Date,
         required: true,
+    },
+    phone: {
+        type: String,
+        required: true,
+    },
+    address: {
+        city: {type: String, required: true},
+        street: {type: String, required: true},
+        number: {type: Number, required: true}
     }
 });
 

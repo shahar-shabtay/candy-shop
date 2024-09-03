@@ -248,3 +248,21 @@ input[type="date"]:focus {
 .btn:hover {
     background-color: #D2B48C;
 }
+
+.password-container {
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: fit-content; /* Adjust the width to fit content */
+}
+
+.password-container input {
+    padding-right: 30px; /* Add padding to make room for the icon */
+    width: 700px; /* Adjust width as needed */
+}
+
+.password-container i {
+    position: absolute;
+    right: 10px;
+    cursor: pointer;
+}

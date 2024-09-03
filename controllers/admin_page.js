@@ -1,19 +1,16 @@
-function showContent(optionId, element) {
-    // Hide all content items
-    var contents = document.getElementsByClassName('content-item');
-    for (var i = 0; i < contents.length; i++) {
-        contents[i].style.display = 'none';
+const customerService = require('../services/customerService');
+
+async function renderAdminPage(req, res) {
+    try {
+        const customerId = req.user.name;  // Assuming req.user contains authenticated user info
+        const customer = await customerService.getCustomerById(customerId);
+        res.render('aadmin_page', { customer });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server Error');
     }
-
-    // Show the selected content item
-    document.getElementById(optionId).style.display = 'block';
-
-    // Remove 'active' class from all menu options
-    var options = document.getElementsByClassName('menu-option');
-    for (var i = 0; i < options.length; i++) {
-        options[i].classList.remove('active');
-    }
-
-    // Add 'active' class to the clicked option
-    element.classList.add('active');
 }
+
+module.exports = {
+    renderAdminPage
+};

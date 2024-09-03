@@ -1,22 +1,26 @@
-function showContent(optionId, element) {
-    // Hide all content items
-    var contents = document.getElementsByClassName('content-item');
-    for (var i = 0; i < contents.length; i++) {
-        contents[i].style.display = 'none';
-    }
+function showContent(contentId, element) {
+    // Remove active class from all tabs
+    const tabs = document.querySelectorAll('.menu-option');
+    tabs.forEach(tab => tab.classList.remove('active'));
 
-    // Show the selected content item
-    document.getElementById(optionId).style.display = 'block';
+    // Hide all content sections
+    const contents = document.querySelectorAll('.content-item');
+    contents.forEach(content => content.classList.remove('active'));
 
-    // Remove 'active' class from all menu options
-    var options = document.getElementsByClassName('menu-option');
-    for (var i = 0; i < options.length; i++) {
-        options[i].classList.remove('active');
-    }
-
-    // Add 'active' class to the clicked option
+    // Add active class to the clicked tab
     element.classList.add('active');
+
+    // Show the corresponding content section
+    document.getElementById(contentId).classList.add('active');
 }
+
+// Ensure the default tab (Option 1) is shown on page load
+document.addEventListener('DOMContentLoaded', () => {
+    const activeTab = document.querySelector('.menu-option.active');
+    if (!activeTab) {
+        document.querySelector('.menu-option').click();
+    }
+});
 
 const togglePassword = document.querySelector('#togglePassword');
     const password = document.querySelector('#password');

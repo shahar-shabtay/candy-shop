@@ -174,6 +174,10 @@ body {
     display: none; /* By default, all content is hidden */
 }
 
+.content-item.active {
+    display: block;
+}
+
 .container {
     max-width: 100%;
     margin: 0 auto;

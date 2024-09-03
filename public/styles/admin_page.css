@@ -3,26 +3,42 @@ body {
     font-family: Arial, sans-serif;
 }
 
-.top-bar {
-    background-color: reds;
-    color: black;
-    height: 60px;
+.left-section {
     display: flex;
-    justify-content: space-around; /* Instead of space-between */
     align-items: center;
-    padding: 0 20px;
+    justify-content: flex-start;
+    padding-left: 10px; /* Adjust this to move closer to the left corner */
+    flex-basis: 33%;
+}
+
+.center-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-basis: 34%;
+}
+
+.right-section {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 10px; /* Adjust this to move closer to the right corner */
+    flex-basis: 33%;
+}
+
+.top-bar {
+    background-color: #DFD8C1; /* Match the background color to your theme */
+    color: black;
+    height: 80px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0;
     position: fixed;
     top: 0;
     width: 100%;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     z-index: 1000;
-}
-
-.left-section,
-.center-section,
-.right-section {
-    display: flex;
-    align-items: center;
 }
 
 .icon {
@@ -31,7 +47,9 @@ body {
 }
 
 .logo {
-    height: 50px; /* Adjust the size of your logo */
+    height: 80px; /* Adjust the size of your logo */
+    align-items: center;
+    background-color: #DFD8C1;
 }
 
 .text {
@@ -43,3 +61,116 @@ body {
     margin-top: 70px; /* Add enough margin to push content below the fixed top bar */
     padding: 20px;
 }
+
+.account-section {
+    background-color: #f4f7fb; /* Match the background color */
+    padding: 20px;
+    padding-top: 30px;
+    margin-top: 70px; /* Adjust to be just below your top bar */
+}
+
+.account-header {
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.account-header h2 {
+    margin: 0;
+    color: black;
+    font-size: 30px;
+}
+
+.account-header p {
+    margin: 0;
+    color: #666;
+    font-size: 14px;
+}
+
+.account-content {
+    background-color: #ffffff; /* White background for content */
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Optional: Add styles for form elements or other content */
+.account-content input,
+.account-content select {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.account-content button {
+    background-color: white;
+    color: black;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.account-content button:hover {
+    background-color: none;
+}
+
+.menu {
+    display: flex;
+    justify-content: space-around; /* Align options evenly across the menu */
+    margin: 20px;
+}
+
+.menu-option {
+    background-color: transparent;
+    color: black;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    position: relative;
+    transition: color 0.3s ease;
+    outline: none; /* Remove the default focus outline */
+}
+
+.menu-option:hover {
+    color: #D2B48C;
+}
+
+.menu-option::after {
+    content: '';
+    display: block;
+    width: 0;
+    height: 2px;
+    background: transparent;
+    transition: width 0.3s ease, background-color 0.3s ease;
+    position: absolute;
+    left: 0;
+    bottom: -5px; /* Adjust this value to control the space between text and underline */
+}
+
+.menu-option.active {
+    color: #D2B48C;
+    font-weight: bold;
+}
+
+.menu-option.active::after {
+    width: 100%;
+    background: #D2B48C; /* The color of the underline */
+}
+
+
+.content {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #f4f7fb;
+    border-radius: 5px;
+}
+
+.content-item {
+    display: none; /* By default, all content is hidden */
+}
+

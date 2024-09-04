@@ -17,8 +17,6 @@ app.use(express.static('public'));
 app.use('/products', productRoutes);
 
 
-
-
 const port = 3000;
 app.listen(port, () => console.log(`Server running at http://localhost:${port}`));
 

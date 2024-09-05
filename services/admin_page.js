@@ -1,32 +1,37 @@
-const Customer = require('../models/customers'); // Import the schema of the customers.
-const mongoose = require('mongoose')
+// AdminPage Service
 
+// import mongo module
+const { MongoClient } = require('mongodb');
 
-// Return the account details by username
-async function getCustomerByUsername(name) {
-    try{
-        return await Customer.findById(name)
-    } catch (error) {
-        return null
-    }
+// MongoDB connection URL
+const url = 'mongodb://localhost:27017';
+const dbName = 'sweetly';
+
+// Function to connect to MongoDB
+async function connectToDb() {
+    const client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true });
+    await client.connect();
+    console.log('Connected to database');
+    const db = client.db(dbName);
+    return { db, client };
 }
 
-// Change the account details by id
-async function updateCustomer(id, customerData) {
-    const customer = await getCustomerByUsername(id);
-    if (!customer)
-        return null;
-  
-    Object.assign(customer, customerData);
+// Function to get customer data by name
+async function getCustomerByName(customerName) {
+    const { db, client } = await connectToDb();
     try {
-        await customer.save();
+        // Fetch the customer document where the name matches
+        const customer = await db.collection('customer').findOne({ name: customerName });
         return customer;
-    } catch (error) {
-        throw new Error('Error updating customer: ' + error.message);
+    } catch (err) {
+        console.error('Error fetching customer by name:', err);
+        throw err;
+    } finally {
+        // Close the connection after querying
+        client.close();
     }
 }
 
 module.exports = {
-    getCustomerByUsername,
-    updateCustomer
-}
+    getCustomerByName
+};

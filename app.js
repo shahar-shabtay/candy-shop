@@ -2,45 +2,32 @@ const express = require('express');
 const path = require('path');
 const app = express();
 
-app.set('view engine', 'ejs');
-
-app.set('views', path.join(__dirname, 'views'));
-
-app.use(express.static(path.join(__dirname, 'public')));
-
-
+// Middleware to parse form data
 app.use(express.urlencoded({ extended: true }));
 
+// Set up the view engine
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+
+// Serve static files
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Mock user authentication middleware (if required)
 app.use((req, res, next) => {
-    req.user = { name: 'Ziv Klein' };  // Mock authenticated user
+    req.user = { _id: '66d730a7e30f7747e7ad1d65', name: 'Ziv Klein' };  // Example mock data
     next();
 });
 
-app.get('/adminPage', async (req, res) => {
-    try {
-        const customerId = req.user.name;
-        const customer = { 
-            name: 'Ziv Klein', 
-            email: 'zivklein21@gmail.com', 
-            password: 'Aa123456',
-            birthday: '2002-08-21', 
-            phone: '052-8221823', 
-            address: {
-                city: 'Candy City',
-                street: 'Sugar Street',
-                number: '1234'
-            }
-        };  // Mock customer data
-        customer.addressString = `${customer.address.street} ${customer.address.number}, ${customer.address.city}`;
+// Import the admin routes
+const adminRoutes = require('./routes/adminPage');
+app.use('/', adminRoutes);
 
-        res.render('account_details', { customer });
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('Server Error');
-    }
-});
+// Import home routes
+const homeRoutes = require('./routes/home');
+app.use('/', homeRoutes);  // Use the home routes
 
+// Start the server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+    console.log(`Server running on port ${PORT}`);
 });

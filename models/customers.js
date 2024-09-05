@@ -1,7 +1,8 @@
+// Customers model in Ziv's branch - need to be deleted
 const mongoose = require('mongoose');
 
 const customerSchema = new mongoose.Schema({
-    name: {
+    customerId: {
         type: String,
         required: true,
     },

@@ -1,4 +1,4 @@
-const customerService = require('../services/admin_page');
+const customerService = require('../services/accountService');
 
 // Helper function to convert address object to a string
 function formatAddress(address) {
@@ -16,7 +16,7 @@ function formatDateToString(date) {
 }
 
 // Function to render the admin page with customer details
-async function renderAdminPage(req, res) {
+async function renderAccountPage(req, res) {
     try {
         const customerName = req.user.name;  // Assuming req.user contains the authenticated user's name
         const customer = await customerService.getCustomerByName(customerName);  // Fetch customer from the service
@@ -30,13 +30,13 @@ async function renderAdminPage(req, res) {
         customer.birthString = formatDateToString(customer.birthdate);
 
         // Render the view with the customer data, including the formatted address string
-        res.render('account_details', { customer });
+        res.render('accountDetails', { customer });
     } catch (err) {
-        console.error('Error rendering admin page:', err);
+        console.error('Error rendering account page:', err);
         res.status(500).send('Server Error');
     }
 }
 
 module.exports = {
-    renderAdminPage,
+    renderAccountPage
 };

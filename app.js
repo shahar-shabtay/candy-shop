@@ -19,8 +19,8 @@ app.use((req, res, next) => {
 });
 
 // Import the admin routes
-const adminRoutes = require('./routes/adminPage');
-app.use('/', adminRoutes);
+const accountRoute = require('./routes/accountRoute');
+app.use('/', accountRoute);
 
 // Import home routes
 const homeRoutes = require('./routes/home');

@@ -271,3 +271,24 @@ input[type="date"]:focus {
     right: 10px;
     cursor: pointer;
 }
+
+.address-container, .birthday-container {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.address-container input, .birthday-container select {
+    padding: 8px;
+    font-size: 16px;
+}
+
+/* Full width for street, city, and year inputs */
+#street, #city, #year {
+    flex: 1;  /* Make these fields take equal width */
+}
+
+/* Smaller width for number, day, and month fields */
+.small-input {
+    flex: 0.2;  /* Make these fields smaller */
+}

@@ -32,6 +32,25 @@ async function getCustomerByName(customerName) {
     }
 }
 
+// Function to update customer details by name
+async function updateCustomerByName(name, updatedData) {
+    const { db, client } = await connectToDb();
+    try {
+        // Update the customer document by name
+        const result = await db.collection('customer').updateOne(
+            { name: name },  // Find the customer by name
+            { $set: updatedData }  // Set the updated fields
+        );
+        return result;  // Return the result of the update operation
+    } catch (err) {
+        console.error('Error updating customer by name:', err);
+        throw err;
+    } finally {
+        client.close();  // Always close the database connection
+    }
+}
+
 module.exports = {
-    getCustomerByName
+    getCustomerByName,
+    updateCustomerByName
 };

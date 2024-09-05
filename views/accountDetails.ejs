@@ -38,7 +38,7 @@
                 <div class="content">
                     <div id="details" class="content-item active">
                         <div class="container">
-                            <form action="/save-details" method="POST">
+                            <form action="/updateCustomer" method="POST" id="updateForm">
                                 <div class="form-row">
                                     <div class="form-column">
                                         <div class="form-group">
@@ -51,7 +51,24 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="birthdate">Birthday</label>
-                                            <input type="text" id="birthdate" name="birthdate" placeholder="dd/mm/yyyy" value="<%= customer.birthdateString %>" required>
+                                            <div class="birthday-container">
+                                                <select id="day" name="birth_day" required class="small-input">
+                                                    <% for (let i = 1; i <= 30; i++) { %>
+                                                        <option value="<%= i %>" <%= customer.birthdate.getDate() === i ? 'selected' : '' %>><%= i %></option>
+                                                    <% } %>
+                                                </select>
+                                                <select id="month" name="birth_month" required class="small-input">
+                                                    <% for (let i = 1; i <= 12; i++) { %>
+                                                        <option value="<%= i %>" <%= (customer.birthdate.getMonth() + 1) === i ? 'selected' : '' %>><%= i %></option>
+                                                    <% } %>
+                                                </select>
+                                                <select id="year" name="birth_year" required>
+                                                    <% for (let i = 1990; i <= 2024; i++) { %>
+                                                        <option value="<%= i %>" <%= customer.birthdate.getFullYear() === i ? 'selected' : '' %>><%= i %></option>
+                                                    <% } %>
+                                                </select>
+                                                
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="form-column">
@@ -60,8 +77,12 @@
                                             <input type="tel" id="phone" name="phone" value="<%= customer.phone %>" pattern="[0-9]{3}-[0-9]{7}" maxlength="10" required>
                                         </div>
                                         <div class="form-group">
-                                            <label for="address">Address</label>
-                                            <input type="text" id="address" name="address" value="<%= customer.addressString %>" required>
+                                            <label for="address">Address:</label>
+                                            <div class="address-container">
+                                                <input type="text" id="street" name="address_street" value="<%= customer.address.street %>" required placeholder="Street">
+                                                <input type="text" id="number" name="address_number" value="<%= customer.address.number %>" required placeholder="Number" class="small-input">
+                                                <input type="text" id="city" name="address_city" value="<%= customer.address.city %>" required placeholder="City">
+                                            </div>
                                         </div>
                                         <div class="form-group">
                                             <label for="password">Password</label>
@@ -73,7 +94,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group full-width">
-                                    <button type="submit" class="btn">Save Changes</button>
+                                    <button id="submitButton" type="submit" class="btn">Save Changes</button>
                                 </div>
                             </form>
                         </div>
@@ -84,5 +105,11 @@
             </div>
         </div>
         <script src="/js/adminPage.js"></script>
+        <script>
+            // JavaScript to submit the form programmatically when the button is clicked
+            document.getElementById('submitButton').addEventListener('click', function() {
+                document.getElementById('updateForm').submit();  // Submit the form
+            });
+        </script>
     </body>
 </html>

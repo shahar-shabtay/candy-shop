@@ -37,6 +37,44 @@ async function renderAccountPage(req, res) {
     }
 }
 
+// Function to handle form submission and update customer details
+async function updateCustomerDetails(req, res) {
+    try {
+        const customerName = req.body.name;
+        const birthDay = parseInt(req.body.birth_day, 10);
+        const birthMonth = parseInt(req.body.birth_month, 10) -1;
+        const birthYear = parseInt(req.body.birth_year, 10);
+        const birthdate = new Date(birthYear, birthMonth, birthDay);
+        const password = req.body.password;
+
+        // Create an object with the updated data from the form
+        const updatedData = {
+            email: req.body.email,
+            phone: req.body.phone,
+            birthdate: birthdate,
+            address: {
+                city: req.body.address_city,
+                street: req.body.address_street,
+                number: req.body.address_number,
+            },
+            password: password,
+        };
+
+        // Call the service to update customer details by name
+        const result = await customerService.updateCustomerByName(customerName, updatedData);
+
+        if (result.modifiedCount > 0) {
+            res.redirect('/myAccount');  // Redirect to the admin page after successful update
+        } else {
+            res.status(404).send('Customer not found');
+        }
+    } catch (err) {
+        console.error('Error updating customer details:', err);
+        res.status(500).send('Server Error');
+    }
+}
+
 module.exports = {
-    renderAccountPage
+    renderAccountPage,
+    updateCustomerDetails
 };

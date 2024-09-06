@@ -22,6 +22,10 @@ const customerSchema = new mongoose.Schema({
         type: Date,
         required: true,
     },
+    role: {
+        type: String,
+        required: false,
+    },
     address: {
         type: {
             town: String,

@@ -39,9 +39,7 @@
                     <div id="details" class="content-item"></div>
                     <div id="favorit" class="content-item" style="display:none;">This is the content for Option 2.</div>
                     <div id="orders" class="content-item active">
-                        <% if (orders.length === 0) { %>
-                            <p>No orders found.</p>
-                        <% } else { %>
+                        <div class="table-container">
                             <table>
                                 <thead>
                                     <tr>
@@ -49,6 +47,7 @@
                                         <th>Date</th>
                                         <th>Total Cost</th>
                                         <th>Status</th>
+                                        <th>Actions</th> <!-- New Actions column -->
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -58,11 +57,16 @@
                                             <td><%= new Date(order.createdAt).toLocaleDateString() %></td>
                                             <td>$<%= order.totalCost.toFixed(2) %></td>
                                             <td><%= order.status %></td>
+                                            <td class="action-buttons">
+                                                <img class="order-actions" src="/images/seeOrder.svg" onClick="">
+                                                <img class="order-actions" src="/images/orderAgain.svg" onClick="">
+                                                <img class="order-actions" src="/images/cancelOrder.svg" onClick="">
+                                            </td>
                                         </tr>
                                     <% }) %>
                                 </tbody>
                             </table>
-                        <% } %>
+                        </div>
                     </div>
                 </div>
             </div>

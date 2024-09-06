@@ -30,15 +30,15 @@
             </div>
             <div class="account-content">
                 <div class="account-menu">
-                    <button class="menu-option active" onclick="showContent('details', this)">Personal Details</button>
-                    <button class="menu-option" onclick="showContent('favorit', this)">Favorits</button>
-                    <button class="menu-option" onclick="showContent('orders', this)">My Orders</button>
+                    <button class="menu-option active" onclick="window.location.href='/myAccount/details'">Personal Details</button>
+                    <button class="menu-option" onclick="window.location.href='/myAccount/favorite'">Favorits</button>
+                    <button class="menu-option" onclick="window.location.href='/myAccount/orders'">My Orders</button>
                 </div>
                 <!-- Account Details -->
                 <div class="content">
                     <div id="details" class="content-item active">
                         <div class="container">
-                            <form action="/updateCustomer" method="POST" id="updateForm">
+                            <form action="/myAccount" method="POST" id="updateForm">
                                 <div class="form-row">
                                     <div class="form-column">
                                         <div class="form-group">
@@ -54,22 +54,22 @@
                                             <div class="birthday-container">
                                                 <select id="day" name="birth_day" required class="small-input">
                                                     <% for (let i = 1; i <= 30; i++) { %>
-                                                        <option value="<%= i %>" <%= customer.birthdate.getDate() === i ? 'selected' : '' %>><%= i %></option>
+                                                        <option value="<%= i %>" <%= customer.birthdate && new Date(customer.birthdate).getDate() === i ? 'selected' : '' %>><%= i %></option>
                                                     <% } %>
                                                 </select>
                                                 <select id="month" name="birth_month" required class="small-input">
                                                     <% for (let i = 1; i <= 12; i++) { %>
-                                                        <option value="<%= i %>" <%= (customer.birthdate.getMonth() + 1) === i ? 'selected' : '' %>><%= i %></option>
+                                                        <option value="<%= i %>" <%= customer.birthdate && (new Date(customer.birthdate).getMonth() + 1) === i ? 'selected' : '' %>><%= i %></option>
                                                     <% } %>
                                                 </select>
                                                 <select id="year" name="birth_year" required>
                                                     <% for (let i = 1990; i <= 2024; i++) { %>
-                                                        <option value="<%= i %>" <%= customer.birthdate.getFullYear() === i ? 'selected' : '' %>><%= i %></option>
+                                                        <option value="<%= i %>" <%= customer.birthdate && new Date(customer.birthdate).getFullYear() === i ? 'selected' : '' %>><%= i %></option>
                                                     <% } %>
                                                 </select>
-                                                
                                             </div>
                                         </div>
+                                        
                                     </div>
                                     <div class="form-column">
                                         <div class="form-group">
@@ -79,11 +79,12 @@
                                         <div class="form-group">
                                             <label for="address">Address:</label>
                                             <div class="address-container">
-                                                <input type="text" id="street" name="address_street" value="<%= customer.address.street %>" required placeholder="Street">
-                                                <input type="text" id="number" name="address_number" value="<%= customer.address.number %>" required placeholder="Number" class="small-input">
-                                                <input type="text" id="city" name="address_city" value="<%= customer.address.city %>" required placeholder="City">
+                                                <input type="text" id="street" name="address_street" value="<%= customer.address ? customer.address.street : '' %>" required placeholder="Street">
+                                                <input type="text" id="number" name="address_number" value="<%= customer.address ? customer.address.number : '' %>" required placeholder="Number" class="small-input">
+                                                <input type="text" id="city" name="address_city" value="<%= customer.address ? customer.address.city : '' %>" required placeholder="City">
                                             </div>
                                         </div>
+                                        
                                         <div class="form-group">
                                             <label for="password">Password</label>
                                             <div class="password-container">

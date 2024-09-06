@@ -28,50 +28,9 @@
                     <button class="menu-option" onclick="showContent('orders', this)">My Orders</button>
                 </div>
                 <div class="content">
-                    <div id="details" class="content-item">
-                        <div class="container">
-                            <form action="/save-details" method="POST">
-                                <div class="form-row">
-                                    <div class="form-column">
-                                        <div class="form-group">
-                                            <label for="full_name">Full Name</label>
-                                            <input type="text" id="full_name" name="full_name" value="from db" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="email">Email</label>
-                                            <input type="email" id="email" name="email" value="from db" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="birthday">Birthday</label>
-                                            <input type="date" id="birthday" name="birthday" placeholder="dd/mm/yyyy" required>
-                                        </div>
-                                    </div>
-                                    <div class="form-column">
-                                        <div class="form-group">
-                                            <label for="phone">Phone Number</label>
-                                            <input type="tel" id="phone" name="phone" value="from db" pattern="[0-9]{3}-[0-9]{7}" maxlength="10" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="address">Address</label>
-                                            <input type="text" id="address" name="address" value="from db" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="password">Password</label>
-                                            <div class="password-container">
-                                                <input type="password" id="password" name="password" value="from db" required>
-                                                <i class="fas fa-eye" id="togglePassword"></i>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group full-width">
-                                    <button type="submit" class="btn">Save Changes</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                    <div id="favorit" class="content-item" style="display:none;">This is the content for Option 2.</div>
-                    <div id="orders" class="content-item" style="display:none;">This is the content for Option 3.</div>
+                    <div id="details" class="content-item">This is the content for Option 2.</div>
+                    <div id="favorit" class="content-item">This is the content for Option 2.</div>
+                    <div id="orders" class="content-item">This is the content for Option 3.</div>
                 </div>
             </div>
         </div>

@@ -14,17 +14,18 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Mock user authentication middleware (if required)
 app.use((req, res, next) => {
-    req.user = { _id: '66d730a7e30f7747e7ad1d65', name: 'Ziv Klein' };  // Example mock data
+    req.user = {customerId: '222222222' };  // here i need to get from the login page data.
     next();
 });
 
 // Import the admin routes
-const accountRoute = require('./routes/accountRoute');
+const accountRoute = require('./routes/customerRoute');
 app.use('/', accountRoute);
 
 // Import home routes
-const homeRoutes = require('./routes/home');
+const homeRoutes = require('./routes/homeRoute');
 app.use('/', homeRoutes);  // Use the home routes
+
 
 // Start the server
 const PORT = process.env.PORT || 3000;

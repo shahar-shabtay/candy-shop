@@ -16,6 +16,7 @@ router.post('/register', function(req, res) {
     password: password,
     birtdate: birtdate,
     address: address,
+    role: role
   })
   .then(function(savedUser) {
     // Redirect to login or send success response

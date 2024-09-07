@@ -1,7 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const productRoutes = require('./routes/productRoutes');
+const productsRoutes = require('./routes/productsRoutes.js');
 
 mongoose.connect('mongodb://localhost:27017/candy_shop');
 
@@ -14,7 +14,7 @@ app.use(bodyParser.json());
 // routes middleware
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
-app.use('/products', productRoutes);
+app.use('/products', productsRoutes);
 
 
 const port = 3000;

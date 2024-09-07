@@ -1,0 +1,19 @@
+/* styles/login.css */
+
+body {
+    align-items: center;
+    align-self: center;
+    align-items: center;
+    justify-content: center;
+    justify-items: center;
+    background-image: url('/public/images/candy-background.png');
+    width: 100%;
+    height: 100%;
+    background-position: absolute;
+
+}
+
+.form-box {
+    align-items: center;
+    justify-content: center;
+}

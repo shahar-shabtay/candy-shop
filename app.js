@@ -29,6 +29,8 @@ app.use('/public', express.static(path.join(__dirname, 'public')));
 app.use('/register', registerRoutes);  // Ensure this is correctly set
 app.use('/login', loginRoutes);
 
+// Static public dir 
+app.use('/public', express.static(path.join(__dirname, 'public')));
 
 // Start server
 const PORT = process.env.PORT || 3000;

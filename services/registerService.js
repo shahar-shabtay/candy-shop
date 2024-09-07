@@ -1,9 +1,9 @@
 const Customer = require('../models/customer');
 
 function registerUser(userData) {
-  return new Promise(function (resolve, reject) {
+  return new Promise(function(resolve, reject) {
     try {
-      const { name, email, ID, password, birtdate, address } = userData;
+      const { name, email, password, birtdate, address } = userData;
 
       // Create a new customer instance
       const newCustomer = new Customer({
@@ -16,7 +16,7 @@ function registerUser(userData) {
       });
 
       // Save the customer to the database
-      newCustomer.save(function (err, savedCustomer) {
+      newCustomer.save(function(err, savedCustomer) {
         if (err) {
           console.error('Error registering user:', err);
           reject(err);
@@ -32,5 +32,5 @@ function registerUser(userData) {
 }
 
 module.exports = {
-  registerUser
+  registerUser: registerUser
 };

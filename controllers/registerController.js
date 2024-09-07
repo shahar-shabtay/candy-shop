@@ -1,12 +1,10 @@
-const express = require('express');
-const router = express.Router();
 const registerService = require('../services/registerService');
 
-router.get('/register', function(req, res) {
-  res.render('register');
-});
+function getRegisterPage(req, res) {
+  res.render('register', { error: null });
+}
 
-router.post('/register', function(req, res) {
+function postRegister(req, res) {
   const { name, email, ID, password, birtdate, address, role } = req.body;
 
   registerService.registerUser({
@@ -26,6 +24,9 @@ router.post('/register', function(req, res) {
     console.error('Registration error:', error);
     res.render('register', { error: 'Registration failed. Please try again.' });
   });
-});
+}
 
-module.exports = router;
+module.exports = {
+  getRegisterPage,
+  postRegister
+};

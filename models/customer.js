@@ -26,10 +26,6 @@ const customerSchema = new mongoose.Schema({
         type: String,
         required: false,
     },
-    ID: {
-        type: String,
-        required: true,
-    }, 
     address: {
         type: {
             town: String,

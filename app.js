@@ -5,7 +5,7 @@ const loginRoutes = require('./routes/loginRoutes');
 const registerRoutes = require('./routes/registerRoutes');
 
 // Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/candy-shop', {
+mongoose.connect('mongodb://localhost:27017/candy_shop', {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })

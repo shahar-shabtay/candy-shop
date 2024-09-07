@@ -1,36 +1,29 @@
 const Customer = require('../models/customer');
 
-function registerUser(userData) {
-  return new Promise(function(resolve, reject) {
-    try {
-      const { name, email, password, birtdate, address } = userData;
+async function registerUser(userData) {
+  try {
+    const { name, email, ID, password, birtdate, address, role } = userData;
 
-      // Create a new customer instance
-      const newCustomer = new Customer({
-        name,
-        email,
-        ID,
-        password,
-        birtdate,
-        address
-      });
+    // Create a new customer instance
+    const newCustomer = new Customer({
+      name,
+      email,
+      ID,
+      password,
+      birtdate,
+      address,
+      role
+    });
 
-      // Save the customer to the database
-      newCustomer.save(function(err, savedCustomer) {
-        if (err) {
-          console.error('Error registering user:', err);
-          reject(err);
-        } else {
-          resolve(savedCustomer);
-        }
-      });
-    } catch (error) {
-      console.error('Error registering user:', error);
-      reject(error);
-    }
-  });
+    // Save the customer to the database
+    const savedCustomer = await newCustomer.save();
+    return savedCustomer;
+  } catch (error) {
+    console.error('Error registering user:', error);
+    throw error;
+  }
 }
 
 module.exports = {
-  registerUser: registerUser
+  registerUser
 };

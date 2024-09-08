@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Candy Shop - Admin Page</title>
+        <link rel="stylesheet" href="/styles/adminPage.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    </head>
+    <body>  
+        <!-- Topbar -->
+        <div class="top-bar">
+            <!-- Left elements -->
+            <div class="left-section">
+                <img src="/images/shooping_cart.svg" alt="Icon 1" class="icon">
+                <img src="/images/logout.svg" alt="Icon 1" class="icon">
+            </div>
+            <!-- Logo -->
+            <div class="center-section">
+                <img src="/images/logo.svg" class="logo"> 
+            </div>
+            <!-- Right elements -->
+            <div class="right-section">
+                <img src="/images/home_icon.svg" alt="Icon 1" class="icon" onclick="window.location.href='/home'">
+            </div>
+        </div>
+        <!-- Account Section -->
+        <div class="account-section">
+            <div class="account-header">
+                <h2>Hello <%= customer.name %></h2>
+            </div>
+            <div class="account-content">
+                <div class="account-menu">
+                    <button class="menu-option" onclick="window.location.href='/admin/customers'">All Users</button>
+                    <button class="menu-option" onclick="window.location.href='/admin/orders'">All Orders</button>
+                    <button class="menu-option" onclick="window.location.href='/admin/products'">All Products</button>
+                    <button class="menu-option active" onclick="window.location.href='/admin/addProducts'">Add Products</button>
+                </div>
+                <!-- Account Details -->
+                <div class="content">
+                    <div id="customers" class="content-item active">
+                        <div class="container">
+                            <form action="/products/add" method="POST" enctype="multipart/form-data" class="product-form">
+                                <div>
+                                  <label for="name">Product Name:</label>
+                                  <input type="text" id="name" name="name" required>
+                                </div>
+                              
+                                <div>
+                                  <label for="price">Price:</label>
+                                  <input type="number" id="price" name="price" step="0.01" required>
+                                </div>
+                              
+                                <div>
+                                  <label for="category">Category:</label>
+                                  <input type="text" id="category" name="category" required>
+                                </div>
+                              
+                                <div>
+                                  <label for="weight">Weight:</label>
+                                  <input type="text" id="weight" name="weight" required>
+                                </div>
+                              
+                                <div>
+                                  <label for="image">Upload Product Image:</label>
+                                  <input type="file" id="image" name="image" accept="image/*" required>
+                                </div>
+                              
+                                <div class="button-container">
+                                  <button type="submit" class="add-product-btn">Add Product</button>
+                                </div>
+                              </form>
+                                                            
+                        </div>
+                    </div>
+                    <div id="orders" class="content-item" style="display:none;">This is the content for Option 2.</div>
+                    <div id="products" class="content-item" style="display:none;">This is the content for Option 3.</div>
+                </div>
+            </div>
+        </div>
+        <script src="/js/adminPage.js"></script>
+    </body>
+</html>

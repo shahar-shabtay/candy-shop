@@ -1,10 +1,14 @@
-// Customers model in Ziv's branch - need to be deleted
 const mongoose = require('mongoose');
 
 const customerSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true,
+    },
     customerId: {
         type: String,
         required: true,
+        unique: true,
     },
     email: {
         type: String,
@@ -23,17 +27,21 @@ const customerSchema = new mongoose.Schema({
         type: Date,
         required: true,
     },
-    phone: {
+    role: {
         type: String,
-        required: true,
+        required: false,
+        default: "user",
     },
     address: {
-        city: {type: String, required: true},
-        street: {type: String, required: true},
-        number: {type: Number, required: true}
+        type: {
+            city: String,
+            street: String,
+            homeNumber: Number
+        },
+        required: true,
     }
 });
 
-const Customer = mongoose.model('Customer', customerSchema);
+const Customer = mongoose.model('Customer', customerSchema, 'cutomer');
 
 module.exports = Customer;

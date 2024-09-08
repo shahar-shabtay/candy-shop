@@ -1,6 +1,10 @@
 const express = require('express');
 const path = require('path');
 const app = express();
+const mongoose = require('mongoose');
+
+
+mongoose.connect('mongodb://localhost:27017/sweetlyç');
 
 // Middleware to parse form data
 app.use(express.urlencoded({ extended: true }));
@@ -14,12 +18,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Mock user authentication middleware (if required)
 app.use((req, res, next) => {
-    req.user = {customerId: '222222222' };  // here i need to get from the login page data.
+    req.user = {customerId: '111111111' };  // here i need to get from the login page data.
     next();
 });
 
 // Import the admin routes
-const accountRoute = require('./routes/customerRoute');
+const accountRoute = require('./routes/adminRoute');
 app.use('/', accountRoute);
 
 // Import home routes

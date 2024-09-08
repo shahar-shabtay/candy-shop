@@ -1,7 +1,7 @@
 // Customers model in Ziv's branch - need to be deleted
 const mongoose = require('mongoose');
 
-const customerSchema = new mongoose.Schema({
+const ordersSchema = new mongoose.Schema({
     customerId: {
         type: String,
         required: true,
@@ -34,6 +34,6 @@ const customerSchema = new mongoose.Schema({
     }
 });
 
-const Customer = mongoose.model('Customer', customerSchema);
+const Orders = mongoose.model('Orders', ordersSchema, 'orders');
 
-module.exports = Customer;
+module.exports = Orders;

@@ -2,9 +2,8 @@
 <html lang="en">
     <head>
         <title>Candy Shop - Admin Page</title>
-        <link rel="stylesheet" href="/styles/adminPage.css ">
+        <link rel="stylesheet" href="/styles/myAccount.css ">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
     </head>
     <body>  
         <!-- Topbar -->
@@ -29,6 +28,7 @@
                 <h2>Hello <%= customer.name %></h2>
             </div>
             <div class="account-content">
+                <!-- Sub Menu -->
                 <div class="account-menu">
                     <button class="menu-option active" onclick="window.location.href='/myAccount/details'">Personal Details</button>
                     <button class="menu-option" onclick="window.location.href='/myAccount/favorite'">Favorits</button>
@@ -36,8 +36,10 @@
                 </div>
                 <!-- Account Details -->
                 <div class="content">
+                    <!-- Details -->
                     <div id="details" class="content-item active">
                         <div class="container">
+                            <!-- Form with Details -->
                             <form action="/myAccount" method="POST" id="updateForm">
                                 <div class="form-row">
                                     <div class="form-column">
@@ -100,12 +102,14 @@
                             </form>
                         </div>
                     </div>
+                    <!-- Favorite -->
                     <div id="favorit" class="content-item" style="display:none;">This is the content for Option 2.</div>
+                    <!-- Orders -->
                     <div id="orders" class="content-item" style="display:none;">This is the content for Option 3.</div>
                 </div>
             </div>
         </div>
-        <script src="/js/adminPage.js"></script>
+        <script src="/js/myAccount.js"></script>
         <script>
             // JavaScript to submit the form programmatically when the button is clicked
             document.getElementById('submitButton').addEventListener('click', function() {

@@ -10,12 +10,12 @@
 			<div class="inner">
 				<form action="/login" method="post">
 					<h3>Sign In</h3>
-					<input name="username" type="text" placeholder="Username" class="form-control">
+					<input name="email" type="email" placeholder="Email address" class="form-control">
 					<input name="password" type="password" placeholder="Password" class="form-control">
 					<!-- Error message -->
 					<% if (error) { %>
 						<h4 class="error-message">
-							Username / Password is incorrect
+							Email / Password is incorrect
 						</h4>
 					<% } %>
 					<button type="submit" class="button">Sign In</button>

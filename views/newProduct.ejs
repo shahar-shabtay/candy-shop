@@ -7,6 +7,8 @@
     <body>
         <h1>Add a new product:</h1>
         <form action="/products" method="POST">
+            <label for="productId">Id:</label>
+            <input type="number" id="productId" name="productId" required>
             <label for="name">Name:</label>
             <input type="text" id="name" name="name" required>
             <label for="desc">Description:</label>

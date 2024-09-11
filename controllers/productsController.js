@@ -29,8 +29,24 @@ async function saveProduct (req, res) {
 	}
 };
 
+async function showDeleteProductForm (req, res) {
+    res.render('deleteProduct', { error: null, productId: '' });
+};
+
+async function deleteProduct (req, res) {
+	const productId = req.body.productId;
+    try {
+        await productsService.deleteProduct(productId);
+        res.redirect('/products');
+    } catch (error) {
+        res.render('deleteProduct', { error: error.message });
+    }
+};
+
 module.exports = {
 	getAllProducts,
 	newProductForm,
-	saveProduct
+	saveProduct,
+	showDeleteProductForm,
+	deleteProduct
 };

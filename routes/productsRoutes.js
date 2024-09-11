@@ -11,4 +11,10 @@ router.get('/new', productsController.newProductForm);
 // Save new product
 router.post('/', productsController.saveProduct);
 
+// Get delete product form
+router.get('/delete', productsController.showDeleteProductForm);
+
+// Delete product
+router.post('/delete', productsController.deleteProduct);
+
 module.exports = router;

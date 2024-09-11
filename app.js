@@ -3,12 +3,13 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const productsRoutes = require('./routes/productsRoutes.js');
 
-mongoose.connect('mongodb://localhost:27017/candy_shop');
+mongoose.connect('mongodb://localhost:27017/candyShop');
 
 const app = express();
 
 // Body parser middleware
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 // routes middleware

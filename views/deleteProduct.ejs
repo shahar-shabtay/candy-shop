@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Delete Product</title>
+</head>
+<body>
+    <h1>Delete a Product</h1>
+    <form method="POST" action="/products/delete">
+        <label for="productId">Product ID:</label>
+        <input type="text" id="productId" name="productId" required>
+        <input type="submit" value="Delete Product">
+    </form>
+    <% if (error) { %>
+        <p><strong>Error:</strong> <%= error %></p>
+    <% } %>
+</body>
+</html>

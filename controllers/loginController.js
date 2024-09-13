@@ -8,7 +8,7 @@ async function loginUser(req, res) {
     if (connect){
       console.log('Login attempt with:', { email, password }, 'SUCCESS');
       // later change this to home page !!!!!!
-      return res.redirect('/login');
+      return res.redirect('/products');
     }
     else{
       console.log('Login attempt with:', { email, password }, 'FAILED'); //DEBUG

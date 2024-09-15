@@ -35,15 +35,6 @@ app.use('/register', registerRoutes);
 app.use('/login', loginRoutes);
 app.use('/products', productsRoutes);
 
-// Start server
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});const express = require('express');
-const path = require('path');
-const app = express();
-const mongoose = require('mongoose');
-
 
 mongoose.connect('mongodb://localhost:27017/sweetly');
 
@@ -58,11 +49,6 @@ app.set('views', path.join(__dirname, 'views'));
 // Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Mock user authentication middleware (if required)
-app.use((req, res, next) => {
-    req.user = {customerId: '111111111' };  // here i need to get from the login page data.
-    next();
-});
 
 // Import the admin routes
 const accountRoute = require('./routes/adminRoute');

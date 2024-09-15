@@ -73,7 +73,7 @@ function saveCustomer(customerId) {
     console.log('Customer Data to Save:', customerData);
 
     // Send the data to the server using fetch
-    fetch(`/admin/customers/${customerId}`, {
+    fetch(`/admin/customers/update/${customerId}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
@@ -87,10 +87,9 @@ function saveCustomer(customerId) {
             const editButton = customerRow.querySelector('.edit-btn-cust');
             const saveButton = customerRow.querySelector('.save-btn-cust');
 
-            editButton.style.display = 'inline-block';  
+            editButton.style.display = 'block';  
             saveButton.style.display = 'none';
 
-            console.log('הנתונים נשמרו בהצלחה עבור לקוח:', customerId);
         } else {
             console.error('Error updating customer:', data.message);
         }

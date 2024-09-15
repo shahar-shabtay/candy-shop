@@ -1,3 +1,4 @@
+
 function showContent(contentId, element) {
     // Remove active class from all tabs
     const tabs = document.querySelectorAll('.menu-option');
@@ -24,13 +25,40 @@ document.addEventListener('DOMContentLoaded', () => {
 
 const togglePassword = document.querySelector('#togglePassword');
     const password = document.querySelector('#password');
+    if (togglePassword){
+        togglePassword.addEventListener('click', function (e) {
+            // Toggle the type attribute
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+    
+            // Toggle the eye / eye-slash icon
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        });
+    }
 
-    togglePassword.addEventListener('click', function (e) {
-        // Toggle the type attribute
-        const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
-        password.setAttribute('type', type);
+async function showOrderDetails(orderId) {
+    const response = await fetch(`/myAccount/orders/${orderId}`);
+    const orderDetails = await response.json();
 
-        // Toggle the eye / eye-slash icon
-        this.classList.toggle('fa-eye');
-        this.classList.toggle('fa-eye-slash');
-    });
+    const detailsContent = document.getElementById('orderDetailsContent');
+
+    detailsContent.innerHTML = 
+    `
+        <p>Order ID: ${orderDetails.orderId}</p>
+        <p>Order Date: ${orderDetails.orderDate}</p>
+        <p>Total: ${orderDetails.totalPrice}</p>
+        <ul>
+            ${orderDetails.products.map(product =>
+                `<li>${product.productId} - ${product.quantity}
+                </li>`).join('')}
+            )}
+        </ul>
+        `;
+    
+    document.getElementById('orderDetailsPopup').style.display = 'block';
+}
+
+function closeModel(){
+    document.getElementById('orderDetailsPopup').style.display = 'none';
+}

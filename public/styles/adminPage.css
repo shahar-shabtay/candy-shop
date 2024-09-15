@@ -166,7 +166,8 @@ body {
 
 .menu-option.active::after {
     width: 100%;
-    background: #D2B48C;
+    background: #FF418A;
+    color: white;
 }
 
 .icon {
@@ -303,7 +304,7 @@ input[type="date"]:focus,
 input[type="number"]:focus,
 input[type="number"]:focus {
     outline: none;
-    border-bottom-color: #D2B48C;
+    border-bottom-color: #FF418A;
 }
 
 .form-group {
@@ -317,7 +318,7 @@ input[type="number"]:focus {
 
 .btn {
     padding: 10px 20px;
-    background-color: #D2B48C;
+    background-color: #FF418A;
     color: #fff;
     border: none;
     border-radius: 4px;
@@ -326,7 +327,7 @@ input[type="number"]:focus {
 }
 
 .btn:hover {
-    background-color: #D2B48C;
+    background-color: #FF418A;
 }
 
 .password-container {
@@ -375,7 +376,7 @@ input[type="number"]:focus {
 }
 
 .edit-btn-cust:hover {
-    background-color: #DFD8C1;
+    background-color: #FF418A;
     border-radius: 4px;
 }
 

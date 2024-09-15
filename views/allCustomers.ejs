@@ -33,14 +33,14 @@
                     <button class="menu-option active" onclick="window.location.href='/admin/customers'">All Users</button>
                     <button class="menu-option" onclick="window.location.href='/admin/orders'">All Orders</button>
                     <button class="menu-option" onclick="window.location.href='/admin/products'">All Products</button>
-                    <button class="menu-option" onclick="window.location.href='/admin/addProducts'">Add Products</button>
+                    <button class="menu-option" onclick="window.location.href='/admin/addProducts'">Add Product</button>
                 </div>
                 <!-- Account Details -->
                 <div class="content">
                     <div id="customers" class="content-item active">
                         <div class="container">
                             <!-- <div class="customer-details" data-id="<%= customer._id %>"> -->
-                                <form action="/admin/customers" method="POST" id="updateForm"></form>
+                                <form action="" method="POST" id="updateForm"></form>
                                     <table>
                                         <thead>
                                             <tr>
@@ -105,6 +105,7 @@
                     </div>
                     <div id="orders" class="content-item" style="display:none;">This is the content for Option 2.</div>
                     <div id="products" class="content-item" style="display:none;">This is the content for Option 3.</div>
+                    <div id="addProduct" class="content-item" style="display:none;">This is the content for Option 3.</div>
                 </div>
             </div>
         </div>

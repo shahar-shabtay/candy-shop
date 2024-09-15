@@ -79,7 +79,7 @@ body {
 
 /* sub menu css */
 .content {
-    margin-top: 70px; /* Add enough margin to push content below the fixed top bar */
+    margin-top: 20px; /* Add enough margin to push content below the fixed top bar */
     padding: 20px;
 }
 
@@ -248,7 +248,7 @@ input[type="tel"]:focus,
 input[type="password"]:focus,
 input[type="date"]:focus {
     outline: none;
-    border-bottom-color: #D2B48C;
+    border-bottom-color: #26C1DF;
 }
 
 .form-group {
@@ -262,7 +262,7 @@ input[type="date"]:focus {
 
 .btn {
     padding: 10px 20px;
-    background-color: #D2B48C;
+    background-color: #26C1DF;
     color: #fff;
     border: none;
     border-radius: 4px;
@@ -270,7 +270,7 @@ input[type="date"]:focus {
     align-self: flex-end;
 }
 .btn:hover {
-    background-color: #D2B48C;
+    background-color: #26C1DF;
 }
 
 .password-container {
@@ -468,3 +468,34 @@ tr:hover {
     border-bottom-color: none !important;  
 }
 
+/* Order Deatils */
+/* Modal container */
+#orderDetailsPopup {
+    display: none !important; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1000; /* On top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    background-color: rgba(0, 0, 0, 0.5); /* Black background with opacity */
+    justify-content: center;
+    align-items: center;
+    display: flex; /* Flexbox to center */
+}
+
+/* Modal content */
+.modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    width: 400px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Close button */
+.close-button {
+    float: right;
+    font-size: 20px;
+    cursor: pointer;
+}

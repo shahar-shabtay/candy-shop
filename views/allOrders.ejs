@@ -33,7 +33,7 @@
                     <button class="menu-option" onclick="window.location.href='/admin/customers'">All Users</button>
                     <button class="menu-option active" onclick="window.location.href='/admin/orders'">All Orders</button>
                     <button class="menu-option" onclick="window.location.href='/admin/products'">All Products</button>
-                    <button class="menu-option" onclick="window.location.href='/admin/addProducts'">Add Products</button>
+                    <button class="menu-option" onclick="window.location.href='/admin/addProducts'">Add Product</button>
                 </div>
                 <!-- Account Details -->
                 <div class="content">
@@ -54,7 +54,7 @@
                                         <tr>
                                             <td><%= order.orderNumber %></td>
                                             <td><%= new Date(order.createdAt).toLocaleDateString() %></td>
-                                            <td>$<%= order.totalCost.toFixed(2) %></td>
+                                            <td>$<%= order.totalPrice %></td>
                                             <td><%= order.status %></td>
                                             <td class="action-buttons">
                                                 <img class="order-actions" src="/images/seeOrder.svg" onClick="">

@@ -13,7 +13,7 @@ router.get('/myAccount', adminController.renderAccountPage);
 router.get('/myAccount/details', adminController.renderAccountPage);
 
 // Route for account orders
-router.get('/myAccount/orders', adminController.getOrdersByCustomerId);
+router.get('/myAccount/orders', adminController.getCustomerOrders);
 
 // Route for admin area
 router.get('/admin', adminController.renderAdminPage);
@@ -31,14 +31,12 @@ router.get('/admin/orders', adminController.getAllOrders);
 router.get('/admin/products', adminController.getAllProducts);
 
 // Route to add products
-router.get('/admin/addProducts', adminController.addProducts);
+router.get('/admin/addProducts', adminController.addProductsPage);
 
 // Route to all favorite
 router.get('/myAccount/favorite', adminController.getAllFavorite);
 
-// Route to remove favorite
-
-// Edit customer by admin
-router.put('/admin/customers/:id', adminController.updateCustomer);
+// Update User
+router.put('/admin/customers/update/:customerId', adminController.updateCustomerDetails)
 
 module.exports = router;

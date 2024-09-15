@@ -4,10 +4,11 @@ const app = express();
 const mongoose = require('mongoose');
 
 
-mongoose.connect('mongodb://localhost:27017/sweetlyç');
+mongoose.connect('mongodb://localhost:27017/sweetly');
 
 // Middleware to parse form data
 app.use(express.urlencoded({ extended: true }));
+
 
 // Set up the view engine
 app.set('view engine', 'ejs');

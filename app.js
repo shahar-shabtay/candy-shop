@@ -40,3 +40,18 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+
+// Cart 
+const session = require('express-session');
+const MemoryStore = require('express-session').MemoryStore;
+app.use(session({
+  secret: 'some secret',
+  resave: false,
+  saveUninitialized: false,
+  cookie: { secure: false, maxAge: 60000 },
+  store: new MemoryStore({
+      checkPeriod: 86400000 // prune expired entries every 24h
+  })
+}));
+const cartRoutes = require('./routes/cartRoutes');
+app.use('/cart', cartRoutes);

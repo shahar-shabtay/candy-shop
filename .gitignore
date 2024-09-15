@@ -80,6 +80,8 @@ jspm_packages/
 # next.js build output
 .next
 
+# tokens
+.env
 # Lerna
 lerna-debug.log
 

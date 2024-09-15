@@ -15,19 +15,24 @@ function addToCart (req, res, next) {
 async function showCart (req, res) {
     let cart = req.session.cart;
     let cartDetails = [];
+    let totalPrice = 0; // Initialize total price
 
     if (cart) {
         for (let id of cart) {
             const product = await productsService.getProductById(id);
             if (product) {
                 cartDetails.push(product);
+                totalPrice += product.price; // Add each product's price to the total
             }
         }
     }
 
-    res.render("cart", { cart: cartDetails });
+    totalPrice = totalPrice.toFixed(2); // Optional: round to two decimal places
+
+    res.render("cart", { cart: cartDetails, total: totalPrice });
 };
 
+// Remvoves item from cart
 function removeFromCart (req, res) {
     const productId = req.body.productId;
     const cart = req.session.cart;
@@ -47,6 +52,7 @@ function removeFromCart (req, res) {
     res.redirect('/cart');
 }
 
+// Checkout
 function checkout (req, res) {
     // Logic to handle checkout (process payment, create order, etc.)
 

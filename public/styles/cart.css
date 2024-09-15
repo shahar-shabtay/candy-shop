@@ -77,21 +77,24 @@ p:last-child {
 }
 
 .checkout-button {
-    color: #fff; /* white text color */
-    background-color: #007BFF; /* blue background color */
-    border: none; /* removes default button border */
-    padding: 10px 20px; /* 10px top/bottom padding, 20px left/right padding */
+    color: #fff; 
+    background-color: #007BFF; 
+    border: none; 
+    padding: 10px 20px; 
     text-align: center; 
     text-decoration: none;
     font-size: 16px;
     cursor: pointer;
-    border-radius: 5px; /* rounded corners */
+    border-radius: 5px; 
     display: block;
-    width: 200px; /* This sets a smaller fixed width */
+    width: 200px; 
     margin: 0 auto;
 }
 
-/* Add this if you want the button color to change when you hover over it */
 .checkout-button:hover {
-    background-color: #0069D9; /* darker blue */
+    background-color: #0069D9; 
+}
+
+.total-price {
+    text-align: center;
 }

@@ -68,7 +68,7 @@ document.querySelectorAll('.remove-favorite').forEach(icon => {
         const productId = icon.getAttribute('data-product-id');
 
         try {
-            const response = await fetch('/myAccount/favorite/remove', {
+            const response = await fetch('/personal/myAccount/favorite/remove', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

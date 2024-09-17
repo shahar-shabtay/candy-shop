@@ -62,7 +62,7 @@ async function removeFavoriteProduct(customerId, productId) {
             customerId: customerId,
             productId: productId 
         });
-
+        console.log(result);
         // Check if a favorite was removed
         return result.deletedCount > 0; // Return true if a product was removed
     } catch (err) {

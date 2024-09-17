@@ -36,6 +36,6 @@ router.get('/myAccount/favorite', adminController.renderFavoriteProducts,);
 // Update User
 // router.put('/admin/customers/update/:customerId', adminController.updateCustomerDetails)
 
-router.post('/favorite/remove', productsController.removeFavoriteProduct);
+router.post('/myAccount/favorite/remove', productsController.removeFavoriteProduct);
 
 module.exports = router;

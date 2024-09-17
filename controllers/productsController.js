@@ -57,7 +57,6 @@ async function addNewFavorite (req,res) {
 		const user = req.session.user;
 		const productId = req.body.productId;
 		const result = await favoriteService.addNewFavorite(customerId, productId);
-		console.log(result);
 		if (result.success) {
             // Optionally, you can add a message to the session to display after rendering
             req.flash('success', 'Product added to favorites'); // If you're using connect-flash or a similar library

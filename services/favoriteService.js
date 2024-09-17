@@ -43,7 +43,6 @@ async function addNewFavorite(customerId, productId) {
             productId: productId,
             customerId: customerId,
         });
-        console.log(favorite);
 
         // Save to the database
         await favorite.save();
@@ -62,7 +61,6 @@ async function removeFavoriteProduct(customerId, productId) {
             customerId: customerId,
             productId: productId 
         });
-        console.log(result);
         // Check if a favorite was removed
         return result.deletedCount > 0; // Return true if a product was removed
     } catch (err) {

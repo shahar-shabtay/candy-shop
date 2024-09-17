@@ -37,32 +37,6 @@ const togglePassword = document.querySelector('#togglePassword');
         });
     }
 
-async function showOrderDetails(orderId) {
-    const response = await fetch(`/myAccount/orders/${orderId}`);
-    const orderDetails = await response.json();
-
-    const detailsContent = document.getElementById('orderDetailsContent');
-
-    detailsContent.innerHTML = 
-    `
-        <p>Order ID: ${orderDetails.orderId}</p>
-        <p>Order Date: ${orderDetails.orderDate}</p>
-        <p>Total: ${orderDetails.totalPrice}</p>
-        <ul>
-            ${orderDetails.products.map(product =>
-                `<li>${product.productId} - ${product.quantity}
-                </li>`).join('')}
-            )}
-        </ul>
-        `;
-    
-    document.getElementById('orderDetailsPopup').style.display = 'block';
-}
-
-function closeModel(){
-    document.getElementById('orderDetailsPopup').style.display = 'none';
-}
-
 document.querySelectorAll('.remove-favorite').forEach(icon => {
     icon.addEventListener('click', async () => {
         const productId = icon.getAttribute('data-product-id');
@@ -89,3 +63,17 @@ document.querySelectorAll('.remove-favorite').forEach(icon => {
         }
     });
 });
+
+
+
+document.querySelectorAll('.see-order-btn').forEach(button => {
+    button.addEventListener('click', function () {
+      const orderId = this.getAttribute('data-order-id');
+      console.log('Redirecting to order details for order ID:', orderId);
+  
+      // Redirect the user to the order details page
+      window.location.href = `/personal/myAccount/orders/${orderId}`;
+    });
+  });
+  
+

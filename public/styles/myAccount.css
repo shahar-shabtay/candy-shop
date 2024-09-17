@@ -519,3 +519,16 @@ tr:hover {
 	color: red;
 }
 
+/* Style for the dynamic status bar */
+.status-bar {
+    width: 100%;
+    background-color: #ddd;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.status-progress {
+height: 20px;
+background-color: green;
+width: 0;
+}

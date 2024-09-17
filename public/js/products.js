@@ -1,6 +1,5 @@
 document.querySelectorAll('.favorite').forEach(button => {
     button.addEventListener('click', async () => {
-        console.log('Button clicked:', button.getAttribute('data-product-id')); // Log button click
         const productId = button.getAttribute('data-product-id');
 
         try {

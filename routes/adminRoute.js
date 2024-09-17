@@ -38,4 +38,6 @@ router.get('/myAccount/favorite', adminController.renderFavoriteProducts,);
 
 router.post('/myAccount/favorite/remove', productsController.removeFavoriteProduct);
 
+router.get('/myAccount/orders/:orderId', adminController.getOrderDetailsById);
+
 module.exports = router;

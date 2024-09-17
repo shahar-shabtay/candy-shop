@@ -39,7 +39,6 @@ async function renderAdminPage(req, res) {
 async function renderAccountPage(req, res) {
     try {
         const user = req.session.user;
-        console.log(user);
         res.render('customerDetails', {user});
     } catch (err) {
         console.error('Error rendering admin page:', err);
@@ -69,7 +68,6 @@ async function updateCustomerDetails(req, res) {
             street, number, city,
             password
         };
-        console.log('the new data that fetch: ', updateUser);
         const updateCustomer = await customerService.updateCustomerDetails(customerId, updateUser);
         if (updateCustomer) {
             req.session.user = {...req.session.user, ...updateUser};
@@ -95,7 +93,6 @@ async function saveProduct(req, res) {
                 name: name,
                 image: `/public/images/${imageFileName}` // Save the file path in the DB
             });
-            console.log(product);
             await product.save();
 
             // Redirect to a success page or the product list page
@@ -112,7 +109,6 @@ async function getAllCustomers(req, res) {
         const user = req.session.user;  // Assume customerId is available in the session
         const customers = await customerService.getAllCustomers(); // Fetch all customers from service
         const customer = await customerService.getCustomerById(user.customerId);  // Search by customerId
-        console.log(customers);
         res.render('allCustomers', { customers, customer, user}); // Render the view and pass customers
     } catch (err) {
         console.error('Error fetching customers:', err);
@@ -146,29 +142,6 @@ async function getAllProducts(req, res) {
 }
 
 // For specific customer - orders / details / favorite
-async function getOrdersByCustomerId(req, res) {
-    try {
-        const customerId = req.user.customerId;
-        if (!customerId) {
-            console.error('No user ID found in request');
-            return res.status(400).send('User not authenticated');
-        }
-        const orders = await orderService.getOrderByCustomer(customerId);
-        console.log(orders);
-        const customer = await customerService.getCustomerById(customerId); // Fetch Custoer
-        // const products = await orderService.getProductsInOrder()
-        if (!orders || orders.length === 0) {
-            console.log('No orders found for this user');
-            return res.render('customerOrders', { orders , customer });  // Render an empty order list
-        }
-
-        res.render('customerOrders', { orders, customer });;  // Render the orders EJS view
-    } catch (err) {
-        console.error('Error in getOrders controller:', err);  // Log the error in detail
-        res.status(500).send('Server Error - getOrdersByCustomerId');
-    }
-}
-
 async function renderFavoriteProducts(req, res) {
     try {
         const user = req.session.user;
@@ -181,20 +154,15 @@ async function renderFavoriteProducts(req, res) {
     }
 }
 
-
 async function getCustomerOrders (req, res) {
     try {
         const user = req.session.user;
-        const customer = await customerService.getCustomerById(user.customerId);
         const orders = await orderService.getCustomerOrders(user.customerId);
-        res.render('customerOrders', {customer, orders, user});
+        res.render('customerOrders', {orders, user});
     } catch (err) {
         res.status(500).send('Error fetching orders');
     }
 }
-
-
-
 
 // Multer storage configuration to save the file to /public/images
 const storage = multer.diskStorage({
@@ -221,29 +189,48 @@ async function addProductsPage(req, res) {
     }
 }
 
-const getOrderDetailsById = async (req, res) => {
-    const orderId = req.params.orderId;
-    
+async function getOrderDetailsById (req, res) {
     try {
-        const order = await orderService.getOrderById(orderId); // שליפת ההזמנה
-        
+        const orderId = req.params.orderId; // Get orderId from the request
+    
+        // Fetch the order from the service
+        const order = await orderService.getOrderById(orderId);
+        console.log(order);
         if (!order) {
-            return res.status(404).json({ message: 'Order not found' });
+          return res.status(404).json({ message: 'Order not found' });
         }
-
-        // נשלוף את כל פרטי המוצרים בהזמנה
-        const productsDetails = await Promise.all(order.products.map(async (product) => {
-            const productDetails = await productService.getProductById(product.productId);
-            return {
-                ...productDetails.toObject(), // פרטי המוצר
-                quantity: product.quantity // הוספת הכמות של המוצר
-            };
+    
+        // Prepare an array to hold products with full details
+        const fullProductDetails = await Promise.all(order.products.map(async (product) => {
+          const productDetails = await productService.getProductById(product.productId);
+          return {
+            name: productDetails.name, // Get product name from product collection
+            price: productDetails.price, // Get product price from product collection
+            quantity: product.quantity, // Get quantity from the order document
+            image: productDetails.imageUrl,
+          };
         }));
-
-        res.render('orderDetails', { order, products: productsDetails }); // הצגת הטבלה עם פרטי ההזמנה
-    } catch (error) {
-        res.status(500).json({ message: 'Server error', error });
-    }
+    
+        // Retrieve user from the session
+        const user = req.session.user;
+        
+        // Pass the data to the view
+        res.render('orderDetails', {
+          orderDetails: {
+            orderId: order.orderId,
+            customerId: order.customerId,
+            orderDate: order.orderDate,
+            totalPrice: order.totalPrice,
+            status: order.status,
+            address: order.address,
+            products: fullProductDetails,
+          },
+          user: user, // Pass the user from the session
+        });
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+      }
 };
 
 
@@ -251,7 +238,6 @@ module.exports = {
     renderAccountPage,
     updateCustomerDetails,
     getAllCustomers,
-    getOrdersByCustomerId,
     renderAdminPage,
     getAllOrders,
     getAllProducts,

@@ -10,18 +10,9 @@ async function loginUser(req, res) {
     const customer = await customerService.getCustomerByEmail(email)
     if (connect){
       req.session.user = customer;
-      // { 
-      //   customerId: customer.customerId,
-      //   email: customer.email,
-      //   role: customer.role,
-      // };
-      // console.log('customer', customer);
-      console.log('Login attempt with:', { email, password }, 'SUCCESS');
-      // later change this to home page !!!!!!
       return res.redirect('/products');
     }
     else{
-      console.log('Login attempt with:', { email, password }, 'FAILED'); //DEBUG
       // If failed to connect - stay in login page (There is print to user from ejs)  
       return res.render('login', { error: 'Email / Password is incorrect' }); // Re-render login page with error
     }

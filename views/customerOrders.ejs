@@ -12,7 +12,7 @@
             <!-- Left elements -->
             <div class="left-section">
                 <img src="/public/images/shooping_cart.svg" alt="Icon 1" class="icon">
-                <img src="/public/images/logout.svg" alt="Icon 1" class="icon">
+                <img src="/public/images/logout.svg" alt="Icon 1" class="icon" onClick="window.location.href='/logout'">
             </div>
             <!-- Logo -->
             <div class="center-section">
@@ -29,7 +29,7 @@
         <!-- Account Section -->
         <div class="account-section">
             <div class="account-header">
-                <h2>Hello <%= customer.name %><s/h2>
+                <h2>Hello <%= user.name %><s/h2>
             </div>
             <div class="account-content">
                 <div class="account-menu">
@@ -42,23 +42,28 @@
                     <div id="details" class="content-item"></div>
                     <div id="favorit" class="content-item" style="display:none;">This is the content for Option 2.</div>
                     <div id="orders" class="content-item active">
+                        <div class=""container"></div>
                         <table>
                             <thead>
                                 <tr>
                                     <th>Order ID</th>
                                     <th>Order Date</th>
                                     <th>Total Amount</th>
+                                    <th>Status</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <% orders.forEach(order => { %>
-                                <tr>
-                                    <td><%= order.orderId %></td>
-                                    <td><%= order.orderData %></td>
-                                    <td><%= order.totalPrice %></td>
-                                    <td><button onclick="showOrderDetails('<%= order.orderId %>')">View Order</button></td>
-                                </tr>
+                                    <tr>
+                                        <td><%= order.orderId %></td>
+                                        <td><%= new Date(order.createdAt).toLocaleDateString() %></td>
+                                        <td>$<%= order.totalPrice.toFixed(2) %></td>
+                                        <td><%= order.status %></td>
+                                        <td class="action-buttons">
+                                            <img class="order-actions see-order-btn" src="/public/images/seeOrder.svg" data-order-id="<%= order.orderId %>">
+                                        </td>
+                                    </tr>
                                 <% }) %>
                             </tbody>
                         </table>
@@ -73,6 +78,6 @@
                 </div>
             </div>
         </div>
-        <script src="/js/myAccount.js"></script>
+        <script src="/public/js/myAccount.js"></script>
     </body>
 </html>

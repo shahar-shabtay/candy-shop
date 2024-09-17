@@ -44,7 +44,6 @@ document.addEventListener('DOMContentLoaded', () => {
 function toggleEditMode(customerId) {
     const customerRow = document.querySelector(`tr[data-id="${customerId}"]`);
     const inputs = customerRow.querySelectorAll('.customer-input');
-    console.log("Toggle Edit Mode for Customer ID:", customerId);
 
     inputs.forEach(input => {
         input.removeAttribute('readonly');
@@ -62,15 +61,12 @@ function saveCustomer(customerId) {
     const customerRow = document.querySelector(`tr[data-id="${customerId}"]`);
     const inputs = customerRow.querySelectorAll('.customer-input'); // Get all inputs in the customer row
 
-    console.log("Save Mode for Customer ID:", customerId); // Debugging
-
     const customerData = {};
     inputs.forEach(input => {
         customerData[input.name] = input.value; // Create a dynamic object with field names as keys and input values
         input.setAttribute('readonly', 'true'); // החזרת readonly לשדות לאחר השמירה
         input.classList.remove('editable'); // הסרת מחלקת עיצוב לשדות
     });
-    console.log('Customer Data to Save:', customerData);
 
     // Send the data to the server using fetch
     fetch(`/admin/customers/update/${customerId}`, {
@@ -83,7 +79,6 @@ function saveCustomer(customerId) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            console.log('Customer updated successfully:', data.customer);
             const editButton = customerRow.querySelector('.edit-btn-cust');
             const saveButton = customerRow.querySelector('.save-btn-cust');
 

@@ -62,3 +62,30 @@ async function showOrderDetails(orderId) {
 function closeModel(){
     document.getElementById('orderDetailsPopup').style.display = 'none';
 }
+
+document.querySelectorAll('.remove-favorite').forEach(icon => {
+    icon.addEventListener('click', async () => {
+        const productId = icon.getAttribute('data-product-id');
+
+        try {
+            const response = await fetch('/myAccount/favorite/remove', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ productId: productId }),
+            });
+
+            const result = await response.json();
+            if (response.ok) {
+                alert(result.message); // Show success message
+                icon.closest('.product-card').remove(); // Remove the product card from the DOM
+            } else {
+                alert(result.error); // Show error message
+            }
+        } catch (error) {
+            console.error('Error removing favorite:', error);
+            alert('Failed to remove favorite product.');
+        }
+    });
+});

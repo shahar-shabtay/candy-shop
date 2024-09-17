@@ -17,4 +17,8 @@ router.get('/delete', productsController.showDeleteProductForm);
 // Delete product
 router.post('/delete', productsController.deleteProduct);
 
+// Add new favorite
+router.post('/add', productsController.addNewFavorite);
+
+
 module.exports = router;

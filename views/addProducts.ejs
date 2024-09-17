@@ -11,17 +11,21 @@
         <div class="top-bar">
             <!-- Left elements -->
             <div class="left-section">
-                <img src="/images/shooping_cart.svg" alt="Icon 1" class="icon">
-                <img src="/images/logout.svg" alt="Icon 1" class="icon">
+                <img src="/public/images/shooping_cart.svg" alt="Icon 1" class="icon">
+                <img src="/public/images/logout.svg" alt="Icon 1" class="icon">
             </div>
             <!-- Logo -->
             <div class="center-section">
-                <img src="/images/logo.svg" class="logo"> 
+                <img src="/public/images/logo.svg" class="logo"> 
             </div>
             <!-- Right elements -->
             <div class="right-section">
-                <img src="/images/home_icon.svg" alt="Icon 1" class="icon" onclick="window.location.href='/home'">
+                <img src="/public/images/home_icon.svg" alt="Icon 1" class="icon" onclick="window.location.href='/products'">
+                <% if (user.role === 'admin') { %> 
+                    <img src="/public/images/adminIcon.svg" alt="Icon 1" class="icon" onclick="window.location.href='/personal/admin'">
+                <% } %>
             </div>
+            
         </div>
         <!-- Account Section -->
         <div class="account-section">
@@ -30,10 +34,10 @@
             </div>
             <div class="account-content">
                 <div class="account-menu">
-                    <button class="menu-option" onclick="window.location.href='/admin/customers'">All Users</button>
-                    <button class="menu-option" onclick="window.location.href='/admin/orders'">All Orders</button>
-                    <button class="menu-option" onclick="window.location.href='/admin/products'">All Products</button>
-                    <button class="menu-option active" onclick="window.location.href='/admin/addProducts'">Add Product</button>
+                    <button class="menu-option" onclick="window.location.href='/personal/admin/customers'">All Users</button>
+                    <button class="menu-option" onclick="window.location.href='/personal/admin/orders'">All Orders</button>
+                    <button class="menu-option" onclick="window.location.href='/personal/admin/products'">All Products</button>
+                    <button class="menu-option active" onclick="window.location.href='/personal/admin/addProducts'">Add Product</button>
                 </div>
                 <!-- Account Details -->
                 <div class="content">

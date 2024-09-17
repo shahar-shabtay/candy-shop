@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <title>Candy Shop - Admin Page</title>
-        <link rel="stylesheet" href="/styles/myAccount.css ">
+        <link rel="stylesheet" href="/public/styles/myAccount.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     </head>
     <body>  
@@ -10,29 +10,33 @@
         <div class="top-bar">
             <!-- Left elements -->
             <div class="left-section">
-                <img src="/images/shooping_cart.svg" alt="Icon 1" class="icon">
-                <img src="/images/logout.svg" alt="Icon 1" class="icon">
+                <img src="/public/images/shooping_cart.svg" alt="Icon 1" class="icon">
+                <img src="/public/images/logout.svg" alt="Icon 1" class="icon" onClick="window.location.href='/logout'">
             </div>
             <!-- Logo -->
             <div class="center-section">
-                <img src="/images/logo.svg" class="logo"> 
+                <img src="/public/images/logo.svg" class="logo"> 
             </div>
             <!-- Right elements -->
             <div class="right-section">
-                <img src="/images/home_icon.svg" alt="Icon 1" class="icon" onclick="window.location.href='/home'">
+                <img src="/public/images/home_icon.svg" alt="Icon 1" class="icon" onclick="window.location.href='/products'">
+                <% if (user.role === 'admin') { %> 
+                    <img src="/public/images/adminIcon.svg" alt="Icon 1" class="icon" onclick="window.location.href='/personal/admin'">
+                <% } %>
             </div>
+            
         </div>
         <!-- Account Section -->
         <div class="account-section">
             <div class="account-header">
-                <h2>Hello <%= customer.name %></h2>
+                <h2>Hello <%= user.name %></h2>
             </div>
             <div class="account-content">
                 <!-- Sub Menu -->
                 <div class="account-menu">
-                    <button class="menu-option active" onclick="window.location.href='/myAccount/details'">Personal Details</button>
-                    <button class="menu-option" onclick="window.location.href='/myAccount/favorite'">Favorits</button>
-                    <button class="menu-option" onclick="window.location.href='/myAccount/orders'">My Orders</button>
+                    <button class="menu-option active" onclick="window.location.href='/personal/myAccount/details'">Personal Details</button>
+                    <button class="menu-option" onclick="window.location.href='/personal/myAccount/favorite'">Favorits</button>
+                    <button class="menu-option" onclick="window.location.href='/personal/myAccount/orders'">My Orders</button>
                 </div>
                 <!-- Account Details -->
                 <div class="content">
@@ -40,33 +44,33 @@
                     <div id="details" class="content-item active">
                         <div class="container">
                             <!-- Form with Details -->
-                            <form action="/myAccount" method="POST" id="updateForm">
+                            <form action="/personal/myAccount/update" method="POST" id="updateForm">
                                 <div class="form-row">
                                     <div class="form-column">
                                         <div class="form-group">
                                             <label for="name">Name</label>
-                                            <input type="text" id="name" name="name" value="<%= customer.name %>" required>
+                                            <input type="text" id="name" name="name" value="<%= user.name %>" required>
                                         </div>
                                         <div class="form-group">
                                             <label for="email">Email</label>
-                                            <input type="email" id="email" name="email" value="<%= customer.email %>" required>
+                                            <input type="email" id="email" name="email" value="<%= user.email %>" required>
                                         </div>
                                         <div class="form-group">
                                             <label for="birthdate">Birthday</label>
                                             <div class="birthday-container">
                                                 <select id="day" name="birth_day" required class="small-input">
                                                     <% for (let i = 1; i <= 30; i++) { %>
-                                                        <option value="<%= i %>" <%= customer.birthdate && new Date(customer.birthdate).getDate() === i ? 'selected' : '' %>><%= i %></option>
+                                                        <option value="<%= i %>" <%= user.birthdate && new Date(user.birthdate).getDate() === i ? 'selected' : '' %>><%= i %></option>
                                                     <% } %>
                                                 </select>
                                                 <select id="month" name="birth_month" required class="small-input">
                                                     <% for (let i = 1; i <= 12; i++) { %>
-                                                        <option value="<%= i %>" <%= customer.birthdate && (new Date(customer.birthdate).getMonth() + 1) === i ? 'selected' : '' %>><%= i %></option>
+                                                        <option value="<%= i %>" <%= user.birthdate && (new Date(user.birthdate).getMonth() + 1) === i ? 'selected' : '' %>><%= i %></option>
                                                     <% } %>
                                                 </select>
                                                 <select id="year" name="birth_year" required>
                                                     <% for (let i = 1990; i <= 2024; i++) { %>
-                                                        <option value="<%= i %>" <%= customer.birthdate && new Date(customer.birthdate).getFullYear() === i ? 'selected' : '' %>><%= i %></option>
+                                                        <option value="<%= i %>" <%= user.birthdate && new Date(user.birthdate).getFullYear() === i ? 'selected' : '' %>><%= i %></option>
                                                     <% } %>
                                                 </select>
                                             </div>
@@ -76,21 +80,21 @@
                                     <div class="form-column">
                                         <div class="form-group">
                                             <label for="phone">Phone Number</label>
-                                            <input type="tel" id="phone" name="phone" value="<%= customer.phone %>" pattern="[0-9]{3}-[0-9]{7}" maxlength="10" required>
+                                            <input type="tel" id="phone" name="phone" value="<%= user.phone %>" pattern="[0-9]{3}-[0-9]{7}" maxlength="10" required>
                                         </div>
                                         <div class="form-group">
                                             <label for="address">Address:</label>
                                             <div class="address-container">
-                                                <input type="text" id="street" name="address_street" value="<%= customer.address ? customer.address.street : '' %>" required placeholder="Street">
-                                                <input type="text" id="number" name="address_number" value="<%= customer.address ? customer.address.number : '' %>" required placeholder="Number" class="small-input">
-                                                <input type="text" id="city" name="address_city" value="<%= customer.address ? customer.address.city : '' %>" required placeholder="City">
+                                                <input type="text" id="street" name="address_street" value="<%= user.address ? user.address.street : '' %>" required placeholder="Street">
+                                                <input type="text" id="number" name="address_number" value="<%= user.address ? user.address.number : '' %>" required placeholder="Number" class="small-input">
+                                                <input type="text" id="city" name="address_city" value="<%= user.address ? user.address.city : '' %>" required placeholder="City">
                                             </div>
                                         </div>
                                         
                                         <div class="form-group">
                                             <label for="password">Password</label>
                                             <div class="password-container">
-                                                <input type="password" id="password" name="password" value="<%= customer.password %>" required>
+                                                <input type="password" id="password" name="password" value="<%= user.password %>" required>
                                                 <i class="fas fa-eye" id="togglePassword"></i>
                                             </div>
                                         </div>
@@ -109,7 +113,7 @@
                 </div>
             </div>
         </div>
-        <script src="/js/myAccount.js"></script>
+        <script src="/public/js/myAccount.js"></script>
         <script>
             // JavaScript to submit the form programmatically when the button is clicked
             document.getElementById('submitButton').addEventListener('click', function() {

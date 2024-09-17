@@ -3,11 +3,13 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const path = require('path');
 const app = express();
+const session = require("express-session");
 
 // Routes
 const productsRoutes = require('./routes/productsRoutes.js');
-const loginRoutes = require('./routes/loginRoutes');
-const registerRoutes = require('./routes/registerRoutes');
+const loginRoutes = require('./routes/loginRoutes.js');
+const registerRoutes = require('./routes/registerRoutes.js');
+const adminRoute = require('./routes/adminRoute.js');
 
 // Connect to MongoDB
 mongoose.connect('mongodb://localhost:27017/candyShop', {
@@ -16,6 +18,15 @@ mongoose.connect('mongodb://localhost:27017/candyShop', {
 })
 .then(() => console.log('MongoDB connected successfully'))
 .catch(err => console.error('MongoDB connection error:', err));
+
+// Create session
+app.use(
+  session({
+    secret: "wusha",
+    saveUninitialized: false,
+    resave: false,
+  })
+);
 
 // Middleware
 app.use(express.json());
@@ -31,32 +42,11 @@ app.set('views', path.join(__dirname, 'views'));
 app.use('/public', express.static(path.join(__dirname, 'public')));
 
 // Use routes
-app.use('/register', registerRoutes); 
-app.use('/login', loginRoutes);
+app.use('/logout', loginRoutes);
 app.use('/products', productsRoutes);
-
-
-mongoose.connect('mongodb://localhost:27017/sweetly');
-
-// Middleware to parse form data
-app.use(express.urlencoded({ extended: true }));
-
-
-// Set up the view engine
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
-
-// Serve static files
-app.use(express.static(path.join(__dirname, 'public')));
-
-
-// Import the admin routes
-const accountRoute = require('./routes/adminRoute');
-app.use('/', accountRoute);
-
-// Import home routes
-const homeRoutes = require('./routes/homeRoute');
-app.use('/', homeRoutes);  // Use the home routes
+app.use('/register', registerRoutes);
+app.use('/personal',adminRoute);
+app.use('/', loginRoutes);
 
 
 // Start the server

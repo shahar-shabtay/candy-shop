@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <title>Candy Shop - Admin Page</title>
-        <link rel="stylesheet" href="/styles/adminPage.css">
+        <link rel="stylesheet" href="/public/styles/adminPage.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     </head>
@@ -11,35 +11,35 @@
         <div class="top-bar">
             <!-- Left elements -->
             <div class="left-section">
-                <img src="/images/shooping_cart.svg" alt="Icon 1" class="icon">
-                <img src="/images/logout.svg" alt="Icon 1" class="icon">
+                <img src="/public/images/shooping_cart.svg" alt="Icon 1" class="icon">
+                <img src="/public/images/logout.svg" alt="Icon 1" class="icon">
             </div>
             <!-- Logo -->
             <div class="center-section">
-                <img src="/images/logo.svg" class="logo"> 
+                <img src="/public/images/logo.svg" class="logo"> 
             </div>
             <!-- Right elements -->
             <div class="right-section">
-                <img src="/images/home_icon.svg" alt="Icon 1" class="icon" onclick="window.location.href='/home'">
+                <img src="/public/images/home_icon.svg" alt="Icon 1" class="icon" onclick="window.location.href='/products'">
+                <img src="/public/images/user.svg" alt="Icon 1" class="icon" onclick="window.location.href='/personal/myAccount'">
             </div>
         </div>
         <!-- Account Section -->
         <div class="account-section">
             <div class="account-header">
-                <h2>Hello <%= customer.name %></h2>
+                <h2>Hello <%= user.name %></h2>
             </div>
             <div class="account-content">
                 <div class="account-menu">
-                    <button class="menu-option active" onclick="window.location.href='/admin/customers'">All Users</button>
-                    <button class="menu-option" onclick="window.location.href='/admin/orders'">All Orders</button>
-                    <button class="menu-option" onclick="window.location.href='/admin/products'">All Products</button>
-                    <button class="menu-option" onclick="window.location.href='/admin/addProducts'">Add Product</button>
+                    <button class="menu-option active" onclick="window.location.href='/personal/admin/customers'">All Users</button>
+                    <button class="menu-option" onclick="window.location.href='/personal/admin/orders'">All Orders</button>
+                    <button class="menu-option" onclick="window.location.href='/personal/admin/products'">All Products</button>
+                    <button class="menu-option" onclick="window.location.href='/personal/admin/addProducts'">Add Product</button>
                 </div>
                 <!-- Account Details -->
                 <div class="content">
                     <div id="customers" class="content-item active">
                         <div class="container">
-                            <!-- <div class="customer-details" data-id="<%= customer._id %>"> -->
                                 <form action="" method="POST" id="updateForm"></form>
                                     <table>
                                         <thead>
@@ -55,44 +55,44 @@
                                         </thead>
                                         <!-- Readonly inputs for customer details initially -->
                                         <tbody>
-                                            <% customers.forEach(customer => { %>
-                                            <tr data-id="<%= customer.customerId %>">
-                                                <td><input name="name" class="customer-name-input customer-input" type="text" value="<%= customer.name %>" readonly></td>
-                                                <td><input name="email" class="customer-email-input customer-input" type="email" value="<%= customer.email %>" readonly></td>
+                                            <% customers.forEach(user => { %>
+                                            <tr data-id="<%= user.customerId %>">
+                                                <td><input name="name" class="customer-name-input customer-input" type="text" value="<%= user.name %>" readonly></td>
+                                                <td><input name="email" class="customer-email-input customer-input" type="email" value="<%= user.email %>" readonly></td>
                                                 <td>
                                                      <!-- Select field for customer role -->
                                                     <select id="day" class="birth-select customer-input small-input" name="birth_day" required disabled>
                                                         <% for (let i = 1; i <= 30; i++) { %>
-                                                            <option value="<%= i %>" <%= customer.birthdate && new Date(customer.birthdate).getDate() === i ? 'selected' : '' %>><%= i %></option>
+                                                            <option value="<%= i %>" <%= user.birthdate && new Date(user.birthdate).getDate() === i ? 'selected' : '' %>><%= i %></option>
                                                         <% } %>
                                                     </select>
                                                     <select  id="month" class="birth-select customer-input small-input" id="month" name="birth_month" required disabled>
                                                         <% for (let i = 1; i <= 12; i++) { %>
-                                                            <option value="<%= i %>" <%= customer.birthdate && (new Date(customer.birthdate).getMonth() + 1) === i ? 'selected' : '' %>><%= i %></option>
+                                                            <option value="<%= i %>" <%= user.birthdate && (new Date(user.birthdate).getMonth() + 1) === i ? 'selected' : '' %>><%= i %></option>
                                                         <% } %>
                                                     </select>
                                                     <select id="year" class="birth-select customer-input small-input" name="birth_year" required disabled>
                                                         <% for (let i = 1990; i <= 2024; i++) { %>
-                                                            <option value="<%= i %>" <%= customer.birthdate && new Date(customer.birthdate).getFullYear() === i ? 'selected' : '' %>><%= i %></option>
+                                                            <option value="<%= i %>" <%= user.birthdate && new Date(user.birthdate).getFullYear() === i ? 'selected' : '' %>><%= i %></option>
                                                         <% } %>
                                                     </select>
                                                 </td>
-                                                <td><input name="phone" class="customer-phone-input customer-input" type="tel" value="<%= customer.phone %>" readonly></td>
+                                                <td><input name="phone" class="customer-phone-input customer-input" type="tel" value="<%= user.phone %>" readonly></td>
                                                 <td>
-                                                    <input name="city" class="customer-address-input customer-input" type="text" value="<%= customer.address.street %>" readonly>
-                                                    <input name="street" class="customer-address-input customer-input" type="text" value="<%= customer.address.city %>" readonly>
-                                                    <input name="number" class="customer-address-input customer-input" type="number" value="<%= customer.address.number %>" readonly>
+                                                    <input name="city" class="customer-address-input customer-input" type="text" value="<%= user.address.street %>" readonly>
+                                                    <input name="street" class="customer-address-input customer-input" type="text" value="<%= user.address.city %>" readonly>
+                                                    <input name="number" class="customer-address-input customer-input" type="number" value="<%= user.address.number %>" readonly>
                                                 </td>
                                                 <td>
                                                     <select id="role" name="role" class="customer-role-select customer-input" disabled>
-                                                        <option value="user" <%= customer.role === 'user' ? 'selected' : '' %>>User</option>
-                                                        <option value="admin" <%= customer.role === 'admin' ? 'selected' : '' %>>Admin</option>
+                                                        <option value="user" <%= user.role === 'user' ? 'selected' : '' %>>User</option>
+                                                        <option value="admin" <%= user.role === 'admin' ? 'selected' : '' %>>Admin</option>
                                                     </select>
                                                 </td>
                                                 <td>
                                                     <div class="customer-actions">
-                                                        <img class="edit-btn-cust" src="/images/edit.svg" onClick="toggleEditMode('<%= customer.customerId %>')" style="display:inline-block;">
-                                                        <img class="save-btn-cust" src="/images/save.svg" onClick="saveCustomer('<%= customer.customerId %>')" style="display:none;">
+                                                        <img class="edit-btn-cust" src="/public/images/edit.svg" onClick="toggleEditMode('<%= user.customerId %>')" style="display:inline-block;">
+                                                        <img class="save-btn-cust" src="/public/images/save.svg" onClick="saveCustomer('<%= user.customerId %>')" style="display:none;">
                                                     </div>
                                                 </td>
                                             </tr>
@@ -109,6 +109,6 @@
                 </div>
             </div>
         </div>
-        <script src="/js/adminPage.js"></script>
+        <script src="/public/js/adminPage.js"></script>
     </body>
 </html>

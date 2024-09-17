@@ -4,8 +4,28 @@
         <title>Candy Shop - Products</title>
         <link rel="stylesheet" type="text/css" href="public/styles/products.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+        <link rel="stylesheet" href="/public/styles/myAccount.css">
     </head>
     <body>
+        <!-- Topbar -->
+    <div class="top-bar">
+        <!-- Left elements -->
+        <div class="left-section">
+            <img src="/public/images/shooping_cart.svg" alt="Icon 1" class="icon">
+            <img src="/public/images/logout.svg" alt="Icon 1" class="icon" onClick="window.location.href='/logout'">
+        </div>
+        <!-- Logo -->
+        <div class="center-section">
+            <img src="/public/images/logo.svg" class="logo"> 
+        </div>
+        <!-- Right elements -->
+        <div class="right-section">
+            <img src="/public/images/user.svg" alt="Icon 1" class="icon" onclick="window.location.href='/personal/myAccount'">
+            <% if (user.role === 'admin') { %> 
+                <img src="/public/images/adminIcon.svg" alt="Icon 1" class="icon" onclick="window.location.href='/personal/admin'">
+            <% } %>
+        </div>
+    </div>
         <h1>Our Products</h1>
         <div class="products">
         <!-- List all products in DB -->
@@ -17,12 +37,13 @@
                     <p><%= product.description %></p>
                     <p>Price: <%= product.price %></p>
                     <button class="icon-button cart"><i class="fas fa-shopping-cart"></i>Add to Cart</button>
-                    <button class="icon-button favorite"><i class="fas fa-heart"></i>Add to Favorites</button>
+                    <button class="icon-button favorite" data-product-id="<%= product.productId %>"><i class="fas fa-heart"></i>Add to Favorites</button>
                 </div>
             <% }); %>
         <% } else { %>
             <p>No products found!</p>
         <% } %>
         </div>
+        <script src="/public/js/products.js"></script>
     </body>
 </html>

@@ -10,4 +10,6 @@ router.get('/', function(req, res) {
 // Handle login form submission
 router.post('/', loginController.loginUser); // Use the controller to handle the login
 
+router.get('/logout',loginController.logout);
+
 module.exports = router;

@@ -499,3 +499,23 @@ tr:hover {
     font-size: 20px;
     cursor: pointer;
 }
+
+.icon-button {
+	border: none;
+	cursor: pointer;
+	background: none;
+	outline: none;
+}
+
+.icon-button i {
+	margin-right: 5px;
+}
+
+.icon-button.cart {
+	color: #007bff;
+}
+
+.icon-button.remove {
+	color: red;
+}
+

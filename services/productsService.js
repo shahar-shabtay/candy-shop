@@ -27,8 +27,18 @@ async function deleteProduct (productId) {
     return productToDelete;
 };
 
+async function getProductById(productId) {
+    try {
+        const product = await Products.findOne({productId: productId});
+        return product;
+    } catch(err) {
+        console.error('error fetching product', err);
+    }
+}
+
 module.exports = {
     getAllProducts,
     createProduct,
-    deleteProduct
+    deleteProduct,
+    getProductById
 }

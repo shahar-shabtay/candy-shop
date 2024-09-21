@@ -4,31 +4,32 @@
         <title>Candy Shop - Admin Page</title>
         <link rel="stylesheet" href="/public/styles/adminPage.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
     </head>
-    <body>  
-        <!-- Topbar -->
-        <div class="top-bar">
-            <!-- Left elements -->
-            <div class="left-section">
-                <img src="/public/images/shooping_cart.svg" alt="Icon 1" class="icon">
-                <img src="/public/images/logout.svg" alt="Icon 1" class="icon">
-            </div>
-            <!-- Logo -->
-            <div class="center-section">
-                <img src="/public/images/logo.svg" class="logo"> 
-            </div>
-            <!-- Right elements -->
-            <div class="right-section">
-                <img src="/public/images/home_icon.svg" alt="Icon 1" class="icon" onclick="window.location.href='/products'">
-                <img src="/public/images/user.svg" alt="Icon 1" class="icon" onclick="window.location.href='/personal/myAccount'">
-            </div>
-        </div>
+    <body> 
+        <header>
+            <!-- Topbar -->
+            <nav class="top-bar">
+                <!-- Left elements -->
+                <div class="left-section">
+                    <img src="/public/images/shooping_cart.svg" alt="Icon 1" class="icon">
+                    <img src="/public/images/logout.svg" alt="Icon 1" class="icon" onclick="window.location.href='/logout'">
+                </div>
+                <!-- Logo -->
+                <div class="center-section">
+                    <img src="/public/images/logo.svg" class="logo"> 
+                </div>
+                <!-- Right elements -->
+                <div class="right-section">
+                    <img src="/public/images/home_icon.svg" alt="Icon 1" class="icon" onclick="window.location.href='/products'">
+                    <img src="/public/images/user.svg" alt="Icon 1" class="icon" onclick="window.location.href='/personal/myAccount'">
+                </div>
+            </nav>
+        </header>
         <!-- Account Section -->
-        <div class="account-section">
-            <div class="account-header">
-                <h2>Hello <%= customer.name %></h2>
-            </div>
+        <section class="account-section">
+            <header class="account-header">
+                <h2>Hello <%= user.name %></h2><h4><%= user.role %></h4>
+            </header>
             <div class="account-content">
                 <div class="account-menu">
                     <button class="menu-option" onclick="window.location.href='/personal/admin/customers'">All Users</button>
@@ -52,18 +53,27 @@
                                 </thead>
                                 <tbody>
                                     <% orders.forEach(order => { %>
-                                        <tr>
-                                            <td><%= order.orderNumber %></td>
-                                            <td><%= new Date(order.createdAt).toLocaleDateString() %></td>
+                                        <tr data-order-id="<%= order.orderId %>">
+                                            <td><%= order.orderId %></td>
+                                            <td><%= new Date(order.createdAt)%></td>
                                             <td>$<%= order.totalPrice %></td>
-                                            <td><%= order.status %></td>
+                                            <td>
+                                                <select id="orderStatus-<%= order.orderId %>" disabled>
+                                                    <option value="Pending" <%= order.status === 'Pending' ? 'selected' : '' %>>Pending</option>
+                                                    <option value="Processing" <%= order.status === 'Processing' ? 'selected' : '' %>>Processing</option>
+                                                    <option value="Shipped" <%= order.status === 'Shipped' ? 'selected' : '' %>>Shipped</option>
+                                                    <option value="Delivered" <%= order.status === 'Delivered' ? 'selected' : '' %>>Delivered</option>
+                                                    <option value="Cancelled" <%= order.status === 'Cancelled' ? 'selected' : '' %>>Cancelled</option>
+                                                </select>
+                                            </td>
                                             <td class="action-buttons">
-                                                <img class="order-actions" src="/images/seeOrder.svg" onClick="">
-                                                <img class="order-actions" src="/images/orderAgain.svg" onClick="">
-                                                <img class="order-actions" src="/images/cancelOrder.svg" onClick="">
+                                                <img class="order-actions see-order-btn" src="/public/images/seeOrder.svg" data-order-id="<%= order.orderId %>">
+                                                <img id="editStatusButton-<%= order.orderId %>" class="order-actions edit-btn-cust" src="/public/images/editOrder.svg" data-order-id="<%= order.orderId %>" onclick="enableStatusEdit('<%= order.orderId %>')">
+                                                <img id="saveStatusButton-<%= order.orderId %>" class="order-actions save-btn-cust" src="/public/images/save.svg" data-order-id="<%= order.orderId %>" onclick="updateOrderStatus('<%= order.orderId %>')" style="display:none;">
+                                                <img class="order-actions remove" src="/public/images/cancelOrder.svg" data-order-id="<%= order.orderId %>" >
                                             </td>
                                         </tr>
-                                    <% }) %>
+                                    <% }) %>    
                                 </tbody>
                             </table>
                         </div>
@@ -72,7 +82,7 @@
                     <div id="products" class="content-item" style="display:none;">This is the content for Option 3.</div>
                 </div>
             </div>
-        </div>
-        <script src="/js/adminPage.js"></script>
+        </section>
+        <script src="/public/js/adminPage.js"></script>
     </body>
 </html>

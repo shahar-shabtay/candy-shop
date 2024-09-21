@@ -1,6 +1,9 @@
 const productsService = require("../services/productsService.js");
 const customerService = require("../services/customerService.js");
 const favoriteService = require('../services/favoriteService');
+const multer = require('multer');
+const path = require('path');
+
 
 async function getAllProducts (req, res) {
 	const user = req.session.user;
@@ -18,23 +21,49 @@ async function getAllProducts (req, res) {
 	}
 };
 
-async function newProductForm (req, res) {
-	try {
-		res.render('newProduct');
-	} catch (err){
-		console.error('Error loading newProductForm:', err);
-		res.status(500).send('Server Error (productsController - newProductForm)');
-	}
-};
+// Configure multer to store files in the /public/images folder
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, path.join(__dirname, '/public/images')); // Make sure this folder exists
+    },
+    filename: function (req, file, cb) {
+        const fileName = Date.now() + '-' + file.originalname; // Append a timestamp to avoid conflicts
+        cb(null, fileName); // Save the file with a unique name
+    }
+});
+
+const upload = multer({ storage: storage });
 
 async function saveProduct (req, res) {
-	try {
-		const products = await productsService.createProduct(req.body);
-		res.redirect('/products');
-	} catch (err) {
-		console.error('Error saving new product:', err);
-		res.status(500).send('Server Error (productsController - saveProduct)');
-	}
+	console.log('Controller: addProduct called');
+
+	upload.single('image'), // Use multer to upload the file
+
+    async (req, res) => {
+		console.log('Controller: addProduct called');
+        try {
+			console.log('controller - try')
+            const { name, price, inventory } = req.body;
+			console.log('Received form data:', { name, price, inventory });
+
+            // File path for the image
+            const filePath = `/public/images/${req.file.filename}`;
+			console.log('Uploaded file path:', filePath);
+
+            // Pass the data to the service to insert into the database
+            const newProduct = await productService.createProduct({
+                name,
+                price,
+                inventory,
+                image: filePath // Save the file path as a string in the database
+            });
+			console.log('Product created successfully:', newProduct);
+            return res.json({ success: true, product: newProduct });
+        } catch (error) {
+            console.error('Error creating product:', error);
+            return res.status(500).json({ success: false, message: 'Error creating product' });
+        }
+    }
 };
 
 async function showDeleteProductForm (req, res) {
@@ -43,9 +72,10 @@ async function showDeleteProductForm (req, res) {
 
 async function deleteProduct (req, res) {
 	const productId = req.body.productId;
+	console.log('controller: ', productId);
     try {
         await productsService.deleteProduct(productId);
-        res.redirect('/products');
+        return res.json({ success: true });
     } catch (error) {
         res.render('deleteProduct', { error: error.message });
     }
@@ -87,12 +117,27 @@ async function removeFavoriteProduct (req,res) {
 	}
 }
 
+async function editProducts (req,res) {
+	const { productId } = req.params; // Get product ID from URL
+    const { name, price, description, inventory } = req.body; // Get updated data from the request body
+
+    try {
+        // Call the service to update the product
+        const updatedProduct = await productsService.saveProduct(productId, { name, price, description, inventory });
+        
+        // Respond with success
+        return res.json({ success: true, product: updatedProduct });
+    } catch (error) {
+        console.error('Error updating product:', error);
+        return res.json({ success: false, message: 'Error updating product' });
+    }
+}
 module.exports = {
 	getAllProducts,
-	newProductForm,
 	saveProduct,
 	showDeleteProductForm,
 	deleteProduct,
 	addNewFavorite,
-	removeFavoriteProduct
+	removeFavoriteProduct,
+	editProducts
 };

@@ -42,7 +42,7 @@ async function updateCustomerDetails(customerId, updateUser) {
     try {
         const updateCustomer = await Customer.findOneAndUpdate(
             {customerId : customerId},
-            updateUser,
+                updateUser,
             { new: true, runValidators: true }
         );
         if (!updateCustomer) {

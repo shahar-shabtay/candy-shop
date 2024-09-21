@@ -56,7 +56,7 @@ async function updateCustomerDetails(req, res) {
             birth_day, birth_month, birth_year, 
             phone, 
             street, number, city, 
-            password 
+            password
         } = req.body;
         const birthdate = new Date(`${birth_year}-${birth_month}-${birth_day}`);    
         const updateUser = {
@@ -65,7 +65,9 @@ async function updateCustomerDetails(req, res) {
             email, 
             birthdate, 
             phone, 
-            street, number, city,
+            address: {
+                street, number, city
+            },
             password
         };
         const updateCustomer = await customerService.updateCustomerDetails(customerId, updateUser);
@@ -119,9 +121,8 @@ async function getAllCustomers(req, res) {
 async function getAllOrders(req, res) {
     try {
         const user = req.session.user;  // Assume customerId is available in the session
-        const customer = await customerService.getCustomerById(user.customerId);  // Search by customerId
         const orders = await orderService.getAllOrders();
-        res.render('allOrders', { orders, customer, user}); // Render the view and pass customers
+        res.render('allOrders', { orders, user}); // Render the view and pass customers
     } catch (err) {
         console.error('Error fetching customers:', err);
         res.status(500).send('Server Error (adminController - getAllOrders)');
@@ -131,10 +132,9 @@ async function getAllOrders(req, res) {
 async function getAllProducts(req, res) {
     try {
         const user = req.session.user;
-        const customer = await customerService.getCustomerById(user.customerId);
         const customers = await customerService.getAllCustomers();
         const products = await productService.getAllProducts();
-        res.render('allProducts', {customers, customer, products, user});
+        res.render('allProducts', {customers, products, user});
     } catch (err) {
         console.error('Error fetching products: ', err);
         res.status(500).send('Server Error (adminController - getAllProducts');
@@ -164,32 +164,18 @@ async function getCustomerOrders (req, res) {
     }
 }
 
-// Multer storage configuration to save the file to /public/images
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, path.join(__dirname, '../public/images')); // Save to /public/images
-    },
-    filename: function (req, file, cb) {
-        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname)); // Create unique filename
-    }
-});
-
-// Multer upload middleware to handle file upload
-const upload = multer({ storage: storage });
-
 // Controller to render the add product part
 async function addProductsPage(req, res) {
     try {
-        const customerId = req.user.customerId;  // Assume customerId is available in the session
-        const customer = await customerService.getCustomerById(customerId);  // Search by customerId
-        res.render('addProducts', {customer}); // Render the view and pass customers
+        const user = req.session.user;  // Assume customerId is available in the session
+        res.render('addProducts', {user}); // Render the view and pass customers
     } catch (err) {
         console.error('Error fetching customers:', err);
         res.status(500).send('Server Error (adminController - addProducts)');
     }
 }
 
-async function getOrderDetailsById (req, res) {
+async function getCustomerOrderDetailsById (req, res) {
     try {
         const orderId = req.params.orderId; // Get orderId from the request
     
@@ -215,6 +201,50 @@ async function getOrderDetailsById (req, res) {
         const user = req.session.user;
         
         // Pass the data to the view
+        res.render('customerOrderDetails', {
+          orderDetails: {
+            orderId: order.orderId,
+            customerId: order.customerId,
+            orderDate: order.orderDate,
+            totalPrice: order.totalPrice,
+            status: order.status,
+            address: order.address,
+            products: fullProductDetails,
+          },
+          user: user, // Pass the user from the session
+        });
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+      }
+};
+
+async function getOrderDetailsById (req, res) {
+    try {
+        const orderId = req.params.orderId; // Get orderId from the request
+    
+        // Fetch the order from the service
+        const order = await orderService.getOrderById(orderId);
+        console.log(order);
+        if (!order) {
+          return res.status(404).json({ message: 'Order not found' });
+        }
+    
+        // Prepare an array to hold products with full details
+        const fullProductDetails = await Promise.all(order.products.map(async (product) => {
+          const productDetails = await productService.getProductById(product.productId);
+          return {
+            name: productDetails.name, // Get product name from product collection
+            price: productDetails.price, // Get product price from product collection
+            quantity: product.quantity, // Get quantity from the order document
+            image: productDetails.imageUrl,
+          };
+        }));
+    
+        // Retrieve user from the session
+        const user = req.session.user;
+        console.log(order.status);
+        // Pass the data to the view
         res.render('orderDetails', {
           orderDetails: {
             orderId: order.orderId,
@@ -233,17 +263,100 @@ async function getOrderDetailsById (req, res) {
       }
 };
 
+// Manage customers / orders / product
+async function adminUpdateCustomerDetails(req, res) {
+    try {
+        const customerId = req.params.customerId;
+        const { name, email, birth_day, birth_month, birth_year, phone, street, number, city, role } = req.body;
+
+        // Create a birthdate object from the day, month, and year
+        const birthdate = new Date(`${birth_year}-${birth_month}-${birth_day}`);
+
+        // Prepare the updated customer data
+        const updatedCustomerData = {
+            name,
+            email,
+            birthdate,
+            phone,
+            address: {
+                city,
+                street,
+                number: Number(number)
+            },
+            role
+        };
+        // Call the service to update the customer in the database
+        const updatedCustomer = await customerService.updateCustomerDetails(customerId, updatedCustomerData);
+
+        if (updatedCustomer) {
+            res.json({ success: true, message: 'Customer updated successfully' });
+        } else {
+            res.status(400).json({ success: false, message: 'Failed to update customer' });
+        }
+    } catch (err) {
+        console.error('Error updating customer:', err);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+}
+
+async function updateOrderStatus(req,res) {
+    try {
+        console.log('UpdateOrderStatus called');
+        console.log('Request Params:', req.params);
+        console.log('Request Body:', req.body);
+        const orderId = req.params.orderId;
+        const { newStatus } = req.body;
+        console.log(orderId, newStatus);
+        // Validate status (you may want to have valid statuses)
+        const validStatuses = ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'];
+        if (!validStatuses.includes(newStatus)) {
+            return res.status(400).json({ success: false, message: 'Invalid status' });
+        }
+
+        // Call the service to update the status
+        const updatedOrder = await orderService.updateOrderStatus(orderId, newStatus);
+        console.log(updatedOrder);
+        if (updatedOrder) {
+            return res.status(200).json({ success: true, order: updatedOrder });
+        } else {
+            return res.status(404).json({ success: false, message: 'Order not found' });
+        }
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+}
+
+async function deleteOrder (req, res) {
+    try {
+        const orderId = req.body.orderId;
+        const wasRemoved = await orderService.deleteOrder(orderId);
+        console.log(orderId);
+		if (wasRemoved) {
+			res.status(200).json({ message: 'order removed' }); // Respond with success
+		} else {
+			res.status(404).json({ error: 'order not found' }); // Handle case where product was not found
+		}
+	} catch (err) {
+		console.error('Error removing order:', err);
+		res.status(500).json({ error: 'Failed to remove order' }); // Handle other errors
+	}
+}
 
 module.exports = {
+    deleteOrder,
     renderAccountPage,
+    updateOrderStatus,
     updateCustomerDetails,
     getAllCustomers,
     renderAdminPage,
     getAllOrders,
     getAllProducts,
+    getOrderDetailsById,
     addProductsPage,
     saveProduct,
     renderFavoriteProducts,
     getCustomerOrders,
-    getOrderDetailsById
+    getCustomerOrderDetailsById,
+    adminUpdateCustomerDetails
 };

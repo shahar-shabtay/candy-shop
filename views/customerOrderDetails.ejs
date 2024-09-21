@@ -2,17 +2,17 @@
 <html lang="en">
     <head>
         <title>Candy Shop - Admin Page</title>
-        <link rel="stylesheet" href="/public/styles/adminPage.css">
+        <link rel="stylesheet" href="/public/styles/myAccount.css ">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
     </head>
-    <body> 
+    <body>
         <header>
-            <!-- Topbar -->
             <nav class="top-bar">
                 <!-- Left elements -->
                 <div class="left-section">
                     <img src="/public/images/shooping_cart.svg" alt="Icon 1" class="icon">
-                    <img src="/public/images/logout.svg" alt="Icon 1" class="icon">
+                    <img src="/public/images/logout.svg" alt="Icon 1" class="icon" onClick="window.location.href='/logout'">
                 </div>
                 <!-- Logo -->
                 <div class="center-section">
@@ -21,30 +21,35 @@
                 <!-- Right elements -->
                 <div class="right-section">
                     <img src="/public/images/home_icon.svg" alt="Icon 1" class="icon" onclick="window.location.href='/products'">
-                    <img src="/public/images/user.svg" alt="Icon 1" class="icon" onclick="window.location.href='/personal/myAccount'">
+                    <% if (user.role === 'admin') { %> 
+                        <img src="/public/images/adminIcon.svg" alt="Icon 1" class="icon" onclick="window.location.href='/personal/admin'">
+                    <% } %>
                 </div>
             </nav>
         </header>
+        <!-- Topbar -->
+        
         <!-- Account Section -->
         <section class="account-section">
             <header class="account-header">
-                <h2>Hello <%= user.role %></h2>
+                <h2>Hello <%= user.name %><s/h2>
             </header>
             <div class="account-content">
-                <div class="account-menu">
-                    <button class="menu-option" onclick="window.location.href='/personal/admin/customers'">All Users</button>
-                    <button class="menu-option active" onclick="window.location.href='/personal/admin/orders'">All Orders</button>
-                    <button class="menu-option" onclick="window.location.href='/personal/admin/products'">All Products</button>
-                    <button class="menu-option" onclick="window.location.href='/personal/admin/addProducts'">Add Product</button>
-                </div>
+                <nav class="account-menu">
+                    <button class="menu-option" onclick="window.location.href='/personal/myAccount/details'">Personal Details</button>
+                    <button class="menu-option" onclick="window.location.href='/personal/myAccount/favorite'">Favorits</button>
+                    <button class="menu-option active" onclick="window.location.href='/personal/myAccount/orders'">My Orders</button>
+                </nav>
                 <!-- Account Details -->
                 <div class="content">
-                    <div id="customers" class="content-item active">
+                    <section id="details" class="content-item"></section>
+                    <section id="favorit" class="content-item" style="display:none;">This is the content for Option 2.</section>
+                    <section id="orders" class="content-item active">
                         <div class="container">
 
                             <header style="position: relative;">
                                 <h1>Order Details for Order #<%= orderDetails.orderId %></h1>
-                                <img src="/public/images/back.svg" onclick="window.location.href='/personal/admin/orders'" class="back-button">
+                                <img src="/public/images/back.svg" onclick="window.location.href='/personal/myAccount/orders'" class="back-button">
                             </header>
 
                             <!-- Info Container: Contact, Delivery Address, and Order Status -->
@@ -88,13 +93,12 @@
                                     <% }) %>
                                 </div>
                             </section>
+
                         </div>
-                    </div>
-                    <div id="orders" class="content-item" style="display:none;">This is the content for Option 2.</div>
-                    <div id="products" class="content-item" style="display:none;">This is the content for Option 3.</div>
+                    </section>
                 </div>
             </div>
         </section>
-        <script src="/public/js/adminPage.js"></script>
+        <script src="/public/js/myAccount.js"></script>
     </body>
 </html>

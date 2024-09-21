@@ -7,38 +7,40 @@
 
     </head>
     <body>  
-        <!-- Topbar -->
-        <div class="top-bar">
-            <!-- Left elements -->
-            <div class="left-section">
-                <img src="/public/images/shooping_cart.svg" alt="Icon 1" class="icon">
-                <img src="/public/images/logout.svg" alt="Icon 1" class="icon">
-            </div>
-            <!-- Logo -->
-            <div class="center-section">
-                <img src="/public/images/logo.svg" class="logo"> 
-            </div>
-            <!-- Right elements -->
-            <div class="right-section">
-                <img src="/public/images/home_icon.svg" alt="Icon 1" class="icon" onclick="window.location.href='/products'">
-                <img src="/public/images/user.svg" alt="Icon 1" class="icon" onclick="window.location.href='/personal/myAccount'">
-            </div>
-        </div>
+        <header>
+            <!-- Topbar -->
+            <nav class="top-bar">
+                <!-- Left elements -->
+                <div class="left-section">
+                    <img src="/public/images/shooping_cart.svg" alt="Icon 1" class="icon">
+                    <img src="/public/images/logout.svg" alt="Icon 1" class="icon" onclick="window.location.href='/logout'">
+                </div>
+                <!-- Logo -->
+                <div class="center-section">
+                    <img src="/public/images/logo.svg" class="logo"> 
+                </div>
+                <!-- Right elements -->
+                <div class="right-section">
+                    <img src="/public/images/home_icon.svg" alt="Icon 1" class="icon" onclick="window.location.href='/products'">
+                    <img src="/public/images/user.svg" alt="Icon 1" class="icon" onclick="window.location.href='/personal/myAccount'">
+                </div>
+            </nav>
+        </header>
         <!-- Account Section -->
-        <div class="account-section">
-            <div class="account-header">
-                <h2>Hello <%= user.name %></h2>
-            </div>
+        <section class="account-section">
+            <header class="account-header">
+                <h2>Hello <%= user.name %></h2><h4><%= user.role %></h4>
+            </header>
             <div class="account-content">
-                <div class="account-menu">
+                <nav class="account-menu">
                     <button class="menu-option active" onclick="window.location.href='/personal/admin/customers'">All Users</button>
                     <button class="menu-option" onclick="window.location.href='/personal/admin/orders'">All Orders</button>
                     <button class="menu-option" onclick="window.location.href='/personal/admin/products'">All Products</button>
                     <button class="menu-option" onclick="window.location.href='/personal/admin/addProducts'">Add Product</button>
-                </div>
+                </nav>
                 <!-- Account Details -->
                 <div class="content">
-                    <div id="customers" class="content-item active">
+                    <section id="customers" class="content-item active">
                         <div class="container">
                                 <form action="" method="POST" id="updateForm"></form>
                                     <table>
@@ -56,26 +58,28 @@
                                         <!-- Readonly inputs for customer details initially -->
                                         <tbody>
                                             <% customers.forEach(user => { %>
-                                            <tr data-id="<%= user.customerId %>">
+                                            <tr data-id="<%= user.customerId %>" class="customer-row">
                                                 <td><input name="name" class="customer-name-input customer-input" type="text" value="<%= user.name %>" readonly></td>
                                                 <td><input name="email" class="customer-email-input customer-input" type="email" value="<%= user.email %>" readonly></td>
                                                 <td>
-                                                     <!-- Select field for customer role -->
-                                                    <select id="day" class="birth-select customer-input small-input" name="birth_day" required disabled>
-                                                        <% for (let i = 1; i <= 30; i++) { %>
-                                                            <option value="<%= i %>" <%= user.birthdate && new Date(user.birthdate).getDate() === i ? 'selected' : '' %>><%= i %></option>
-                                                        <% } %>
-                                                    </select>
-                                                    <select  id="month" class="birth-select customer-input small-input" id="month" name="birth_month" required disabled>
-                                                        <% for (let i = 1; i <= 12; i++) { %>
-                                                            <option value="<%= i %>" <%= user.birthdate && (new Date(user.birthdate).getMonth() + 1) === i ? 'selected' : '' %>><%= i %></option>
-                                                        <% } %>
-                                                    </select>
-                                                    <select id="year" class="birth-select customer-input small-input" name="birth_year" required disabled>
-                                                        <% for (let i = 1990; i <= 2024; i++) { %>
-                                                            <option value="<%= i %>" <%= user.birthdate && new Date(user.birthdate).getFullYear() === i ? 'selected' : '' %>><%= i %></option>
-                                                        <% } %>
-                                                    </select>
+                                                    <div class="birthday-select-container">
+                                                        <!-- Select field for customer role -->
+                                                        <select id="day" class="birth-select customer-input small-input" name="birth_day" required disabled>
+                                                            <% for (let i = 1; i <= 30; i++) { %>
+                                                                <option value="<%= i %>" <%= user.birthdate && new Date(user.birthdate).getDate() === i ? 'selected' : '' %>><%= i %></option>
+                                                            <% } %>
+                                                        </select><br>
+                                                        <select  id="month" class="birth-select customer-input small-input" id="month" name="birth_month" required disabled>
+                                                            <% for (let i = 1; i <= 12; i++) { %>
+                                                                <option value="<%= i %>" <%= user.birthdate && (new Date(user.birthdate).getMonth() + 1) === i ? 'selected' : '' %>><%= i %></option>
+                                                            <% } %>
+                                                        </select><br>
+                                                        <select id="year" class="birth-select customer-input small-input" name="birth_year" required disabled>
+                                                            <% for (let i = 1990; i <= 2024; i++) { %>
+                                                                <option value="<%= i %>" <%= user.birthdate && new Date(user.birthdate).getFullYear() === i ? 'selected' : '' %>><%= i %></option>
+                                                            <% } %>
+                                                        </select>
+                                                    
                                                 </td>
                                                 <td><input name="phone" class="customer-phone-input customer-input" type="tel" value="<%= user.phone %>" readonly></td>
                                                 <td>
@@ -90,25 +94,27 @@
                                                     </select>
                                                 </td>
                                                 <td>
-                                                    <div class="customer-actions">
-                                                        <img class="edit-btn-cust" src="/public/images/edit.svg" onClick="toggleEditMode('<%= user.customerId %>')" style="display:inline-block;">
-                                                        <img class="save-btn-cust" src="/public/images/save.svg" onClick="saveCustomer('<%= user.customerId %>')" style="display:none;">
-                                                    </div>
+                                                        <div class="customer-actions">
+                                                            <!-- Edit Button -->
+                                                            <img class="edit-btn-cust" src="/public/images/edit.svg" onclick="toggleEditMode('<%= user.customerId %>')" style="display:inline-block;">
+                                                            <!-- Save Button -->
+                                                            <img class="save-btn-cust" src="/public/images/save.svg" onclick="saveCustomer('<%= user.customerId %>')" style="display:none;">
+                                                        </div>
+                                                    
                                                 </td>
                                             </tr>
                                             <% }) %>
                                         </tbody>
                                     </table>
                                 </form>
-                            <!-- </div> -->
                         </div>
-                    </div>
-                    <div id="orders" class="content-item" style="display:none;">This is the content for Option 2.</div>
-                    <div id="products" class="content-item" style="display:none;">This is the content for Option 3.</div>
-                    <div id="addProduct" class="content-item" style="display:none;">This is the content for Option 3.</div>
+                    </section>
+                    <section id="orders" class="content-item" style="display:none;">This is the content for Option 2.</section>
+                    <section id="products" class="content-item" style="display:none;">This is the content for Option 3.</section>
+                    <section id="addProduct" class="content-item" style="display:none;">This is the content for Option 3.</section>
                 </div>
             </div>
-        </div>
+        </section>
         <script src="/public/js/adminPage.js"></script>
     </body>
 </html>

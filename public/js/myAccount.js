@@ -1,4 +1,4 @@
-
+// for the sub menu
 function showContent(contentId, element) {
     // Remove active class from all tabs
     const tabs = document.querySelectorAll('.menu-option');
@@ -23,6 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+// make the password readable and ubreadable
 const togglePassword = document.querySelector('#togglePassword');
     const password = document.querySelector('#password');
     if (togglePassword){
@@ -37,6 +38,7 @@ const togglePassword = document.querySelector('#togglePassword');
         });
     }
 
+// fetch product id fro remove favorite
 document.querySelectorAll('.remove-favorite').forEach(icon => {
     icon.addEventListener('click', async () => {
         const productId = icon.getAttribute('data-product-id');
@@ -65,7 +67,7 @@ document.querySelectorAll('.remove-favorite').forEach(icon => {
 });
 
 
-
+// fetch order id for details
 document.querySelectorAll('.see-order-btn').forEach(button => {
     button.addEventListener('click', function () {
       const orderId = this.getAttribute('data-order-id');
@@ -74,6 +76,51 @@ document.querySelectorAll('.see-order-btn').forEach(button => {
       // Redirect the user to the order details page
       window.location.href = `/personal/myAccount/orders/${orderId}`;
     });
-  });
+});
   
+
+// Dynamic status bar logic
+const statusBar = document.getElementById('statusBar');
+const statusText = document.getElementById('statusText');
+const status = document.getElementById('status').innerText;
+let progress = 0;
+
+// Remove any existing status classes before adding new ones
+statusBar.classList.remove('status-pending', 'status-processing', 'status-shipped', 'status-delivered');
+
+switch (status) {
+    case "Pending":
+        progress = 25;
+        statusBar.classList.add('status-pending');
+        break;
+    case "Processing":
+        progress = 50;
+        statusBar.classList.add('status-processing');
+        break;
+    case "Shipped":
+        progress = 75;
+        statusBar.classList.add('status-shipped');
+        break;
+    case "Delivered":
+        progress = 100;
+        statusBar.classList.add('status-delivered');
+        break;
+    default:
+        progress = 0;
+}
+
+
+// Set the width of the progress bar based on the progress percentage
+statusBar.style.width = progress + "%";
+
+// update user details
+document.getElementById('submitButton').addEventListener('click', function() {
+    document.getElementById('updateForm').submit();  // Submit the form
+});
+
+// change order status
+// Enable the status dropdown for editing
+
+
+
 

@@ -19,13 +19,9 @@ async function createProduct (productsData) {
 };
 
 async function deleteProduct (productId) {
-    const productToDelete = await Products.findOne({ productId: productId });
-    if (!productToDelete) {
-        throw new Error('No product found with the given productId');
-    }
-    await Products.deleteOne({ productId: productId });
-    return productToDelete;
-};
+    console.log('service: ',productId);
+    const productToDelete = await Products.findOneAndDelete({ productId: productId });
+    return productToDelete.deletedCount > 0; };
 
 async function getProductById(productId) {
     try {
@@ -36,9 +32,29 @@ async function getProductById(productId) {
     }
 }
 
+
+async function saveProduct(productId, updatedData) {
+    try {
+        console.log('Service: createProduct called');
+        const lastProduct = await Products.findOne().sort({ productId: -1 });
+        console.log('Last product fetched:', lastProduct);
+        const newProductId = lastProduct ? lastProduct.productId + 1 : 1;
+        console.log('New productId calculated:', newProductId);
+        const product = new Product({
+            ...productData,
+            productId: newProductId // Assign the incremented productId
+        });
+        await product.save();
+        console.log('Product saved to database:', product);
+        return product;
+    } catch (error) {
+        throw new Error('Unable to update product');
+    }
+}
 module.exports = {
     getAllProducts,
     createProduct,
     deleteProduct,
-    getProductById
+    getProductById,
+    saveProduct
 }

@@ -59,10 +59,41 @@ async function getOrderById(orderId) {
   }
 }
 
+async function updateOrderStatus (orderId, newStatus) {
+  try {
+    console.log('in the service', orderId, newStatus);
+    // Find the order by ID and update the status
+    const updatedOrder = await Orders.findOneAndUpdate(
+        {orderId :orderId}, 
+        { status: newStatus }, 
+        { new: true } // Returns the updated order
+    );
+    console.log(updatedOrder);
+    return updatedOrder;
+} catch (error) {
+    console.error(error);
+    throw new Error('Error updating order status');
+}
+}
+
+async function deleteOrder(orderId) {
+  try {
+    console.log('service', orderId);
+    const result = await Orders.deleteOne({ 
+      orderId: orderId  ,
+    }); 
+    return result.deletedCount > 0;
+  } catch (err) {
+    console.error('Error removing order:', err);
+    throw err; // Rethrow to handle in the controller
+  }
+}
 module.exports = {
     getCustomerOrders,
+    updateOrderStatus,
     getAllOrders,
     getOrderDetailsById,
-    getOrderById
+    getOrderById,
+    deleteOrder
   };
   

@@ -6,7 +6,6 @@ const productsController = require('../controllers/productsController.js');
 router.get('/', productsController.getAllProducts);
 
 // Get new product form
-router.get('/new', productsController.newProductForm);
 
 // Save new product
 router.post('/', productsController.saveProduct);

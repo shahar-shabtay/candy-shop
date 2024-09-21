@@ -7,28 +7,30 @@
 
     </head>
     <body>  
-        <!-- Topbar -->
-        <div class="top-bar">
-            <!-- Left elements -->
-            <div class="left-section">
-                <img src="/public/images/shooping_cart.svg" alt="Icon 1" class="icon">
-                <img src="/public/images/logout.svg" alt="Icon 1" class="icon">
-            </div>
-            <!-- Logo -->
-            <div class="center-section">
-                <img src="/public/images/logo.svg" class="logo"> 
-            </div>
-            <!-- Right elements -->
-            <div class="right-section">
-                <img src="/public/images/home_icon.svg" alt="Icon 1" class="icon" onclick="window.location.href='/products'">
-                <img src="/public/images/user.svg" alt="Icon 1" class="icon" onclick="window.location.href='/personal/myAccount'">
-            </div>
-        </div>
+        <header>
+            <!-- Topbar -->
+            <nav class="top-bar">
+                <!-- Left elements -->
+                <div class="left-section">
+                    <img src="/public/images/shooping_cart.svg" alt="Icon 1" class="icon">
+                    <img src="/public/images/logout.svg" alt="Icon 1" class="icon" onclick="window.location.href='/logout'">
+                </div>
+                <!-- Logo -->
+                <div class="center-section">
+                    <img src="/public/images/logo.svg" class="logo"> 
+                </div>
+                <!-- Right elements -->
+                <div class="right-section">
+                    <img src="/public/images/home_icon.svg" alt="Icon 1" class="icon" onclick="window.location.href='/products'">
+                    <img src="/public/images/user.svg" alt="Icon 1" class="icon" onclick="window.location.href='/personal/myAccount'">
+                </div>
+            </nav>
+        </header>
         <!-- Account Section -->
         <div class="account-section">
-            <div class="account-header">
-                <h2>Hello <%= customer.name %></h2>
-            </div>
+            <header class="account-header">
+                <h2>Hello <%= user.name %></h2><h4><%= user.role %></h4>
+            </header>
             <div class="account-content">
                 <div class="account-menu">
                     <button class="menu-option" onclick="window.location.href='/personal/admin/customers'">All Users</button>
@@ -42,32 +44,28 @@
                         <div class="container">
                             <div class="product-grid">
                                 <% products.forEach(product => { %>
-                                  <div class="product-card">
-                                    <img class="product-img" src="<%= product.image %>" alt="<%= product.name %>" class="product-image">
+                                  <div class="product-card" data-product-id="<%= product.productId %>">
+                                    <img class="product-img" src="<%= product.imageUrl %>" alt="<%= product.name %>" class="product-image">
                                     <div class="product-details">
                                         <div class="detail-item">
                                             <label class="product-details-label" for="name">Product Name</label>
-                                            <input class="product-input-name" type="text" value="<%= product.product_name %>" readonly>
+                                            <input class="product-input-name" name="name" type="text" value="<%= product.name %>" readonly>
                                         </div>
                                         <div class="detail-item">
                                             <label class="product-details-label" for="price">Product Price</label>
-                                            <input class="product-input" type="text" value="<%= product.price %>" readonly>
+                                            <input class="product-input" name="price" type="text" value="<%= product.price %>" readonly>
                                         </div>
                                         <div class="detail-item">
-                                            <label class="product-details-label" for="category">Product Category</label>
-                                            <input class="product-input" type="text" value="<%= product.category %>" readonly>
-                                        </div>
-                                        <div class="detail-item">
-                                            <label class="product-details-label" for="weight">Product Weight</label>
-                                            <input class="product-input" type="text" value="<%= product.weight %>" readonly>
+                                            <label class="product-details-label" for="category">Product Description</label>
+                                            <input class="product-input" name="description" type="text" value="<%= product.description %>" readonly>
                                         </div>
                                         <div class="detail-item">
                                             <label class="product-details-label" for="inventory">Quantity in stock</label>
-                                            <input class="product-input" type="number" value="<%= product.inventory %>" readonly>
+                                            <input class="product-input" name="inventory" type="number" value="<%= product.inventory %>" readonly>
                                         </div>
                                       <div class="product-actions">
-                                      <img class="edit-btn  " src="/images/edit.svg" onClick="editProduct('<%= product.id %>')">
-                                      <img class="delete-btn  " src="/images/trash.svg" onClick="deleteProcudt('<%= product.id %>')">
+                                      <img class="edit-btn" src="/public/images/edit.svg" data-product-id="<%= product.productId %>" onClick="editProduct('<%= product.productId %>')">
+                                      <img class="delete-btn remove-product" src="/public/images/trash.svg" data-product-id="<%= product.productId %>">
                                       </div>
                                     </div>
                                   </div>
@@ -80,6 +78,6 @@
                 </div>
             </div>
         </div>
-        <script src="/js/adminPage.js"></script>
+        <script src="/public/js/adminPage.js"></script>
     </body>
 </html>

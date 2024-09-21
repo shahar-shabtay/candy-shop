@@ -4,73 +4,72 @@
         <title>Candy Shop - Admin Page</title>
         <link rel="stylesheet" href="/public/styles/myAccount.css ">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
     </head>
-    <body>  
+    <body>
+        <header>
+            <nav class="top-bar">
+                <!-- Left elements -->
+                <div class="left-section">
+                    <img src="/public/images/shooping_cart.svg" alt="Icon 1" class="icon">
+                    <img src="/public/images/logout.svg" alt="Icon 1" class="icon" onClick="window.location.href='/logout'">
+                </div>
+                <!-- Logo -->
+                <div class="center-section">
+                    <img src="/public/images/logo.svg" class="logo"> 
+                </div>
+                <!-- Right elements -->
+                <div class="right-section">
+                    <img src="/public/images/home_icon.svg" alt="Icon 1" class="icon" onclick="window.location.href='/products'">
+                    <% if (user.role === 'admin') { %> 
+                        <img src="/public/images/adminIcon.svg" alt="Icon 1" class="icon" onclick="window.location.href='/personal/admin'">
+                    <% } %>
+                </div>
+            </nav>
+        </header>
         <!-- Topbar -->
-        <div class="top-bar">
-            <!-- Left elements -->
-            <div class="left-section">
-                <img src="/public/images/shooping_cart.svg" alt="Icon 1" class="icon">
-                <img src="/public/images/logout.svg" alt="Icon 1" class="icon" onClick="window.location.href='/logout'">
-            </div>
-            <!-- Logo -->
-            <div class="center-section">
-                <img src="/public/images/logo.svg" class="logo"> 
-            </div>
-            <!-- Right elements -->
-            <div class="right-section">
-                <img src="/public/images/home_icon.svg" alt="Icon 1" class="icon" onclick="window.location.href='/products'">
-                <% if (user.role === 'admin') { %> 
-                    <img src="/public/images/adminIcon.svg" alt="Icon 1" class="icon" onclick="window.location.href='/personal/admin'">
-                <% } %>
-            </div>
-            
-        </div>
+        
         <!-- Account Section -->
-        <div class="account-section">
-            <div class="account-header">
-                <h2>Hello <%= user.name %></h2>
-            </div>
+        <section class="account-section">
+            <header class="account-header">
+                <h2>Hello <%= user.name %><s/h2>
+            </header>
             <div class="account-content">
-                <!-- Sub Menu -->
-                <div class="account-menu">
+                <nav class="account-menu">
                     <button class="menu-option" onclick="window.location.href='/personal/myAccount/details'">Personal Details</button>
                     <button class="menu-option active" onclick="window.location.href='/personal/myAccount/favorite'">Favorits</button>
                     <button class="menu-option" onclick="window.location.href='/personal/myAccount/orders'">My Orders</button>
-                </div>
+                </nav>
                 <!-- Account Details -->
                 <div class="content">
-                    <!-- Details -->
-                    <div id="details" class="content-item" style="display:none;">This is the content for personal details</div>
-                    <!-- Favorite -->
-                    <div id="favorit" class="content-item active">
+                    <section id="details" class="content-item"></section>
+                    <section id="favorit" class="content-item active">
                         <div class="container">
-                                <% if (favoriteProducts.length > 0) { %>
-                                    <div class="product-grid">
-                                        <% favoriteProducts.forEach(favorite => { %>
-                                            <div class="product-card">
-                                                <img src="<%= favorite.product.imageUrl %>" alt="<%= favorite.product.name %>" />
-                                                <h2><%= favorite.product.name %></h2>
-                                                <p>Price: $<%= favorite.product.price %></p>
-                                                <button class="icon-button cart"><i class="fas fa-shopping-cart" data-product-id="<%= favorite.product.productId %>"></i>Add to Cart</button>
-                                                <button class="icon-button remove remove-favorite" data-product-id="<%= favorite.product.productId %>"><i class="fas fa-trash-alt"></i> Remove from Favorites</button>
-                                            </div>
-                                        <% }) %>
-                                    </div>
-                                <% } else { %>
-                                    <p>You have no favorite products.</p>
-                                <% } %>     
+                            <% if (favoriteProducts.length > 0) { %>
+                                <div class="product-grid">
+                                    <% favoriteProducts.forEach(favorite => { %>
+                                        <div class="product-card">
+                                            <img src="<%= favorite.product.imageUrl %>" alt="<%= favorite.product.name %>" />
+                                            <h2><%= favorite.product.name %></h2>
+                                            <p>Price: $<%= favorite.product.price %></p>
+                                            <button class="icon-button cart"><i class="fas fa-shopping-cart" data-product-id="<%= favorite.product.productId %>"></i>Add to Cart</button>
+                                            <button class="icon-button remove remove-favorite" data-product-id="<%= favorite.product.productId %>"><i class="fas fa-trash-alt"></i> Remove from Favorites</button>
+                                        </div>
+                                    <% }) %>
+                                </div>
+                            <% } else { %>
+                                <p>You have no favorite products.</p>
+                            <% } %>     
                         </div>
-                    </div>
-                    <!-- Orders -->
-                    <div id="orders" class="content-item" style="display:none;">This is the content for personal orders</div>
+                    </section>
+                    <section id="orders" class="content-item"></section>
                 </div>
             </div>
-        </div>
+        </section>
         <script src="/public/js/myAccount.js"></script>
         <script>
             // JavaScript to submit the form programmatically when the button is clicked
-            document.getElementById('removeBtn').addEventListener('click', function() {
+            document.getElementById('submitButton').addEventListener('click', function() {
                 document.getElementById('updateForm').submit();  // Submit the form
             });
         </script>

@@ -37,7 +37,18 @@ router.get('/myAccount/favorite', adminController.renderFavoriteProducts,);
 // router.put('/admin/customers/update/:customerId', adminController.updateCustomerDetails)
 
 router.post('/myAccount/favorite/remove', productsController.removeFavoriteProduct);
+router.post('/admin/products/remove', productsController.deleteProduct);
+router.post('/admin/orders/remove', adminController.deleteOrder);
+router.post('/admin/products/:productId/edit', productsController.editProducts);
+router.post('/admin/products/:productId/delete', productsController.deleteProduct);
 
-router.get('/myAccount/orders/:orderId', adminController.getOrderDetailsById);
+
+router.get('/myAccount/orders/:orderId', adminController.getCustomerOrderDetailsById);
+router.get('/admin/orders/:orderId', adminController.getOrderDetailsById);
+
+router.put('/admin/orders/status/:orderId', adminController.updateOrderStatus);
+router.put('/admin/customers/update/:customerId', adminController.adminUpdateCustomerDetails);
+router.post('/admin/addProducts', productsController.saveProduct);
+
 
 module.exports = router;

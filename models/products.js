@@ -22,6 +22,10 @@ const productsSchema = new mongoose.Schema({
         type: String,
         required: true,
         default: '/public/images/logo.svg',
+    },
+    inventory: {
+        type: Number,
+        required: true,
     }
 }, { versionKey: false });
 

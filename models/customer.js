@@ -34,7 +34,7 @@ const customerSchema = new mongoose.Schema({
         },
         required: true,
     }
-});
+}, { versionKey: false });
 
 const Customer = mongoose.model('Customer', customerSchema);
 

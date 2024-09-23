@@ -1,34 +1,43 @@
 const productsService = require("../services/productsService.js");
+const ordersService = require('../services/ordersService');
 
 // Adds an item to the cart
 function addToCart (req, res, next) {
     const productId = req.body.productId;
+    const quantity = parseInt(req.body.quantity) || 1;
+
     if(req.session.cart){
-        req.session.cart.push(productId);
+        const cartItemIndex = req.session.cart.findIndex(item => item.productId === productId);
+        
+        if (cartItemIndex > -1) {
+            req.session.cart[cartItemIndex].quantity += quantity;
+        } else {
+            req.session.cart.push({ productId, quantity });
+        }
     } else {
-        req.session.cart = [productId];
+        req.session.cart = [{ productId, quantity }];
     }
     res.redirect('/products');
 };
 
-// Displays the cart
+// Display the cart
 async function showCart (req, res) {
     let cart = req.session.cart;
     let cartDetails = [];
-    let totalPrice = 0; // Initialize total price
+    let totalPrice = 0;
 
     if (cart) {
-        for (let id of cart) {
-            const product = await productsService.getProductById(id);
+        for (let item of cart) {
+            const product = await productsService.getProductById(item.productId);
             if (product) {
+                product.quantity = item.quantity;
                 cartDetails.push(product);
-                totalPrice += product.price; // Add each product's price to the total
+                totalPrice += product.price * item.quantity;
             }
         }
     }
 
-    totalPrice = totalPrice.toFixed(2); // Optional: round to two decimal places
-
+    totalPrice = totalPrice.toFixed(2);
     res.render("cart", { cart: cartDetails, total: totalPrice });
 };
 
@@ -38,11 +47,11 @@ function removeFromCart (req, res) {
     const cart = req.session.cart;
 
     // Find product's index in the cart
-    const index = cart.findIndex(id => id.toString() === productId);
+    const cartItemIndex = cart.findIndex(item => item.productId === productId);
 
     // If product is found in the cart, remove it
-    if (index > -1) {
-        cart.splice(index, 1);
+    if (cartItemIndex > -1) {
+        cart.splice(cartItemIndex, 1);
     }
 
     // Save the updated cart in the session
@@ -53,15 +62,42 @@ function removeFromCart (req, res) {
 }
 
 // Checkout
-function checkout (req, res) {
-    // Logic to handle checkout (process payment, create order, etc.)
+async function checkout (req, res) {
+    const cart = req.session.cart;
+    let orderProducts = [];
+    let totalPrice = 0;
 
-    // Clear the cart in the session after a successful checkout
-    req.session.cart = [];
+    if (cart) {
+        for (let item of cart) {
+            const product = await productsService.getProductById(item.productId);
+            if (product) {
+                orderProducts.push({ productId: item.productId, quantity: item.quantity });
+                totalPrice += product.price * item.quantity;
+            }
+        }
+    }
 
-    // Redirect to 'purchase complete' page
-    res.redirect('/cart/complete'); 
+    totalPrice = totalPrice.toFixed(2);
+
+    let orderData = {
+        orderId: Math.floor(Math.random() * 10000000),
+        customerId: "YOUR_CUSTOMER_ID",
+        orderDate: new Date(),
+        totalPrice: totalPrice,
+        status: "completed",
+        products: orderProducts
+    };
+    
+    try {
+        const order = await ordersService.createOrder(orderData);
+        req.session.cart = [];
+        res.redirect('/cart/complete');
+    } catch (error) {
+        console.log(error);
+        res.redirect('/cart');
+    }
 }
+
 
 function completePurchase (req, res) {
     res.render('complete');

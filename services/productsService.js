@@ -27,8 +27,8 @@ async function deleteProduct (productId) {
     return productToDelete;
 };
 
-async function getProductById (id) {
-    return await Products.findById(id);
+async function getProductById (productId) {
+    return Products.findOne({productId: productId}); 
 }
 
 module.exports = {

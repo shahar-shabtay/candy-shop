@@ -13,6 +13,7 @@ router.post('/remove', cartController.removeFromCart);
 
 // Checkout
 router.post('/checkout', cartController.checkout);
+router.get('/checkout', cartController.checkout);
 
 router.get('/complete', cartController.completePurchase);
 

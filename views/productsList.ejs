@@ -22,8 +22,14 @@
                     <p><%= product.description %></p>
                     <p>Price: <%= product.price %></p>
                     <form action="/cart/add" method="POST">
-                        <input type="hidden" name="productId" value="<%= product._id %>">
-                        <button class="icon-button cart" type="submit"><i class="fas fa-shopping-cart"></i>Add to Cart</button>
+                        <input type="hidden" name="productId" value="<%= product.productId %>">
+                        
+                        <!-- Add this input below for quantity -->
+                        <input type="number" name="quantity" min="1" value="1">
+                        
+                        <button class="icon-button cart" type="submit">
+                            <i class="fas fa-shopping-cart"></i>Add to Cart
+                        </button>
                     </form>
                     <button class="icon-button favorite"><i class="fas fa-heart"></i>Add to Favorites</button>
                 </div>

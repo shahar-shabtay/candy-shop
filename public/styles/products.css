@@ -98,3 +98,7 @@ p:last-child {
   .cart-button i {
     font-size: 24px;
   }
+
+  .low-stock {
+    color: #de0909;
+  }

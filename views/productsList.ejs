@@ -21,6 +21,9 @@
                     <h2><%= product.name %></h2>
                     <p><%= product.description %></p>
                     <p>Price: <%= product.price %></p>
+                    <% if (product.inventory < 10) { %> 
+                        <p class="low-stock">Hurry Up! Only <%= product.inventory %> left!</p>
+                    <% } %>
                     <form action="/cart/add" method="POST">
                         <input type="hidden" name="productId" value="<%= product.productId %>">
                         

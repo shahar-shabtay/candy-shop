@@ -1,5 +1,5 @@
 // services/nearMeService.js
-const StoreLocation = require('../models/storeLocation');
+const storesLocation = require('../models/storesLocation');
 
 // Haversine formula to calculate distance
 function calculateDistance(lat1, lon1, lat2, lon2) {
@@ -15,7 +15,7 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
 }
 
 async function findNearestStore(userLat, userLon) {
-  const stores = await StoreLocation.find();
+  const stores = await storesLocation.find();
   let nearestStore = null;
   let shortestDistance = Infinity;
 
@@ -30,6 +30,18 @@ async function findNearestStore(userLat, userLon) {
   return nearestStore;
 }
 
+// services/nearMeService.js
+
+async function getAllStores() {
+    try {
+        const stores = await storesLocation.find();
+        return stores;
+    } catch (error) {
+        throw new Error('Error fetching stores');
+    }
+}
+
 module.exports = {
+  getAllStores,
   findNearestStore,
 };

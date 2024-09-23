@@ -8,32 +8,33 @@ async function initMap() {
     // Create a new map instance
     var map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
 
-    // Fetch candy shop locations from your API or a predefined list
-    // This is a placeholder; replace with your actual data source
-    const candyShops = [
-        { name: 'Sweet Tooth', coordinates: '32.0853, 34.7818' },
-        { name: 'Candy Land', coordinates: '32.0902, 34.7850' },
-        // Add more candy shop locations as needed
-    ];
+    // Fetch candy shop locations from your API
+    try {
+        const response = await fetch('/nearMe/getStores'); // Call your route to get the stores
+        const candyShops = await response.json();
 
-    // Create a marker and info window for each candy shop
-    candyShops.forEach(shop => {
-        const [lat, lng] = shop.coordinates.split(',').map(Number);
+        // Loop through the fetched candy shops and place markers on the map
+        candyShops.forEach(shop => {
+            const [lat, lng] = shop.coordinates; // Assuming 'coordinates' is an array like [lat, lng]
 
-        var marker = new google.maps.Marker({
-            position: { lat, lng },
-            map: map,
-            title: shop.name // Title can be used for hover text or info window
+            const marker = new google.maps.Marker({
+                position: { lat, lng },
+                map: map,
+                title: shop.name // Title can be used for hover text or info window
+            });
+
+            const infowindow = new google.maps.InfoWindow({
+                content: `<h3>${shop.name}</h3><p>${shop.address}</p>` // Shop name and address
+            });
+
+            marker.addListener("click", () => {
+                infowindow.open(map, marker);
+            });
         });
 
-        var infowindow = new google.maps.InfoWindow({
-            content: `<h3>${shop.name}</h3>`
-        });
-
-        marker.addListener("click", () => {
-            infowindow.open(map, marker);
-        });
-    });
+    } catch (error) {
+        console.error('Error fetching candy shop locations:', error);
+    }
 }
 
 // Ensure initMap is called when the Google Maps API script loads

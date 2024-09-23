@@ -16,6 +16,18 @@ async function showNearestStore(req, res) {
   }
 }
 
+// Get all stores from the database
+async function getStores(req, res) {
+  try {
+    const stores = await nearMeService.getAllStores();
+    res.json(stores);
+  } catch (error) {
+    console.error('Error retrieving stores:', error);
+    res.status(500).send('Server error');
+  }
+}
+
 module.exports = {
+  getStores,
   showNearestStore,
 };

@@ -28,11 +28,9 @@
                         <input type="hidden" name="productId" value="<%= product.productId %>">
                         
                         <!-- Add this input below for quantity -->
-                        <input type="number" name="quantity" min="1" value="1">
+                        <input type="number" name="quantity" min="1" max="50" value="1">
                         
-                        <button class="icon-button cart" type="submit">
-                            <i class="fas fa-shopping-cart"></i>Add to Cart
-                        </button>
+                        <button class="icon-button cart" type="submit"><i class="fas fa-shopping-cart"></i>Add to Cart</button>
                     </form>
                     <button class="icon-button favorite"><i class="fas fa-heart"></i>Add to Favorites</button>
                 </div>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Near Me - Candy Shop</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/styles/header-footer.css">
+    <link rel="stylesheet" href="/styles/maps.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <header class="navbar navbar-expand-lg navbar-light bg-light">
+        <nav class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/images/logo.svg" height="50" alt="Logo"/>
+            </a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/nearMe">Near Me</a>
+                    </li>
+                </ul>
+                <div class="d-flex">
+                    <a class="nav-link" href="#"><i class="fas fa-shopping-cart"></i></a>
+                    <a class="nav-link" href="#"><i class="fas fa-user-circle"></i></a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Map Container -->
+    <div id="googleMap" style="height: 500px; width: 100%;"></div>
+
+    <!-- Footer -->
+    <footer class="text-white text-center text-lg-start bg-dark">
+        <div class="container p-4">
+            <div class="row">
+                <div class="col-lg-6 col-md-12 mb-4 mb-md-0">
+                    <h5 class="text-uppercase">Talk To Us</h5>
+                    <p>Have questions or feedback? Reach out to us at support@candyshop.com or follow us on social media for the latest updates and tips. We're here to help!</p>
+                </div>
+                <div class="col-lg-6 col-md-12 mb-4 mb-md-0">
+                    <h5 class="text-uppercase">About Us</h5>
+                    <p>At Candy Shop, we make finding your favorite sweets easy and enjoyable. Our app helps you locate the nearest candy stores so you can satisfy your sweet tooth quickly!</p>
+                </div>
+            </div>
+        </div>
+        <div class="text-center p-3 bg-secondary">
+            © 2024 Copyright: Your Company Name
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=<%= process.env.GOOGLE_MAPS_API_KEY %>&callback=initMap" async defer></script>
+    <script src="/js/maps.js"></script>
+</body>
+</html>

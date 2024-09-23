@@ -93,12 +93,16 @@ async function checkout (req, res) {
             if (product) {
                 orderProducts.push({ productId: item.productId, quantity: item.quantity });
                 totalPrice += product.price * item.quantity;
+
+                // Reduce product inventory by purchased quantity
+                product.inventory -= item.quantity;
+                await productsService.updateProductInventory(product.productId, product.inventory);
             }
         }
     }
 
     totalPrice = totalPrice.toFixed(2);
-
+    
     let orderData = {
         orderId: Math.floor(Math.random() * 10000000),
         customerId: "YOUR_CUSTOMER_ID",
@@ -107,7 +111,7 @@ async function checkout (req, res) {
         status: "completed",
         products: orderProducts
     };
-    
+
     try {
         const order = await ordersService.createOrder(orderData);
         req.session.cart = [];

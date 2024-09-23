@@ -25,30 +25,8 @@ body {
   }
 
 
-/* Top bar css */
-.left-section {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    padding-left: 10px;
-    flex-basis: 33%;
-}
 
-.center-section {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-basis: 34%;
-}
-
-.right-section {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    padding-right: 10px;
-    flex-basis: 33%;
-}
-
+/* 
 .top-bar {
     background: linear-gradient(to right, #FF99C8, #FCF6BD, #D0F4DE, #A9DEF9, #E4C1F9);
     color: black;
@@ -62,7 +40,7 @@ body {
     width: 100%;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     z-index: 1000;
-}
+} */
 
 /* sub menu css */
 .content {

@@ -9,14 +9,14 @@ async function getAllProducts () {
     }
 };
 
-async function createProduct (productsData) {
-    try {
-        const product = new Products(productsData);
-        return await product.save();
-    } catch (err) {
-        console.error('Error creating product:', err);
-    }
-};
+// async function  (productsData) {
+//     try {
+//         const product = new Products(productsData);
+//         return await product.save();
+//     } catch (err) {
+//         console.error('Error creating product:', err);
+//     }
+// };
 
 async function deleteProduct (productId) {
     console.log('service: ',productId);
@@ -33,15 +33,15 @@ async function getProductById(productId) {
 }
 
 
-async function saveProduct(productId, updatedData) {
+async function createProduct(productId, updatedData) {
     try {
         console.log('Service: createProduct called');
-        const lastProduct = await Products.findOne().sort({ productId: -1 });
+        const lastProduct = await Products.findOne().sort({ productId : -1 });
         console.log('Last product fetched:', lastProduct);
         const newProductId = lastProduct ? lastProduct.productId + 1 : 1;
         console.log('New productId calculated:', newProductId);
         const product = new Product({
-            ...productData,
+            ...updatedData,
             productId: newProductId // Assign the incremented productId
         });
         await product.save();
@@ -56,5 +56,5 @@ module.exports = {
     createProduct,
     deleteProduct,
     getProductById,
-    saveProduct
+    createProduct
 }

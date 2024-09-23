@@ -8,7 +8,7 @@ router.get('/', productsController.getAllProducts);
 // Get new product form
 
 // Save new product
-router.post('/', productsController.saveProduct);
+router.post('/admin/addProducts', productsController.newProduct);
 
 // Get delete product form
 router.get('/delete', productsController.showDeleteProductForm);

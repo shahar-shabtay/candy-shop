@@ -34,7 +34,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-async function saveProduct (req, res) {
+async function newProduct (req, res) {
 	console.log('Controller: addProduct called');
 
 	upload.single('image'), // Use multer to upload the file
@@ -134,7 +134,7 @@ async function editProducts (req,res) {
 }
 module.exports = {
 	getAllProducts,
-	saveProduct,
+	newProduct,
 	showDeleteProductForm,
 	deleteProduct,
 	addNewFavorite,

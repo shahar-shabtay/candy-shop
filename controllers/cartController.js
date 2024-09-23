@@ -61,6 +61,26 @@ function removeFromCart (req, res) {
     res.redirect('/cart');
 }
 
+// Updates item quantity in the cart
+function updateCart(req, res) {
+    const productId = req.body.productId;
+    let newQuantity = parseInt(req.body.newQuantity) || 1;
+
+    if (newQuantity < 1) newQuantity = 1; // Server-side validation
+    if (newQuantity > 50) newQuantity = 50;
+
+    if (req.session.cart) {
+        const cartItemIndex = req.session.cart.findIndex(item => item.productId === productId);
+
+        if (cartItemIndex > -1) {
+            // Update quantity of existing product in the cart
+            req.session.cart[cartItemIndex].quantity = newQuantity;
+        }
+    }
+
+    res.redirect('/cart');
+}
+
 // Checkout
 async function checkout (req, res) {
     const cart = req.session.cart;
@@ -108,5 +128,6 @@ module.exports = {
     showCart,
     removeFromCart,
     checkout,
-    completePurchase
+    completePurchase,
+    updateCart
 }

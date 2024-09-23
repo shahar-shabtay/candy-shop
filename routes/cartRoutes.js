@@ -16,5 +16,6 @@ router.post('/checkout', cartController.checkout);
 router.get('/checkout', cartController.checkout);
 
 router.get('/complete', cartController.completePurchase);
+router.post('/update', cartController.updateCart);
 
 module.exports = router;

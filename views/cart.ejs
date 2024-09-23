@@ -8,24 +8,33 @@
     <body>
         <h1>Your Cart</h1>
         <div class="products">
-        <!-- List all products in cart -->
-        <% if (cart && cart.length > 0) { %> 
-            <% cart.forEach((product) => { %>
-                <div class="product">
-                    <img class="img-class" src="<%= product.imageUrl %>" alt="<%= product.name %>" onerror="this.onerror=null; this.src='/public/images/logo.svg';">
-                    <h2><%= product.name %></h2>
-                    <p><%= product.description %></p>
-                    <p>Price: <%= product.price %></p>
-                    <p>Quantity: <%= product.quantity %></p>
-                    <form action="/cart/remove" method="POST">
-                        <input type="hidden" name="productId" value="<%= product._id %>">
-                        <button type="submit">Remove from Cart</button>
-                    </form>
-                </div>
-            <% }); %>
-        <% } else { %>
-            <p>Your cart is empty!</p>
-        <% } %>
+            <!-- List all products in cart -->
+            <% if (cart && cart.length > 0) { %> 
+                <% cart.forEach((product) => { %>
+                    <div class="product">
+                        <img class="img-class" src="<%= product.imageUrl %>" alt="<%= product.name %>" onerror="this.onerror=null; this.src='/public/images/logo.svg';">
+                        <h2><%= product.name %></h2>
+                        <p><%= product.description %></p>
+                        <p>Price: <%= product.price %></p>
+                        <p>Quantity: <%= product.quantity %></p>
+
+                        <!-- Add the following form to update quantity -->
+                        <form action="/cart/update" method="POST">
+                            <input type="hidden" name="productId" value="<%= product.productId %>">
+                            <input type="number" name="newQuantity" min="1" max="50" value="<%= product.quantity %>">
+                            <button type="submit">Update Quantity</button>
+                        </form>
+                        <!-- End of Quantity update form -->
+
+                        <form action="/cart/remove" method="POST">
+                            <input type="hidden" name="productId" value="<%= product.productId %>">
+                            <button type="submit">Remove from Cart</button>
+                        </form>
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <p>Your cart is empty!</p>
+            <% } %>
         </div>
         <% if (cart && cart.length > 0) { %> 
             <form action="/cart/checkout" method="POST">

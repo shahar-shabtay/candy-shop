@@ -113,7 +113,7 @@ body {
 }
 
 .menu-option:hover {
-    color: #FF99C8;
+    color: #FF418A;
 }
 
 .menu-option::after {
@@ -129,13 +129,13 @@ body {
 }
 
 .menu-option.active {
-    color: #FF99C8;
+    color: #FF418A;
     font-weight: bold;
 }
 
 .menu-option.active::after {
     width: 100%;
-    background: #FF99C8;
+    background: #FF418A;
 }
 
 /*option container css */

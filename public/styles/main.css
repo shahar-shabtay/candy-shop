@@ -1,9 +1,10 @@
 * {
     font-family: 'Heebo', sans-serif;
 }
-
+.account-section {
+    margin-top: -20px;
+}
 /* Navbar */
-/* General Navbar Styling */
 .navbar {
     display: flex;
     justify-content: space-between;
@@ -185,7 +186,10 @@
 
  
  /* Footer */
- 
+footer {
+    margin-top: 100px;
+}
+
  .footer-container {
     background:linear-gradient(to right, #d74a6b, #FF6C8E); ;
     display: flex;
@@ -217,6 +221,9 @@
     margin-right: 10px; /* Add space between the text and icon */
 }
 
+.talk-to-us p {
+    color: white !important;
+}
 .footer-right .facebook-icon img {
     width: 20px; /* Adjust icon size */
     height: auto;

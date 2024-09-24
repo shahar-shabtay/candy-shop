@@ -54,7 +54,6 @@ document.querySelectorAll('.remove-favorite').forEach(icon => {
 
             const result = await response.json();
             if (response.ok) {
-                alert(result.message); // Show success message
                 icon.closest('.product-card').remove(); // Remove the product card from the DOM
             } else {
                 alert(result.error); // Show error message

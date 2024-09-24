@@ -42,10 +42,10 @@ async function getCustomerOrderDetailsById (req, res) {
           if (!productDetails) {
               console.warn(`Product with ID ${product.productId} not found`);
               return {
-                  name: 'Unknown product', // Provide a fallback name for missing products
+                  name: 'We dont have this product right now', // Provide a fallback name for missing products
                   price: 0, // Set a default price if product is not found
                   quantity: product.quantity, // Get quantity from the order document
-                  image: '/path/to/default/image.png', // Default image if the product is missing
+                  image: '/public/images/logo.svg', // Default image if the product is missing
               };
           }
           
@@ -94,12 +94,22 @@ async function getOrderDetailsById (req, res) {
         // Prepare an array to hold products with full details
         const fullProductDetails = await Promise.all(order.products.map(async (product) => {
           const productDetails = await productService.getProductById(product.productId);
-          return {
+          if (!productDetails) {
+            console.warn(`Product with ID ${product.productId} not found`);
+            return {
+                name: 'We dont have this product right now', // Provide a fallback name for missing products
+                price: 0, // Set a default price if product is not found
+                quantity: product.quantity, // Get quantity from the order document
+                image: '/public/images/logo.svg', // Default image if the product is missing
+            };
+        }
+        
+        return {
             name: productDetails.name, // Get product name from product collection
             price: productDetails.price, // Get product price from product collection
             quantity: product.quantity, // Get quantity from the order document
-            image: productDetails.imageUrl,
-          };
+            image: productDetails.imageUrl, // Get product image
+        };
         }));
     
         // Retrieve user from the session

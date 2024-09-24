@@ -137,8 +137,10 @@ async function renderFavoriteProducts(req, res) {
     try {
         const user = req.session.user;
         const favoriteProducts = await favoriteService.getFavoriteProductsByCustomerId(user.customerId);
+        if (favoriteProducts) {
+            res.render('favoriteProducts', { favoriteProducts , user});
+        }
         // Render the favorite products view, passing the products data
-        res.render('favoriteProducts', { favoriteProducts , user});
     } catch (err) {
         console.error('Error rendering favorite products:', err);
         res.status(500).send('Failed to fetch favorite products');

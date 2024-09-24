@@ -188,7 +188,6 @@ document.querySelectorAll('.remove').forEach(icon => {
 
             const result = await response.json();
             if (response.ok) {
-                alert(result.message); // Show success message
                 window.location.href = `/personal/admin/orders`;
             } else {
                 alert(result.error); // Show error message
@@ -289,8 +288,6 @@ function saveProduct(productId) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            alert('Product updated successfully');
-
             // Make inputs readonly again after saving
             const inputs = productCard.querySelectorAll('input');
             inputs.forEach(input => {
@@ -371,7 +368,7 @@ async function submitProduct() {
         console.log('Server response data:', data); // Debug point 6
 
         if (data.success) {
-            alert('Product created successfully');
+            window.location.href = `/personal/admin/products`;
         } else {
             alert('Error creating product: ' + data.message);
         }

@@ -9,7 +9,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 10px;
-    background-color: #ff6c8e;
+    background: linear-gradient(to right,  #d74a6b, #FF6C8E);
     position: relative; /* Ensures dropdown is placed under the navbar */
     z-index: 10;
     height: 60px;
@@ -189,11 +189,12 @@
  .footer-container {
     background:linear-gradient(to right, #d74a6b, #FF6C8E); ;
     display: flex;
-    color: white;
+    color: white !important;
     width: 100%;
     justify-content: space-between;
     text-align: center;
     padding-top: 5px; /* Reduce padding to remove excess space */
+    margin-bottom: 0px;
 }
 
 .footer-left, .footer-right {
@@ -227,7 +228,6 @@
     padding: 5px 0; /* Adjust padding to fit within the footer */
     width: 100%;
     position: absolute;
-    bottom: 0; /* Ensure the copyright text sticks to the bottom */
     left: 0;
 }
 

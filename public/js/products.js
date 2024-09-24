@@ -24,3 +24,4 @@ document.querySelectorAll('.favorite').forEach(button => {
         }
     });
 });
+

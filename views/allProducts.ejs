@@ -3,33 +3,80 @@
     <head>
         <title>Candy Shop - Admin Page</title>
         <link rel="stylesheet" href="/public/styles/adminPage.css">
+        <link rel="stylesheet" href="/public/styles/main.css">
+
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     </head>
     <body>  
+        <!-- Topbar -->
         <header>
-            <!-- Topbar -->
-            <nav class="top-bar">
+            <nav class="navbar">
                 <!-- Left elements -->
                 <div class="left-section">
-                    <img src="/public/images/shooping_cart.svg" alt="Icon 1" class="icon">
-                    <img src="/public/images/logout.svg" alt="Icon 1" class="icon" onclick="window.location.href='/logout'">
+                    <img src="/public/images/shooping_cart.svg" alt="Icon 1" class="icon-nav">
+                    <img src="/public/images/logout.svg" alt="Icon 1" class="icon-nav" onclick="window.location.href='/logout'">
                 </div>
+
                 <!-- Logo -->
                 <div class="center-section">
-                    <img src="/public/images/logo.svg" class="logo"> 
+                    <img src="/public/images/logo.svg" class="logo" onclick="window.location.href='/products'"> 
                 </div>
-                <!-- Right elements -->
+
+                <!-- Right elements (Hamburger menu and dropdown) -->
                 <div class="right-section">
-                    <img src="/public/images/home_icon.svg" alt="Icon 1" class="icon" onclick="window.location.href='/products'">
-                    <img src="/public/images/user.svg" alt="Icon 1" class="icon" onclick="window.location.href='/personal/myAccount'">
+                    <div class="menu-container">
+                        <!-- Hamburger menu icon -->
+                        <div class="hamburger-menu" id="hamburger-menu">
+                            <span class="bar"></span>
+                            <span class="bar"></span>
+                            <span class="bar"></span>
+                        </div>
+
+                        <!-- Dropdown content -->
+                        <div class="dropdown-content" id="dropdown-content">
+                            <!-- Search bar -->
+                            <div class="search-bar">
+                                <input type="text" placeholder="Search for candies...">
+                            </div>
+
+                            <!-- Categories list -->
+                            <ul class="categories">
+                                <li>Chocolate</li>
+                                <li>Gummy Bears</li>
+                                <li>Licorice</li>
+                                <li>Lollipops</li>
+                                <li>Hard Candies</li>
+                                <li>Sour Candies</li>
+                                <li>Caramel</li>
+                            </ul>
+
+                            <!-- Personal area and admin area icons -->
+                            <div class="menu-icons">
+                                <div class="icon-container">
+                                    <a href="/personal/myAccount">
+                                        <img src="/public/images/user.svg" alt="Personal Area" class="icon">
+                                        <div class="icon-label"><%= user.name %></div>
+                                    </a>
+                                </div>
+                                <% if (user.role === 'admin') { %> 
+                                <div class="icon-container">
+                                    <a href="/personal/admin">
+                                        <img src="/public/images/adminIcon.svg" alt="Admin Area" class="icon">
+                                        <div class="icon-label">Manage Shop</div>
+                                    </a>
+                                </div>
+                                <% } %> 
+                            </div>                            
+                        </div>
+                    </div>
                 </div>
             </nav>
         </header>
         <!-- Account Section -->
         <div class="account-section">
             <header class="account-header">
-                <h2>Hello <%= user.name %></h2><h4><%= user.role %></h4>
+                <h2>Hello <%= user.name %></h2>
             </header>
             <div class="account-content">
                 <div class="account-menu">
@@ -79,5 +126,6 @@
             </div>
         </div>
         <script src="/public/js/adminPage.js"></script>
+        <script src="/public/js/main.js"></script>
     </body>
 </html>

@@ -6,24 +6,70 @@
         <link rel="stylesheet" href="/public/styles/main.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
+
     </head>
     <body>  
+        <!-- Topbar -->
         <header>
-            <!-- Topbar -->
             <nav class="navbar">
                 <!-- Left elements -->
                 <div class="left-section">
-                    <img src="/public/images/shooping_cart.svg" alt="Icon 1" class="icon">
-                    <img src="/public/images/logout.svg" alt="Icon 1" class="icon" onclick="window.location.href='/logout'">
+                    <img src="/public/images/shooping_cart.svg" alt="Icon 1" class="icon-nav">
+                    <img src="/public/images/logout.svg" alt="Icon 1" class="icon-nav" onclick="window.location.href='/logout'">
                 </div>
+        
                 <!-- Logo -->
                 <div class="center-section">
-                    <img src="/public/images/logo.svg" class="logo"> 
+                    <img src="/public/images/logo.svg" class="logo" onclick="window.location.href='/products'"> 
                 </div>
-                <!-- Right elements -->
+        
+                <!-- Right elements (Hamburger menu and dropdown) -->
                 <div class="right-section">
-                    <img src="/public/images/home_icon.svg" alt="Icon 1" class="icon" onclick="window.location.href='/products'">
-                    <img src="/public/images/user.svg" alt="Icon 1" class="icon" onclick="window.location.href='/personal/myAccount'">
+                    <div class="menu-container">
+                        <!-- Hamburger menu icon -->
+                        <div class="hamburger-menu" id="hamburger-menu">
+                            <span class="bar"></span>
+                            <span class="bar"></span>
+                            <span class="bar"></span>
+                        </div>
+        
+                        <!-- Dropdown content -->
+                        <div class="dropdown-content" id="dropdown-content">
+                            <!-- Search bar -->
+                            <div class="search-bar">
+                                <input type="text" placeholder="Search for candies...">
+                            </div>
+        
+                            <!-- Categories list -->
+                            <ul class="categories">
+                                <li>Chocolate</li>
+                                <li>Gummy Bears</li>
+                                <li>Licorice</li>
+                                <li>Lollipops</li>
+                                <li>Hard Candies</li>
+                                <li>Sour Candies</li>
+                                <li>Caramel</li>
+                            </ul>
+        
+                            <!-- Personal area and admin area icons -->
+                            <div class="menu-icons">
+                                <div class="icon-container">
+                                    <a href="/personal/myAccount">
+                                        <img src="/public/images/user.svg" alt="Personal Area" class="icon">
+                                        <div class="icon-label"><%= user.name %></div>
+                                    </a>
+                                </div>
+                                <% if (user.role === 'admin') { %> 
+                                <div class="icon-container">
+                                    <a href="/personal/admin">
+                                        <img src="/public/images/adminIcon.svg" alt="Admin Area" class="icon">
+                                        <div class="icon-label">Manage Shop</div>
+                                    </a>
+                                </div>
+                                <% } %> 
+                            </div>                            
+                        </div>
+                    </div>
                 </div>
             </nav>
         </header>
@@ -32,6 +78,7 @@
             <header class="account-header">
                 <h2>Hello <%= user.name %></h2><h4><%= user.role %></h4>
             </header>
+            <!-- Sub Menu -->
             <div class="account-content">
                 <nav class="account-menu">
                     <button class="menu-option active" onclick="window.location.href='/personal/admin/customers'">All Users</button>
@@ -56,7 +103,6 @@
                                                 <th class="actions-th">Actions</th>
                                             </tr>
                                         </thead>
-                                        <!-- Readonly inputs for customer details initially -->
                                         <tbody>
                                             <% customers.forEach(user => { %>
                                             <tr data-id="<%= user.customerId %>" class="customer-row">
@@ -64,7 +110,7 @@
                                                 <td><input name="email" class="customer-email-input customer-input" type="email" value="<%= user.email %>" readonly></td>
                                                 <td>
                                                     <div class="birthday-select-container">
-                                                        <!-- Select field for customer role -->
+                                                        <!-- Select field for customer b-day -->
                                                         <select id="day" class="birth-select customer-input small-input" name="birth_day" required disabled>
                                                             <% for (let i = 1; i <= 30; i++) { %>
                                                                 <option value="<%= i %>" <%= user.birthdate && new Date(user.birthdate).getDate() === i ? 'selected' : '' %>><%= i %></option>
@@ -80,7 +126,6 @@
                                                                 <option value="<%= i %>" <%= user.birthdate && new Date(user.birthdate).getFullYear() === i ? 'selected' : '' %>><%= i %></option>
                                                             <% } %>
                                                         </select>
-                                                    
                                                 </td>
                                                 <td><input name="phone" class="customer-phone-input customer-input" type="tel" value="<%= user.phone %>" readonly></td>
                                                 <td>
@@ -116,6 +161,29 @@
                 </div>
             </div>
         </section>
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-container">
+                <!-- Left Section -->
+                <div class="footer-left">
+                    <h4>About Us</h4>
+                    <p>At Sweetly, we make finding your favorite sweets easy and enjoyable. We have the most special candies and a lot of stores, waiting for you there!</p>
+                </div>
+        
+                <!-- Right Section -->
+                <div class="footer-right">
+                    <div class="talk-to-us">
+                        <h4>Talk To Us</h4>
+                        <a href="https://www.facebook.com/profile.php?id=61565705151661" class="facebook-icon" target="_blank">
+                            <img src="/public/images/facebook_icon.svg" alt="Facebook" class="icon">
+                        </a>
+                    </div>
+                    <p>Talk to us! Reach out to us at support@candyshop.com or follow us on social media for the latest updates and tips. Here to help!</p>
+                </div>
+            </div>
+        </footer>
+        
         <script src="/public/js/adminPage.js"></script>
+        <script src="/public/js/main.js"></script>
     </body>
 </html>

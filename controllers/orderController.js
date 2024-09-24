@@ -24,48 +24,61 @@ async function getCustomerOrders (req, res) {
 }
 
 async function getCustomerOrderDetailsById (req, res) {
-    try {
-        const orderId = req.params.orderId; // Get orderId from the request
-    
-        // Fetch the order from the service
-        const order = await orderService.getOrderById(orderId);
-        console.log(order);
-        if (!order) {
+  try {
+      const orderId = req.params.orderId; // Get orderId from the request
+  
+      // Fetch the order from the service
+      const order = await orderService.getOrderById(orderId);
+      console.log(order);
+      if (!order) {
           return res.status(404).json({ message: 'Order not found' });
-        }
-    
-        // Prepare an array to hold products with full details
-        const fullProductDetails = await Promise.all(order.products.map(async (product) => {
+      }
+  
+      // Prepare an array to hold products with full details
+      const fullProductDetails = await Promise.all(order.products.map(async (product) => {
+          // Fetch product details
           const productDetails = await productService.getProductById(product.productId);
+          
+          if (!productDetails) {
+              console.warn(`Product with ID ${product.productId} not found`);
+              return {
+                  name: 'Unknown product', // Provide a fallback name for missing products
+                  price: 0, // Set a default price if product is not found
+                  quantity: product.quantity, // Get quantity from the order document
+                  image: '/path/to/default/image.png', // Default image if the product is missing
+              };
+          }
+          
           return {
-            name: productDetails.name, // Get product name from product collection
-            price: productDetails.price, // Get product price from product collection
-            quantity: product.quantity, // Get quantity from the order document
-            image: productDetails.imageUrl,
+              name: productDetails.name, // Get product name from product collection
+              price: productDetails.price, // Get product price from product collection
+              quantity: product.quantity, // Get quantity from the order document
+              image: productDetails.imageUrl, // Get product image
           };
-        }));
-    
-        // Retrieve user from the session
-        const user = req.session.user;
-        
-        // Pass the data to the view
-        res.render('customerOrderDetails', {
+      }));
+  
+      // Retrieve user from the session
+      const user = req.session.user;
+      
+      // Pass the data to the view
+      res.render('customerOrderDetails', {
           orderDetails: {
-            orderId: order.orderId,
-            customerId: order.customerId,
-            orderDate: order.orderDate,
-            totalPrice: order.totalPrice,
-            status: order.status,
-            address: order.address,
-            products: fullProductDetails,
+              orderId: order.orderId,
+              customerId: order.customerId,
+              orderDate: order.orderDate,
+              totalPrice: order.totalPrice,
+              status: order.status,
+              address: order.address,
+              products: fullProductDetails,
           },
           user: user, // Pass the user from the session
-        });
-      } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Server error' });
-      }
+      });
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Server error' });
+  }
 }
+
 
 async function getOrderDetailsById (req, res) {
     try {

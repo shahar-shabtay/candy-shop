@@ -31,8 +31,8 @@ async function renderAdminPage(req, res) {
             res.render('accessDenied', {customers, user});
         }
     } catch (err) {
+        res.render('notLogin');
         console.error('Error rendering admin page:', err);
-        res.status(500).send('Server Error - renderAdminPage');
     }
 }
 

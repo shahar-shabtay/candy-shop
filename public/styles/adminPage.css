@@ -5,13 +5,13 @@ body {
 /* cool animation for top bar */
 @keyframes colorTransition {
     0% {
-      background-color: #FF99C8;
+      background-color: #ee2e14;
     }
     20% {
-      background-color: #FCF6BD;
+      background-color: #f3f68f;
     }
     40% {
-      background-color: #D0F4DE;
+      background-color: #9df4c4;
     }
     60% {
       background-color: #A9DEF9;
@@ -163,7 +163,7 @@ body {
 .content {
     margin-top: 20px;
     padding: 20px;
-    background: linear-gradient(to right, #FF99C8, #FCF6BD, #D0F4DE, #A9DEF9, #E4C1F9);
+    background: linear-gradient(to right, #d74a6b, #f8e966, #a3f7c3, #68acce, #b75deb);
     border-radius: 5px;
 }
 

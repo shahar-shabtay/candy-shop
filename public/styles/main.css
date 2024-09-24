@@ -3,20 +3,140 @@
 }
 
 /* Navbar */
+/* General Navbar Styling */
 .navbar {
-    background: linear-gradient(to right, #d74a6b, #FF6C8E);
-    position: fixed;
-    top: 0;
-    justify-content: space-between;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    align-items: center;
-    width: 100%;
-    height: 70px;
-    z-index: 1000;
-    font-size: 1.5em;
-    padding: 0;
     display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #ff6c8e;
+    position: relative; /* Ensures dropdown is placed under the navbar */
+    z-index: 10;
+    height: 60px;
 }
+
+/* Hamburger Menu */
+.hamburger-menu {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 30px;
+    height: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.hamburger-menu .bar {
+    width: 100%;
+    height: 3px;
+    background-color: white;
+    transition: all 0.3s ease;
+}
+
+.hamburger-menu.active .bar:nth-child(1) {
+    transform: rotate(45deg) translateY(7px);
+}
+
+.hamburger-menu.active .bar:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger-menu.active .bar:nth-child(3) {
+    transform: rotate(-45deg) translateY(-7px);
+}
+
+/* Dropdown Content (Now restricted in width) */
+.dropdown-content {
+    position: fixed;
+    top: 80px;
+    left: calc(100vw - 330px);
+    background-color: #fff;
+    width: 300px;
+    height: 0; /* Initially hidden (height 0) */
+    opacity: 0;
+    visibility: hidden;
+    z-index: 999;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Ensure items are spaced between top and bottom */
+    padding: 15px;
+    transition: height 0.5s ease, opacity 0.5s ease;
+}
+
+/* Dropdown Visibility */
+.dropdown-content.active {
+    height: 100vh; 
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Search Bar */
+.search-bar input {
+    width: 100%;
+    padding: 5px;
+    align-items: center;
+    justify-items: center   ;
+}
+
+/* Categories List */
+.categories {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.categories li {
+    padding: 8px 0;
+    cursor: pointer;
+}
+
+/* Personal/Admin Area Icons */
+/* General block styling for icon and text */
+.icon-container {
+    display: flex;
+    margin-top: auto;
+    align-items: center;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s ease; /* Smooth transition for background */
+}
+
+.menu-icons {
+    margin-top: auto; /* Pushes it to the bottom */
+    display: flex;
+    flex-direction: column;
+    width: 100%; /* Full width */
+    margin-bottom: 100px;
+}
+/* Make the entire block a clickable link */
+.icon-container a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: inherit; /* Inherit text color */
+    width: 100%;
+    
+}
+
+/* Icon */
+.icon {
+    width: 50px; /* Icon size */
+    height: auto;
+}
+
+/* Hover effect with gradient background */
+.icon-container:hover {
+    background: linear-gradient(to right, #d74a6b, #FF6C8E);
+    transition: background 0.3s ease;
+}
+
+/* Label styling */
+.icon-label {
+    font-size: 14px;
+}
+
 
 .left-section {
     display: flex;
@@ -40,47 +160,15 @@
     padding-right: 10px;
     flex-basis: 33%;
 }
-/* .navbar-brand img {
-    height: 50px; 
-} */
-
-.nav-link {
-    font-size: 16px; 
-    padding: 8px 15px; 
+.icon-nav {
+    height: 40px; /* Adjust the size of your icons */
+    margin-right: 10px;
 }
 
-.fas {
-    color: rgba(0, 0, 0, .55);
-    font-size: 1.5em;
+.logo {
+    height: 80px; /* Adjust the size of your logo */
+    align-items: center;
 }
-
-.dropdown {
-    position: static; 
-}
-
-.dropdown-toggle {
-    cursor: pointer; 
-    display: flex;
-    justify-content: center; 
-    align-items: center; 
-}
-
-.dropdown-menu {
-    position: absolute;
-    top: 100%; 
-    right: 0; 
-    left: 0; 
-    transform: translateX(-50%); 
-    z-index: 1050; 
-    background-color: #ffffff; 
-    border: 1px solid #ddd; 
-    border-radius: 0.25rem; 
-}
-
-.dropdown-item {
-    padding: 8px 20px;
-}
-
 
 @media (max-width: 991px) {
     .navbar {
@@ -95,28 +183,65 @@
 }
 
 
-.dropdown-menu .dropdown-item {
-    font-size: 18px; 
-    padding: 12px 20px; 
-}
-
-.dropdown-menu {
-    width: auto; 
-    min-width: 200px; 
-    border-radius: 0.375rem; 
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15); 
-}
- 
  
  /* Footer */
-  footer {
-    padding-top: 20px;
-    background: linear-gradient(to right, #cf2f54, #ff6c8e);
-    bottom: 0;
+ 
+ .footer-container {
+    background:linear-gradient(to right, #d74a6b, #FF6C8E); ;
+    display: flex;
+    color: white;
     width: 100%;
-    /* position: absolute; */
+    justify-content: space-between;
+    text-align: center;
+    padding-top: 5px; /* Reduce padding to remove excess space */
 }
 
-#second-footer {
-    background-color: #cf2f54;
+.footer-left, .footer-right {
+    flex: 1;
+    margin: 0;
+}
+
+.footer h4 {
+    margin: 0; /* Remove margin from headings */
+    text-align: center;
+}
+
+/* Align Talk To Us Text and Icon Next to Each Other */
+.talk-to-us {
+    display: inline-flex;
+    align-items: center; /* Align icon vertically with text */
+}
+
+.talk-to-us h4{
+    margin-right: 10px; /* Add space between the text and icon */
+}
+
+.footer-right .facebook-icon img {
+    width: 20px; /* Adjust icon size */
+    height: auto;
+}
+
+.footer-bottom {
+    text-align: center;
+    font-size: 12px;
+    padding: 5px 0; /* Adjust padding to fit within the footer */
+    width: 100%;
+    position: absolute;
+    bottom: 0; /* Ensure the copyright text sticks to the bottom */
+    left: 0;
+}
+
+@media (max-width: 768px) {
+    .footer-container {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .footer-left, .footer-right {
+        padding: 10px;
+    }
+
+    .footer-right .facebook-icon {
+        margin: 0 auto;
+    }
 }

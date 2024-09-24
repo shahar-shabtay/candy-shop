@@ -153,7 +153,6 @@ function updateOrderStatus(orderId) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            alert('Order status updated successfully');
             
             // Disable the <select> dropdown after saving
             const statusSelect = document.getElementById(`orderStatus-${orderId}`);

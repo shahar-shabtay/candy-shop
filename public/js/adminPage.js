@@ -309,7 +309,27 @@ function saveProduct(productId) {
 }
 
 
-// add new product
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('productForm');
+    const submitButton = document.getElementById('submitButton');
+
+    // Ensure the submit button is enabled on page load
+    if (submitButton) {
+        submitButton.disabled = false;
+    }
+
+    // Check if the form exists on the current page
+    if (form) {
+        // Add form submit listener if form exists
+        form.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission
+            submitProduct();        // Call the submit function
+        });
+    } else {
+        console.log('Form not found on this page.');
+    }
+});
+
 async function submitProduct() {
     console.log('submitProduct function triggered'); // Debug point 1
 
@@ -343,6 +363,12 @@ async function submitProduct() {
     formData.append('price', price);
     formData.append('inventory', inventory);
 
+    // Disable submit button to prevent multiple submissions
+    const submitButton = document.getElementById('submitButton');
+    if (submitButton) {
+        submitButton.disabled = true;
+    }
+
     // Log form data content
     console.log('Form data content before submission:');
     for (let [key, value] of formData.entries()) {
@@ -360,6 +386,9 @@ async function submitProduct() {
 
         if (!response.ok) {
             console.error('Error:', response.statusText);
+            if (submitButton) {
+                submitButton.disabled = false; // Re-enable button if there was an error
+            }
             return;
         }
 
@@ -371,9 +400,14 @@ async function submitProduct() {
             window.location.href = `/personal/admin/products`;
         } else {
             alert('Error creating product: ' + data.message);
+            if (submitButton) {
+                submitButton.disabled = false; // Re-enable button on error
+            }
         }
     } catch (error) {
         console.error('Error uploading file or submitting product:', error); // Debug point 7
+        if (submitButton) {
+            submitButton.disabled = false; // Re-enable button on error
+        }
     }
 }
-

@@ -21,50 +21,64 @@ async function getAllProducts (req, res) {
 	}
 };
 
-// Configure multer to store files in the /public/images folder
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, path.join(__dirname, '/public/images')); // Make sure this folder exists
-    },
-    filename: function (req, file, cb) {
-        const fileName = Date.now() + '-' + file.originalname; // Append a timestamp to avoid conflicts
-        cb(null, fileName); // Save the file with a unique name
-    }
-});
 
-const upload = multer({ storage: storage });
+async function addProduct(req, res) {
+    console.log('Controller: addProduct called');
 
-async function newProduct (req, res) {
-	console.log('Controller: addProduct called');
+    try {
+        // Get the next product ID
+        const lastProduct = await productsService.getLastProduct();
+        const newProductId = lastProduct ? lastProduct.productId + 1 : 1;
 
-	upload.single('image'), // Use multer to upload the file
+        // Multer setup inside the handler
+        const storage = multer.diskStorage({
+            destination: function (req, file, cb) {
+                cb(null, path.join(__dirname, '../public/images')); // Adjust the path
+            },
+            filename: function (req, file, cb) {
+                const fileName = `product_${newProductId}.svg`;
+                console.log('Filename generated:', fileName); // Debug: Check filename
+                cb(null, fileName); // Save the file with the generated productId filename
+            }
+        });
 
-    async (req, res) => {
-		console.log('Controller: addProduct called');
-        try {
-			console.log('controller - try')
+        const upload = multer({ storage: storage }).single('image');
+
+        // Call multer to handle file upload
+        upload(req, res, async function (err) {
+            if (err) {
+                console.error('Error uploading image:', err);
+                return res.status(500).json({ success: false, message: 'Error uploading image' });
+            }
+
+            // Proceed with product creation after file is uploaded
             const { name, price, inventory } = req.body;
-			console.log('Received form data:', { name, price, inventory });
+            console.log('Received form data:', { name, price, inventory });
 
-            // File path for the image
-            const filePath = `/public/images/${req.file.filename}`;
-			console.log('Uploaded file path:', filePath);
+            // Use 'imageUrl' instead of 'image' to match the Mongoose schema
+            const imageUrl = `/public/images/product_${newProductId}.svg`;
+            console.log('Uploaded file path:', imageUrl);
+
+            // Create product data object
+            const productData = {
+                productId: newProductId,  // Set the new product ID
+                name,                    // Product name from form data
+                price,                   // Product price from form data
+                inventory,               // Product inventory from form data
+                imageUrl                 // Save the file path to the imageUrl field
+            };
 
             // Pass the data to the service to insert into the database
-            const newProduct = await productService.createProduct({
-                name,
-                price,
-                inventory,
-                image: filePath // Save the file path as a string in the database
-            });
-			console.log('Product created successfully:', newProduct);
+            const newProduct = await productsService.createProduct(productData);
+            console.log('Product created successfully:', newProduct);
             return res.json({ success: true, product: newProduct });
-        } catch (error) {
-            console.error('Error creating product:', error);
-            return res.status(500).json({ success: false, message: 'Error creating product' });
-        }
+        });
+    } catch (error) {
+        console.error('Error creating product:', error);
+        return res.status(500).json({ success: false, message: 'Error creating product' });
     }
-};
+}
+
 
 async function showDeleteProductForm (req, res) {
     res.render('deleteProduct', { error: null, productId: '' });
@@ -118,12 +132,16 @@ async function removeFavoriteProduct (req,res) {
 }
 
 async function editProducts (req,res) {
+	console.log('edit button called');
 	const { productId } = req.params; // Get product ID from URL
     const { name, price, description, inventory } = req.body; // Get updated data from the request body
 
     try {
         // Call the service to update the product
-        const updatedProduct = await productsService.saveProduct(productId, { name, price, description, inventory });
+		console.log(name, price, description, inventory);
+		
+        const updateData = { productId, name, price, description, inventory };
+		const updatedProduct = await productsService.saveProduct(productId, updateData);
         
         // Respond with success
         return res.json({ success: true, product: updatedProduct });
@@ -132,12 +150,14 @@ async function editProducts (req,res) {
         return res.json({ success: false, message: 'Error updating product' });
     }
 }
+
+
 module.exports = {
 	getAllProducts,
-	newProduct,
+	editProducts,
 	showDeleteProductForm,
 	deleteProduct,
 	addNewFavorite,
 	removeFavoriteProduct,
-	editProducts
+	addProduct
 };

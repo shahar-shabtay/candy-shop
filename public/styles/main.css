@@ -16,6 +16,9 @@
     height: 60px;
 }
 
+.nearMe {
+    margin-right: 10px;
+}
 /* Hamburger Menu */
 .hamburger-menu {
     display: flex;

@@ -80,31 +80,6 @@ async function updateCustomerDetails(req, res) {
     }
 }
 
-async function saveProduct(req, res) {
-    upload.single('image')(req, res, async function (err) {
-        if (err) {
-            return res.status(500).send('Error uploading file');
-        }
-
-        const { name } = req.body;
-        const imageFileName = req.file.filename; // Get the file name
-
-        try {
-            // Save the product details to the database
-            const product = new Product({
-                name: name,
-                image: `/public/images/${imageFileName}` // Save the file path in the DB
-            });
-            await product.save();
-
-            // Redirect to a success page or the product list page
-            res.redirect('/admin/addProducts');
-        } catch (error) {
-            res.status(500).send('Error saving product to database');
-        }
-    });
-}
-
 // Get all about - orders / favorite / customers / products
 async function getAllCustomers(req, res) {
     try {
@@ -211,5 +186,4 @@ module.exports = {
     addProductsPage,
     renderFavoriteProducts,
     adminUpdateCustomerDetails,
-    saveProduct
 };

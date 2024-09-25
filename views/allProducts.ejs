@@ -25,6 +25,7 @@
 
                 <!-- Right elements (Hamburger menu and dropdown) -->
                 <div class="right-section">
+                    <img src="/public/images/nearMe.svg" class="icon nearMe" onclick="window.location.href='/nearMe'">
                     <div class="menu-container">
                         <!-- Hamburger menu icon -->
                         <div class="hamburger-menu" id="hamburger-menu">
@@ -79,13 +80,14 @@
                 <h2>Hello <%= user.name %></h2>
             </header>
             <div class="account-content">
+                <!-- Sub Menu -->
                 <div class="account-menu">
                     <button class="menu-option" onclick="window.location.href='/personal/admin/customers'">All Users</button>
                     <button class="menu-option" onclick="window.location.href='/personal/admin/orders'">All Orders</button>
                     <button class="menu-option active" onclick="window.location.href='/personal/admin/products'">All Products</button>
                     <button class="menu-option" onclick="window.location.href='/personal/admin/addProducts'">Add Product</button>
                 </div>
-                <!-- Account Details -->
+                <!-- All Products -->
                 <div class="content">
                     <div id="customers" class="content-item active">
                         <div class="container">
@@ -120,8 +122,6 @@
                             </div>                              
                         </div>
                     </div>
-                    <div id="orders" class="content-item" style="display:none;">This is the content for Option 2.</div>
-                    <div id="products" class="content-item" style="display:none;">This is the content for Option 3.</div>
                 </div>
             </div>
         </div>

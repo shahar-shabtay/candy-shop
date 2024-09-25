@@ -9,15 +9,6 @@ async function getAllProducts () {
     }
 };
 
-// async function  (productsData) {
-//     try {
-//         const product = new Products(productsData);
-//         return await product.save();
-//     } catch (err) {
-//         console.error('Error creating product:', err);
-//     }
-// };
-
 async function deleteProduct (productId) {
     console.log('service: ',productId);
     const productToDelete = await Products.findOneAndDelete({ productId: productId });
@@ -32,29 +23,43 @@ async function getProductById(productId) {
     }
 }
 
+async function getLastProduct() {
+    return await Products.findOne().sort({ productId: -1 }); // Sort by productId in descending order
+}
 
-async function createProduct(productId, updatedData) {
+async function createProduct(productData) {
     try {
-        console.log('Service: createProduct called');
-        const lastProduct = await Products.findOne().sort({ productId : -1 });
-        console.log('Last product fetched:', lastProduct);
-        const newProductId = lastProduct ? lastProduct.productId + 1 : 1;
-        console.log('New productId calculated:', newProductId);
-        const product = new Product({
-            ...updatedData,
-            productId: newProductId // Assign the incremented productId
-        });
-        await product.save();
-        console.log('Product saved to database:', product);
-        return product;
-    } catch (error) {
-        throw new Error('Unable to update product');
+        // Create a new product using the Products model and the provided product data
+        const product = new Products(productData);
+        return await product.save(); // Save the product to the database
+    } catch (err) {
+        console.error('Error creating product:', err);
+        throw err; // Rethrow the error to be handled in the controller
     }
 }
+
+
+async function saveProduct(productId, updateData) {
+    try {
+        const updateProduct = await Products.findOneAndUpdate(
+            {productId : productId},
+                updateData,
+            { new: true, runValidators: true }
+        );
+        if (!updateProduct) {
+            throw new Error('product not found');
+        }
+        return updateProduct;
+    } catch(err) {
+        console.error('Error while update product ', err);
+    }
+}
+
 module.exports = {
     getAllProducts,
     createProduct,
     deleteProduct,
     getProductById,
-    createProduct
+    saveProduct,
+    getLastProduct
 }

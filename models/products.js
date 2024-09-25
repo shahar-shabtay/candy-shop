@@ -10,10 +10,10 @@ const productsSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    description: {
-        type: String,
-        required: true,
-    },
+    // description: {
+    //     type: String,
+    //     required: true,
+    // },
     price: {
         type: Number,
         required: true,
@@ -21,12 +21,15 @@ const productsSchema = new mongoose.Schema({
     imageUrl: {
         type: String,
         required: true,
-        default: '/public/images/logo.svg',
     },
     inventory: {
         type: Number,
         required: true,
-    }
+    },
+    // category: {
+    //     type: String,
+    //     required: true,
+    // },
 }, { versionKey: false });
 
 module.exports = mongoose.model('Products', productsSchema);

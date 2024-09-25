@@ -30,7 +30,7 @@ router.post('/admin/products/remove', productsController.deleteProduct);
 router.post('/admin/orders/remove', orderController.deleteOrder);
 router.post('/admin/products/:productId/edit', productsController.editProducts);
 router.post('/admin/products/:productId/delete', productsController.deleteProduct);
-router.post('/admin/addProducts', productsController.newProduct);
+router.post('/admin/addProducts', productsController.addProduct);
 
 
 module.exports = router;

@@ -3,9 +3,46 @@
     <head>
         <title>Candy Shop - Cart</title>
         <link rel="stylesheet" type="text/css" href="/public/styles/cart.css">
+        <link rel="stylesheet" type="text/css" href="/public/styles/main.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     </head>
     <body>
+                <!-- Topbar -->
+                <header>
+                    <nav class="main-navbar">
+                        <section class="navbar-left">
+                            <img src="/public/images/shooping_cart.svg" class="navbar-icon" onclick="window.location.href='/cart'">
+                            <img src="/public/images/logout.svg" class="navbar-icon" onclick="window.location.href='/logout'">
+                        </section>
+                        <section class="navbar-center">
+                            <img src="/public/images/logo.svg" class="logo" onclick="window.location.href='/products'">
+                        </section>
+                        <section class="navbar-right">
+                            <img src="/public/images/nearMe.svg" class="navbar-icon" onclick="window.location.href='/nearMe'">
+                            <div class="side-menu">
+                                <div class="sideMenu-sign" id="sideMenu-sign">
+                                    <span class="bar"></span>
+                                    <span class="bar"></span>
+                                    <span class="bar"></span>
+                                </div>
+                                <div class="sideMenu-content" id="sideMenu-content">
+                                    <div class="sideMenu-search">
+                                        <input type="text" placeholder="Search for candies...">
+                                    </div>
+                                    <ul class="sideMenu-categories">
+                                        <li>Chocolate</li>
+                                        <li>Gummy Bears</li>
+                                        <li>Licorice</li>
+                                        <li>Lollipops</li>
+                                        <li>Hard Candies</li>
+                                        <li>Sour Candies</li>
+                                        <li>Caramel</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </section>
+                    </nav>
+                </header>
         <h1>Your Cart</h1>
         <div class="products">
             <!-- List all products in cart -->

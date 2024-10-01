@@ -89,7 +89,7 @@ async function deleteOrder(orderId) {
   }
 }
 
-exports.createOrder = async function(orderDetails) {
+async function createOrder (orderDetails) {
   const order = new Orders(orderDetails);
   return await order.save();
 }

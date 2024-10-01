@@ -55,6 +55,7 @@ app.use('/register', registerRoutes);
 app.use('/personal',adminRoute);
 app.use('/nearMe', nearMeRoutes)
 app.use('/', loginRoutes);
+app.use('/cart', cartRoutes);
 
 
 // Start the server

@@ -3,7 +3,9 @@ const ordersService = require('../services/ordersService');
 
 // Adds an item to the cart
 function addToCart (req, res, next) {
+    
     const productId = req.body.productId;
+    console.log(productId);
     const quantity = parseInt(req.body.quantity) || 1;
 
     if(req.session.cart){
@@ -124,7 +126,7 @@ async function checkout (req, res) {
 
 
 function completePurchase (req, res) {
-    res.render('complete');
+    res.redirect('/products');
 }
 
 module.exports = {

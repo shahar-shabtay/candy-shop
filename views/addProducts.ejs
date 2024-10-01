@@ -2,47 +2,37 @@
 <html lang="en">
     <head>
         <title>Candy Shop - Admin Page</title>
-        <link rel="stylesheet" href="/public/styles/adminPage.css">
         <link rel="stylesheet" href="/public/styles/main.css">
-        <link rel="stylesheet" href="/public/styles/peronsal.css">
+        <link rel="stylesheet" href="/public/styles/personal.css">
+        <link rel="stylesheet" href="/public/styles/productPreview.css  ">
+        <link rel="icon" href="/public/images/favicon.ico" type="image/x-icon">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     </head>
     <body>  
         <!-- Topbar -->
         <header>
-            <nav class="navbar">
-                <!-- Left elements -->
-                <div class="left-section">
-                    <img src="/public/images/shooping_cart.svg" alt="Icon 1" class="icon-nav">
-                    <img src="/public/images/logout.svg" alt="Icon 1" class="icon-nav" onclick="window.location.href='/logout'">
-                </div>
-        
-                <!-- Logo -->
-                <div class="center-section">
-                    <img src="/public/images/logo.svg" class="logo" onclick="window.location.href='/products'"> 
-                </div>
-        
-                <!-- Right elements (Hamburger menu and dropdown) -->
-                <div class="right-section">
-                    <img src="/public/images/nearMe.svg" class="icon nearMe" onclick="window.location.href='/nearMe'">
-                    <div class="menu-container">
-                        <!-- Hamburger menu icon -->
-                        <div class="hamburger-menu" id="hamburger-menu">
+            <nav class="main-navbar">
+                <section class="navbar-left">
+                    <img src="/public/images/shooping_cart.svg" class="navbar-icon">
+                    <img src="/public/images/logout.svg" class="navbar-icon" onclick="window.location.href='/logout'">
+                </section>
+                <section class="navbar-center">
+                    <img src="/public/images/logo.svg" class="logo" onclick="window.location.href='/products'">
+                </section>
+                <section class="navbar-right">
+                    <img src="/public/images/nearMe.svg" class="navbar-icon" onclick="window.location.href='/nearMe'">
+                    <div class="side-menu">
+                        <div class="sideMenu-sign" id="sideMenu-sign">
                             <span class="bar"></span>
                             <span class="bar"></span>
                             <span class="bar"></span>
                         </div>
-        
-                        <!-- Dropdown content -->
-                        <div class="dropdown-content" id="dropdown-content">
-                            <!-- Search bar -->
-                            <div class="search-bar">
+                        <div class="sideMenu-content" id="sideMenu-content">
+                            <div class="sideMenu-search">
                                 <input type="text" placeholder="Search for candies...">
                             </div>
-        
-                            <!-- Categories list -->
-                            <ul class="categories">
+                            <ul class="sideMenu-categories">
                                 <li>Chocolate</li>
                                 <li>Gummy Bears</li>
                                 <li>Licorice</li>
@@ -51,64 +41,119 @@
                                 <li>Sour Candies</li>
                                 <li>Caramel</li>
                             </ul>
-        
-                            <!-- Personal area and admin area icons -->
-                            <div class="menu-icons">
-                                <div class="icon-container">
-                                    <a href="/personal/myAccount">
-                                        <img src="/public/images/user.svg" alt="Personal Area" class="icon">
-                                        <div class="icon-label"><%= user.name %></div>
-                                    </a>
-                                </div>
-                                <% if (user.role === 'admin') { %> 
-                                <div class="icon-container">
-                                    <a href="/personal/admin">
-                                        <img src="/public/images/adminIcon.svg" alt="Admin Area" class="icon">
-                                        <div class="icon-label">Manage Shop</div>
-                                    </a>
-                                </div>
+                            <div class="sideMenu-personal">
+                                <% if (user.name) { %> 
+                                    <div class="sideMenu-iconContainer">
+                                        <a href="/personal/myAccount">
+                                            <img src="/public/images/user.svg" class="sideMenu-icon">
+                                            <div class="sideMenu-iconLabel"><%= user.name %></div>
+                                        </a>
+                                    </div>
                                 <% } %> 
-                            </div>                            
+                                <% if (user.role === 'admin') { %> 
+                                    <div class="sideMenu-iconContainer">
+                                        <a href="/personal/admin">
+                                            <img src="/public/images/adminIcon.svg" class="sideMenu-icon">
+                                            <div class="sideMenu-iconLabel">Manage Shop</div>
+                                        </a>
+                                    </div>
+                                <% } %> 
+                            </div>
                         </div>
                     </div>
-                </div>
+                </section>
             </nav>
         </header>
         <!-- Account Section -->
-        <div class="account-section">
-            <div class="account-header">
-                <h2>Hello <%= user.name %></h2>
-            </div>
-            <div class="account-content">
-                <div class="account-menu">
-                    <button class="menu-option" onclick="window.location.href='/personal/admin/customers'">All Users</button>
-                    <button class="menu-option" onclick="window.location.href='/personal/admin/orders'">All Orders</button>
-                    <button class="menu-option" onclick="window.location.href='/personal/admin/products'">All Products</button>
-                    <button class="menu-option active" onclick="window.location.href='/personal/admin/addProducts'">Add Product</button>
+        <section class="page-content">
+                <div class="personal-header">
+                    <h2>Hello <%= user.name %></h2>
                 </div>
-                <!-- Account Details -->
-                <div class="content">
-                    <div id="customers" class="content-item active">
-                        <div class="container">   
-                            <form action="/personal/admin/addProducts" method="POST" enctype="multipart/form-data" id="productForm">
-                                <label for="name">Product Name</label>
-                                <input type="text" id="name" name="name" required>
-                                <label for="price">Product Price</label>
-                                <input type="text" id="price" name="price" required>
+                <div class="personal-content">
+                    <div class="sub-menu">
+                        <button class="menu-option" onclick="window.location.href='/personal/admin/customers'">All Users</button>
+                        <button class="menu-option" onclick="window.location.href='/personal/admin/orders'">All Orders</button>
+                        <button class="menu-option" onclick="window.location.href='/personal/admin/products'">All Products</button>
+                        <button class="menu-option active" onclick="window.location.href='/personal/admin/addProducts'">Add Product</button>
+                    </div>
+                    <!-- Account Details -->
+                    <div class="main-content">
+                        <div id="customers" class="content-item active">
+                            <div class="container">                            
+                                <div class="product-preview-container">
+                                    <!-- Form Card -->
+                                    <div class="card">
+                                        <form id="productForm">
+                                            <label for="name">Product Name</label>
+                                            <input type="text" id="name" name="name" required>
 
-                                <label for="inventory">Inventory</label>
-                                <input type="text" id="inventory" name="inventory" required>
-                                <label for="image">Product Image (SVG only):</label>
-                                <input type="file" id="fileInput" name="image" accept=".svg" required>
-                        
-                                <button id="submitButton" type="submit" onClick="submitProduct()">Create Product</button>
-                            </form>
+                                            <label for="price">Product Price</label>
+                                            <input type="text" id="price" name="price" required>
+
+                                            <label for="inventory">Inventory</label>
+                                            <input type="text" id="inventory" name="inventory" required>
+
+                                            <label for="image">Product Image (SVG only):</label>
+                                            <input type="file" id="fileInput" name="image" accept=".svg">
+                                        
+                                            <button id="submitButton" type="submit" onClick="submitProduct()">Create Product</button>
+                                        </form>
+                                    </div>
+
+                                    <!-- Live Preview Card -->
+                                    <div class="card" id="previewCard">
+                                        <img id="previewImage" src="/public/images/upload.svg">
+                                        <div class="info">
+                                            <h3 id="previewName"></h3>
+                                            <p id="previewPrice"></p>
+                                            <p id="previewInventory"></p>
+                                        </div>
+                                    </div>
+                                    <div id="success-alert" class="custom-alert hidden">
+                                        המוצר נוסף בהצלחה
+                                    </div>
+                                    <div id="error-alert" class="custom-alert hidden">
+                                            שגיאה ביצירת מוצר
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
+        </section>
+        <footer class="footer">
+            <div class="footer-left">
+                <p>© Sweetly | Adi Brodesky | Gal Ternovsky | Shahar Shabtay | Ziv Klein </p>
             </div>
-        </div>
-        <script src="/public/js/adminPage.js"></script>
+            <div class="footer-right">
+                <div class="hover-container">
+                    <a href="#" class="about-us" id="openAboutModal">About Us</a>
+                    |
+                    <a href="#" class="talk-to-us" id="openTalkModal">Talk To Us</a>
+                    |
+                    <a href="https://tinyurl.com/sweetly-facebook" class="facebook">Facebook</a>
+                </div>
+                
+                <!-- Modal for About Us -->
+                <div id="aboutModal" class="modal">
+                    <div class="modal-content">
+                        <span class="close-button">&times;</span>
+                        <h2>About Us</h2>
+                        <p>At Sweetly, we make finding your favorite sweets easy and enjoyable. We have the most special candies and a lot of stores waiting for you!</p>
+                    </div>
+                </div>
+                
+                <!-- Modal for Talk To Us -->
+                <div id="talkModal" class="modal">
+                    <div class="modal-content">
+                        <span class="close-button">&times;</span>
+                        <h2>Talk To Us</h2>
+                        <p>You can reach us at support@candyshop.com or follow us on social media for the latest updates and tips!</p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <script type="module" src="/public/js/adminPage.js"></script>
         <script src="/public/js/main.js"></script>
     </body>
 </html>

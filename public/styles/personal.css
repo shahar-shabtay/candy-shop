@@ -1,0 +1,437 @@
+/* Basic CSS
+-------------*/
+* {
+    box-sizing: border-box;
+}
+
+.personal-header {
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.personal-header h2 {
+    margin: 0;
+    color: black;
+    font-size: 30px;
+}
+
+.personal-content {
+    background-color: #f8f8f8;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.personal-content input,
+.personal-content select {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.personal-content button {
+    background-color: #f8f8f8;
+    color: black;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.personal-content button:hover {
+    background-color: none;
+}
+
+.menu-option {
+    background-color: transparent;
+    color: black;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 18px;
+    position: relative;
+    transition: color 0.3s ease;
+    outline: none;
+}
+
+.menu-option:hover {
+    color: #FF418A;
+}
+
+.menu-option::after {
+    content: '';
+    display: block;
+    width: 0;
+    height: 2px;
+    background: transparent;
+    transition: width 0.3s ease, background-color 0.3s ease;
+    position: absolute;
+    left: 0;
+    bottom: -5px;
+}
+
+.menu-option.active {
+    color: #FF418A;
+    font-weight: bold;
+}
+
+.menu-option.active::after {
+    width: 100%;
+    background: #FF418A;
+}
+
+.main-content {
+    margin-top: 20px;
+    padding: 20px;
+    background: linear-gradient(to right, #FF99C8, #FCF6BD, #D0F4DE, #A9DEF9, #E4C1F9);
+    border-radius: 5px;
+}
+
+.content-item.active {
+    display: block;
+}
+
+.container {
+    max-width: 100%;
+    margin: 0 auto;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    overflow: visible;
+}
+
+
+/* All Customers - CSS
+-----------------------*/
+
+.customers-table {
+    width: 100%;
+    border-collapse: collapse; 
+    position: relative;
+    margin: 20px 0; 
+    font-size: 16px;
+    text-align: center; 
+    background-color: white;
+    table-layout: fixed; 
+}
+
+.customers-tr , .customer-th, .customer-td {
+    border-bottom : 1px solid #ddd;
+    font-size: 14px;
+    text-align: center;
+    width: 150px;
+    text-align: left;
+    align-items: center;
+    justify-items: center;
+    justify-content: center;
+}
+
+th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+    color: #333;
+    font-size: 16px;
+    padding: 15px;
+    text-align: center;
+}
+
+tr:hover {
+    background-color: #f8f8f8; 
+}
+
+.edit-btn {
+    width: 80px;
+}
+
+.customer-input {
+    align-items: center;
+    display: flex;
+    justify-items: center;
+    width: 80px; 
+    padding: 5px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="password"],
+input[type="date"],
+input[type="number"],
+input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-bottom: 2px solid #ccc;
+    box-sizing: border-box;
+    transition: border-bottom-color 0.3s ease;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="tel"]:focus,
+input[type="password"]:focus,
+input[type="date"]:focus,
+input[type="number"]:focus,
+input[type="number"]:focus {
+    outline: none;
+    border-bottom-color: #FF418A;
+}
+
+.password-container {
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: fit-content; /* Adjust the width to fit content */
+}
+
+.password-container input {
+    padding-right: 30px; /* Add padding to make room for the icon */
+    width: 700px; /* Adjust width as needed */
+}
+
+.password-container i {
+    position: absolute;
+    right: 10px;
+    cursor: pointer;
+}
+
+.address-container, .birthday-container {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.address-container input, .birthday-container select {
+    padding: 8px;
+    font-size: 16px;
+}
+
+#street, #city, #year {
+    flex: 1; 
+}
+
+.customer-actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;  /* Adjust to fit the icon size */
+    height: 40px;
+}
+
+.customer-actions img {
+    width: 50px; /* Adjust the size of your icons */
+    height: 50px;
+    cursor: pointer;
+}
+
+.customer-row.edit-mode {
+    background-color: #FFE7E9;
+}
+
+.birthday-select-container {
+    display: flex;
+    flex-direction: column; /* Stack elements vertically */
+    justify-content: center; /* Center vertically */
+    align-items: center; /* Center horizontally */
+}
+
+.customer-address-input {
+    width: 150px !important;
+    text-align: center;
+}
+
+.customer-phone-input {
+    width: 150PX !important;
+    text-align: center;
+}
+
+.customer-email-input {
+    width: 200px !important;
+    text-align: center;
+}
+
+.customer-name-input {
+    width: 200px !important;
+    text-align: center;
+}
+
+.customer-role-select {
+    width: 100px !important ;
+    text-align: center;
+}
+
+
+/* All Orders - CSS
+-------------------- */
+.no-orders {
+    font-size: 20px;
+    margin: 10px;
+}
+.orders-table {
+    width: 100%;
+    border-collapse: collapse; 
+    position: relative;
+    margin: 20px 0; 
+    font-size: 16px;
+    text-align: left; 
+    background-color: white;
+    table-layout: fixed; 
+}
+
+.orders-th, .orders-td {
+    border-bottom : 1px solid #ddd;
+    font-size: 14px;
+    text-align: center;
+    width: 150px;
+    text-align: left;
+    align-items: center;
+    justify-items: center;
+    justify-content: center;
+}
+
+.orders-th {
+    border-bottom : 1px solid #ddd;
+    font-size: 14px;
+    text-align: center;
+    width: 150px;
+    text-align: center;
+    align-items: center;
+    justify-items: center;
+    justify-content: center;
+}
+
+.orders-tr:hover {
+    background-color: #f1f1f1; 
+}
+
+.action-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: space-around;
+}
+
+.order-again {
+    background-color: #28a745; 
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.see-order {
+    background-color: #007bff; 
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.cancel-order {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.order-again:hover,
+.see-order:hover,
+.cancel-order:hover {
+    opacity: 0.9;
+}
+
+.order-actions {
+    width: 80px;
+    height: 80px;
+}
+
+/* All Products - CSS
+----------------------*/
+.detail-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.label {
+    font-weight: bold;
+    color: #555;
+    text-align: left;
+}
+
+.value {
+    color: #333;
+    text-align: right;
+}
+
+
+/* Image upload section */
+.image-upload {
+margin-bottom: 15px;
+}
+
+.upload-icon {
+width: 24px;
+height: 24px;
+cursor: pointer;
+}
+
+/* Product info section */
+.product-info {
+text-align: center;
+margin-bottom: 15px;
+}
+
+
+.product-input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+/* Actions section */
+.actions {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+}
+
+.edit-btn {
+    width: 60px;
+    height: 60px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.remove-product {
+    width: 60px;
+    height: 60px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.edit-btn:hover {
+    transform: scale(1.1);
+}
+
+.remove-product:hover {
+    transform: scale(1.1);
+}

@@ -6,7 +6,7 @@ async function showNearestStore(req, res) {
   try {
     const nearestStore = await nearMeService.findNearestStore(lat, lon);
     if (nearestStore) {
-      res.render('nearMe', { store: nearestStore });
+      res.render('nearMe', { store: nearestStore});
     } else {
       res.render('nearMe', { error: 'No stores found nearby' });
     }

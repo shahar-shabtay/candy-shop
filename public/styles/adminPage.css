@@ -2,10 +2,48 @@ body {
     margin: 0;
     font-family: Arial, sans-serif;
 }
+/* cool animation for top bar */
+@keyframes colorTransition {
+    0% {
+      background-color: #ee2e14;
+    }
+    20% {
+      background-color: #f3f68f;
+    }
+    40% {
+      background-color: #9df4c4;
+    }
+    60% {
+      background-color: #A9DEF9;
+    }
+    80% {
+      background-color: #E4C1F9;
+    }
+    100% {
+      background-color: #FF99C8;
+    }
+  }
+
+
+
+/* 
+.top-bar {
+    background: linear-gradient(to right, #FF99C8, #FCF6BD, #D0F4DE, #A9DEF9, #E4C1F9);
+    color: black;
+    height: 80px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+} */
 
 /* sub menu css */
 .content {
-    margin-top: 70px; /* Add enough margin to push content below the fixed top bar */
     padding: 20px;
 }
 
@@ -83,7 +121,7 @@ body {
 }
 
 .menu-option:hover {
-    color: #FF418A;
+    color: #D2B48C;
 }
 
 .menu-option::after {
@@ -99,7 +137,7 @@ body {
 }
 
 .menu-option.active {
-    color: #FF418A;
+    color: #D2B48C;
     font-weight: bold;
 }
 
@@ -108,6 +146,49 @@ body {
     background: #FF418A;
     color: white;
 }
+
+.icon {
+    height: 40px; /* Adjust the size of your icons */
+    margin-right: 10px;
+}
+
+.logo {
+    height: 80px; /* Adjust the size of your logo */
+    align-items: center;
+}
+
+
+/*option container css */
+.content {
+    margin-top: 20px;
+    padding: 20px;
+    background: linear-gradient(to right, #d74a6b, #f8e966, #a3f7c3, #68acce, #b75deb);
+    border-radius: 5px;
+}
+
+.content-item {
+    display: none; /* By default, all content is hidden */
+}
+
+.content-item.active {
+    display: block;
+}
+
+.container {
+    max-width: 100%;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    overflow-y: scroll; /* Enable vertical scroll */
+  overflow-x: hidden;
+}
+
 
 /* customers css */
 .table-container {
@@ -166,14 +247,9 @@ input {
     border-radius: 4px;
 }
 
-.customer-input {
-    align-items: center;
-    display: flex;
-    justify-items: center;
-}
-
 .edit-btn {
     padding: 10px 20px;
+    background-color: #D2B48C;
     color: #fff;
     border: none;
     border-radius: 4px;
@@ -298,7 +374,6 @@ input[type="number"]:focus {
     cursor: pointer;
 }
 
-
 .edit-btn-cust {
     display: inline-block; /* Show the edit button initially */
 }
@@ -308,7 +383,7 @@ input[type="number"]:focus {
 }
 
 .customer-row.edit-mode {
-    background-color: #FFE7E9;
+    background-color: #E4C1F9; /* Light pink */
 }
 
 .birthday-select-container {
@@ -442,18 +517,22 @@ select {
   .edit-btn {
     width: 40px;
     height: 40px;
+    background-color: white;
   }
 
   .delete-btn {
     width: 40px;
     height: 40px;
+    background-color: white;
   }
 
   .edit-btn:hover {
+    background-color: #DFD8C1;
     color: black;
   }
   
   .delete-btn:hover{
+    background-color: #FFADAD;
     color: black;
   }
 

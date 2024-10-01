@@ -1,14 +1,13 @@
-<!DOCTYPE html>
 <html>
+    <html lang="en">
     <head>
-        <title>Candy Shop - Products</title>
-        <link rel="stylesheet" type="text/css" href="public/styles/products.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+        <title></title>
+        <link rel="icon" href="/public/images/favicon.ico" type="image/x-icon">
         <link rel="stylesheet" href="/public/styles/main.css">
-        <link rel="stylesheet" href="/public/styles/cards.css">
+
+
     </head>
     <body>
-        <!-- Topbar -->
         <header>
             <nav class="main-navbar">
                 <section class="navbar-left">
@@ -16,7 +15,7 @@
                     <img src="/public/images/logout.svg" class="navbar-icon" onclick="window.location.href='/logout'">
                 </section>
                 <section class="navbar-center">
-                    <img src="/public/images/logo.svg" class="logo">
+                    <img src="/public/images/logo.svg" class="logo" onclick="window.location.href='/products'">
                 </section>
                 <section class="navbar-right">
                     <img src="/public/images/nearMe.svg" class="navbar-icon" onclick="window.location.href='/nearMe'">
@@ -62,32 +61,7 @@
                 </section>
             </nav>
         </header>
-        <!-- Product Section -->
-         <section class="page-content">
-            <h1 class="products-header">Our Products</h1>
-            <div class="grid-container">
-                <% products.forEach(function(product) { %>
-                <div class="card">
-                    <% if (product.inventory <= 5) { %>
-                        <span class="stock-banner"><%= product.inventory %> left</span>
-                    <% } %>
-                    <img src="<%= product.imageUrl %>" alt="Product Image">
-                    <div class="info">
-                        <h3><%= product.name %></h3>
-                        <p class="price">$<%= product.price %></p>
-                    </div>
-                    <div class="actions">
-                        <button class="icon-button favorite" data-product-id="<%= product.productId %>"><i class="fas fa-heart"></i></button>
-                        <button class="decrease">-</button>
-                        <input type="number" class="quantity" min="1" value="1">
-                        <button class="increase">+</button>
-                        <button class="icon-button cart"><i class="fas fa-shopping-cart"></i></button>
-                    </div>
-                </div>
-                <% }) %>
-            </div>
-        </section>
-        <!-- Footer -->
+        <section class="page-content"></section>
         <footer class="footer">
             <div class="footer-left">
                 <p>© Sweetly | Adi Brodesky | Gal Ternovsky | Shahar Shabtay | Ziv Klein </p>
@@ -120,8 +94,5 @@
                 </div>
             </div>
         </footer>
-        
-        <script src="/public/js/products.js"></script>
-        <script src="/public/js/main.js"></script>
     </body>
 </html>

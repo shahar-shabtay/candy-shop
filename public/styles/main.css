@@ -1,26 +1,78 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap');
+
 * {
-    font-family: 'Heebo', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Nunito';
 }
-.account-section {
-    margin-top: -20px;
+
+html, body {
+    height: 100%;
+    margin: 0;
 }
-/* Navbar */
-.navbar {
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+
+
+/* NavBar 
+------------*/
+
+.main-navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px;
-    background: linear-gradient(to right,  #d74a6b, #FF6C8E);
-    position: relative; /* Ensures dropdown is placed under the navbar */
-    z-index: 10;
+    background: linear-gradient(to right, #d74a6b, #FF6C8E);
+    position: fixed;
+    top: 0;
+    z-index: 1000;
+    width: 100%;
     height: 60px;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
 }
 
-.nearMe {
+.navbar-right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 10px;
+    flex-basis: 33%;
+}
+
+.navbar-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-basis: 34%;
+}
+
+.navbar-left {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding-left: 10px;
+    flex-basis: 33%;
+} 
+
+.navbar-icon {
+    height: 40px;
     margin-right: 10px;
 }
-/* Hamburger Menu */
-.hamburger-menu {
+
+.logo {
+    height: 70px;
+    align-items: center;
+}
+
+/* Side Menu
+------------- */
+
+.side-menu {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -31,227 +83,242 @@
     position: relative;
 }
 
-.hamburger-menu .bar {
+.sideMenu-sign {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 30px;
+    height: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.sideMenu-content {
+    position: fixed;
+    top: 60px;
+    right: -330px;
+    background-color: #fff;
+    width: 300px;
+    height: 100vh;
+    opacity: 0;
+    visibility: hidden;
+    z-index: 10;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 15px;
+    transition: right 0.5s ease, opacity 0.5s ease, visibility 0.5s;
+}
+
+.sideMenu-sign .bar {
     width: 100%;
     height: 3px;
     background-color: white;
     transition: all 0.3s ease;
 }
 
-.hamburger-menu.active .bar:nth-child(1) {
+.sideMenu-sign.active .bar:nth-child(1) {
     transform: rotate(45deg) translateY(7px);
 }
 
-.hamburger-menu.active .bar:nth-child(2) {
+.sideMenu-sign.active .bar:nth-child(2) {
     opacity: 0;
 }
 
-.hamburger-menu.active .bar:nth-child(3) {
+.sideMenu-sign.active .bar:nth-child(3) {
     transform: rotate(-45deg) translateY(-7px);
 }
 
-/* Dropdown Content (Now restricted in width) */
-.dropdown-content {
-    position: fixed;
-    top: 80px;
-    left: calc(100vw - 330px);
-    background-color: #fff;
-    width: 300px;
-    height: 0; /* Initially hidden (height 0) */
-    opacity: 0;
-    visibility: hidden;
-    z-index: 999;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between; /* Ensure items are spaced between top and bottom */
-    padding: 15px;
-    transition: height 0.5s ease, opacity 0.5s ease;
-}
-
-/* Dropdown Visibility */
-.dropdown-content.active {
-    height: 100vh; 
+.sideMenu-content.active {
+    right: 0;
     opacity: 1;
     visibility: visible;
 }
 
-/* Search Bar */
-.search-bar input {
+.sideMenu-search input {
     width: 100%;
     padding: 5px;
     align-items: center;
-    justify-items: center   ;
+    justify-items: center;
 }
 
-/* Categories List */
-.categories {
+.sideMenu-categories {
     list-style-type: none;
     padding: 0;
     margin: 0;
 }
 
-.categories li {
+.sideMenu-categories li {
     padding: 8px 0;
     cursor: pointer;
 }
 
-/* Personal/Admin Area Icons */
-/* General block styling for icon and text */
-.icon-container {
+.sideMenu-personal {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-bottom: 50px;
+}
+
+.sideMenu-iconContainer{
     display: flex;
     margin-top: auto;
     align-items: center;
     cursor: pointer;
     width: 100%;
-    transition: background-color 0.3s ease; /* Smooth transition for background */
+    transition: background-color 0.3s ease;
 }
 
-.menu-icons {
-    margin-top: auto; /* Pushes it to the bottom */
-    display: flex;
-    flex-direction: column;
-    width: 100%; /* Full width */
-    margin-bottom: 100px;
-}
-/* Make the entire block a clickable link */
-.icon-container a {
+.sideMenu-iconContainer a {
     display: flex;
     align-items: center;
     text-decoration: none;
-    color: inherit; /* Inherit text color */
+    color: inherit;
     width: 100%;
-    
 }
 
-/* Icon */
-.icon {
-    width: 50px; /* Icon size */
-    height: auto;
-}
-
-/* Hover effect with gradient background */
-.icon-container:hover {
+.sideMenu-iconContainer:hover {
     background: linear-gradient(to right, #d74a6b, #FF6C8E);
     transition: background 0.3s ease;
 }
 
-/* Label styling */
-.icon-label {
-    font-size: 14px;
-}
-
-
-.left-section {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    padding-left: 10px;
-    flex-basis: 33%;
-}
-
-.center-section {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-basis: 34%;
-}
-
-.right-section {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    padding-right: 10px;
-    flex-basis: 33%;
-}
-.icon-nav {
-    height: 40px; /* Adjust the size of your icons */
-    margin-right: 10px;
-}
-
-.logo {
-    height: 80px; /* Adjust the size of your logo */
-    align-items: center;
-}
-
-@media (max-width: 991px) {
-    .navbar {
-        flex-direction: column; 
-    }
-
-    .dropdown-menu {
-        right: 10px; 
-        left: 10px; 
-        width: calc(100% - 20px); 
-    }
-}
-
-
- 
- /* Footer */
-footer {
-    margin-top: 100px;
-}
-
- .footer-container {
-    background:linear-gradient(to right, #d74a6b, #FF6C8E); ;
-    display: flex;
-    color: white !important;
-    width: 100%;
-    justify-content: space-between;
-    text-align: center;
-    padding-top: 5px; /* Reduce padding to remove excess space */
-    margin-bottom: 0px;
-}
-
-.footer-left, .footer-right {
-    flex: 1;
-    margin: 0;
-}
-
-.footer h4 {
-    margin: 0; /* Remove margin from headings */
-    text-align: center;
-}
-
-/* Align Talk To Us Text and Icon Next to Each Other */
-.talk-to-us {
-    display: inline-flex;
-    align-items: center; /* Align icon vertically with text */
-}
-
-.talk-to-us h4{
-    margin-right: 10px; /* Add space between the text and icon */
-}
-
-.talk-to-us p {
-    color: white !important;
-}
-.footer-right .facebook-icon img {
-    width: 20px; /* Adjust icon size */
+.sideMenu-icon {
+    width: 50px;
     height: auto;
 }
 
-.footer-bottom {
-    text-align: center;
-    font-size: 12px;
-    padding: 5px 0; /* Adjust padding to fit within the footer */
-    width: 100%;
-    position: absolute;
-    left: 0;
+.sideMenu-iconLabel {
+    font-size: 14px;
 }
 
-@media (max-width: 768px) {
-    .footer-container {
-        flex-direction: column;
-        text-align: center;
-    }
+/* Main content of the page
+-----------------------------*/
 
-    .footer-left, .footer-right {
-        padding: 10px;
-    }
+.page-content {
+    flex: 1;
+    margin-top: 90px;
+}
 
-    .footer-right .facebook-icon {
-        margin: 0 auto;
-    }
+
+/* Footer
+-----------*/
+footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #fff; /* White background for the footer */
+    border-top: 1px solid #ddd; /* Top border to match the screenshot */
+    width: 100%;
+    font-size: 14px;
+    position: relative;
+}
+
+.footer-left {
+    text-align: left;
+    color: #333;
+}
+
+.footer-right {
+    display: flex;
+    gap: 15px; /* Space between the links */
+}
+
+.footer-right a {
+    color: #888;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.footer-right a:hover {
+    text-decoration: underline; /* Underline effect on hover */
+}
+
+/* Style for the About Us and Talk To Us links */
+.hover-container {
+    text-align: center;
+}
+
+.hover-container a {
+    margin: 0 10px;
+    text-decoration: none;
+    color: #888;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.hover-container a:hover {
+    text-decoration: underline;
+}
+
+/* Modal container */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1000; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    background-color: rgba(0, 0, 0, 0.5); /* Black background with opacity */
+}
+
+/* Modal content */
+.modal-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 10px;
+    border-radius: 8px;
+    width: 50%;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+/* Close button */
+.close-button {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/*Alerts
+----------*/
+.custom-alert {
+    background-color: #333; /* Dark background */
+    color: white; /* White text */
+    padding: 10px 20px;
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%); /* Center horizontally */
+    border-radius: 20px;
+    font-size: 16px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.visible {
+    opacity: 1;
+    visibility: visible;
 }

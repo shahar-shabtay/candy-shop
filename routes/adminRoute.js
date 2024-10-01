@@ -7,7 +7,7 @@ const orderController = require('../controllers/orderController.js');
 // get
 router.get('/myAccount', adminController.renderAccountPage);
 router.get('/myAccount/details', adminController.renderAccountPage);
-router.get('/admin', adminController.renderAdminPage);
+router.get('/admin', adminController.getAllCustomers);
 router.get('/admin/customers', adminController.getAllCustomers);
 router.get('/admin/products', adminController.getAllProducts);
 router.get('/admin/addProducts', adminController.addProductsPage);

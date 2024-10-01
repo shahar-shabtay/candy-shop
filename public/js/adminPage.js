@@ -1,5 +1,28 @@
+function showSuccessAlert() {
+    const alertBox = document.getElementById('success-alert');
+    alertBox.classList.remove('hidden');
+    alertBox.classList.add('visible');
 
-// Function to save customer details
+    // Hide after 3 seconds
+    setTimeout(() => {
+        alertBox.classList.remove('visible');
+        alertBox.classList.add('hidden');
+    }, 3000);
+}
+
+function showErrorAlert() {
+    const alertBox = document.getElementById('error-alert');
+    alertBox.classList.remove('hidden');
+    alertBox.classList.add('visible');
+
+    // Hide after 3 seconds
+    setTimeout(() => {
+        alertBox.classList.remove('visible');
+        alertBox.classList.add('hidden');
+    }, 3000);
+}
+// All customers
+//---------------
 function toggleEditMode(customerId) {
     const customerRow = document.querySelector(`tr[data-id="${customerId}"]`);
     const editButton = customerRow.querySelector('.edit-btn-cust');
@@ -24,7 +47,6 @@ function toggleEditMode(customerId) {
     customerRow.classList.add('edit-mode');
 }
 
-// Dunction to dfetch and save customer details
 function saveCustomer(customerId) {
     const customerRow = document.querySelector(`tr[data-id="${customerId}"]`);
     const editButton = customerRow.querySelector('.edit-btn-cust');
@@ -61,7 +83,7 @@ function saveCustomer(customerId) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            console.log("Customer updated successfully");
+            showSuccessAlert();
 
             // Remove background color when exiting edit mode
             customerRow.classList.remove('edit-mode');
@@ -74,7 +96,8 @@ function saveCustomer(customerId) {
     });
 }
 
-// Function to see order details
+// All Orders
+//-------------
 document.querySelectorAll('.see-order-btn').forEach(button => {
     button.addEventListener('click', function () {
       const orderId = this.getAttribute('data-order-id');
@@ -85,7 +108,6 @@ document.querySelectorAll('.see-order-btn').forEach(button => {
     });
 });
 
-// Dynamic status bar logic
 const statusBar = document.getElementById('statusBar');
 const statusText = document.getElementById('statusText');
 if (statusBar && statusText) {
@@ -124,7 +146,6 @@ if (statusBar && statusText) {
     statusBar.style.width = progress + "%";
 }
 
-// Enable the status dropdown for editing
 function enableStatusEdit(orderId) {
     const statusSelect = document.getElementById(`orderStatus-${orderId}`);
     const saveButton = document.getElementById(`saveStatusButton-${orderId}`);
@@ -138,7 +159,6 @@ function enableStatusEdit(orderId) {
     editButton.style.display = 'none';
 }
 
-// Function to save the updated status
 function updateOrderStatus(orderId) {
     const selectedStatus = document.getElementById(`orderStatus-${orderId}`).value;
     console.log('Updating status to:', selectedStatus, 'for order ID:', orderId);
@@ -161,6 +181,7 @@ function updateOrderStatus(orderId) {
             // Reset the buttons: Hide Save, show Edit
             document.getElementById(`saveStatusButton-${orderId}`).style.display = 'none';
             document.getElementById(`editStatusButton-${orderId}`).style.display = 'inline-block';
+            
         } else {
             alert('Failed to update status');
         }
@@ -171,7 +192,6 @@ function updateOrderStatus(orderId) {
     });
 }
 
-// function to delete order from db
 document.querySelectorAll('.remove').forEach(icon => {
     icon.addEventListener('click', async () => {
         const orderId = icon.getAttribute('data-order-id');
@@ -199,7 +219,9 @@ document.querySelectorAll('.remove').forEach(icon => {
     });
 });
 
-// fetch product id to remove product
+
+// All Products
+// -------------
 document.querySelectorAll('.remove-product').forEach(icon => {
     icon.addEventListener('click', async () => {
         const productId = icon.getAttribute('data-product-id');
@@ -227,7 +249,6 @@ document.querySelectorAll('.remove-product').forEach(icon => {
 });
 
 
-// Function to enable editing of a product
 function editProduct(productId) {
 
     const productCard = document.querySelector(`.product-card[data-product-id="${productId}"]`);
@@ -256,7 +277,7 @@ function editProduct(productId) {
 function saveProduct(productId) {
     console.log('Saving product with ID:', productId); // Debug
 
-    const productCard = document.querySelector(`.product-card[data-product-id="${productId}"]`);
+    const productCard = document.querySelector(`.card[data-product-id="${productId}"]`);
 
     if (!productCard) {
         console.error('Product card not found for ID:', productId);
@@ -299,6 +320,7 @@ function saveProduct(productId) {
             const editButton = productCard.querySelector('.edit-btn');
             editButton.src = '/public/images/edit.svg'; // Change icon back to edit
             editButton.onclick = () => editProduct(productId); // Reassign the edit function
+            showSuccessAlert();
         } else {
             alert('Failed to update product');
         }
@@ -309,105 +331,92 @@ function saveProduct(productId) {
 }
 
 
-document.addEventListener('DOMContentLoaded', function() {
-    const form = document.getElementById('productForm');
-    const submitButton = document.getElementById('submitButton');
 
-    // Ensure the submit button is enabled on page load
-    if (submitButton) {
-        submitButton.disabled = false;
-    }
 
-    // Check if the form exists on the current page
-    if (form) {
-        // Add form submit listener if form exists
-        form.addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevent default form submission
-            submitProduct();        // Call the submit function
+
+// Add Product
+// ------------
+// Function to handle live preview updates
+document.addEventListener('DOMContentLoaded', () => {
+    const productForm = document.getElementById('productForm');
+    const previewName = document.getElementById('previewName');
+    const previewPrice = document.getElementById('previewPrice');
+    const previewInventory = document.getElementById('previewInventory');
+    const previewImage = document.getElementById('previewImage');
+    const fileInput = document.getElementById('fileInput');
+
+    if (productForm && previewPrice && previewName) {
+    // Update name, price, and inventory in live preview
+        productForm.name.addEventListener('input', function () {
+            previewName.textContent = this.value || 'Product Name';
         });
-    } else {
-        console.log('Form not found on this page.');
+
+        productForm.price.addEventListener('input', function () {
+            previewPrice.textContent = this.value ? `Price: $${this.value}` : 'Price: $0';
+        });
+
+        productForm.inventory.addEventListener('input', function () {
+            previewInventory.textContent = this.value ? `Inventory: ${this.value} items` : 'Inventory: 0 items';
+        });
+
+        // Handle live image preview for SVG files
+        fileInput.addEventListener('change', function () {
+            const file = this.files[0];
+            if (file && file.type === 'image/svg+xml') {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    previewImage.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            } else {
+                previewImage.src = '/public/images/upload.svg'; // Default image if no valid SVG
+            }
+        });
     }
 });
 
-async function submitProduct() {
-    console.log('submitProduct function triggered'); // Debug point 1
+async function submitProduct(event) {
+    event.preventDefault(); // Prevent default form submission behavior
 
     const form = document.getElementById('productForm');
-    const fileInput = document.getElementById('fileInput');
-    const formData = new FormData();
+    const formData = new FormData(form); // Get form data, including the file
 
-    // Get file from the input
-    const file = fileInput.files[0];
-
-    if (!file) {
-        console.error('No file selected'); // Debug point 2
-        alert('Please select a file');
-        return;
-    }
-
-    console.log('File selected:', file.name); // Debug point 3
-
-    // Append the file to formData
-    formData.append('image', file);
-
-    // Get other product details
-    const name = document.getElementById('name').value;
-    const price = document.getElementById('price').value;
-    const inventory = document.getElementById('inventory').value;
-
-    console.log('Adding form data fields...'); // Debug point 4
-
-    // Add other form fields to formData
-    formData.append('name', name);
-    formData.append('price', price);
-    formData.append('inventory', inventory);
-
-    // Disable submit button to prevent multiple submissions
+    // Disable the submit button to prevent multiple submissions
     const submitButton = document.getElementById('submitButton');
-    if (submitButton) {
-        submitButton.disabled = true;
-    }
-
-    // Log form data content
-    console.log('Form data content before submission:');
-    for (let [key, value] of formData.entries()) {
-        console.log(key, value);  // Log each key-value pair in FormData
-    }
+    submitButton.disabled = true;
 
     try {
-        // Send formData to the server for both file upload and form submission
         const response = await fetch('/personal/admin/addProducts', {
             method: 'POST',
-            body: formData
+            body: formData, // Send the form data
         });
 
-        console.log('Server response status:', response.status); // Debug point 5
-
-        if (!response.ok) {
-            console.error('Error:', response.statusText);
-            if (submitButton) {
-                submitButton.disabled = false; // Re-enable button if there was an error
+        if (response.ok) {
+            const data = await response.json();
+            if (data.success) {
+                showSuccessAlert(); // Show success alert
+                setTimeout(() => {
+                    window.location.href = '/personal/admin/products'; // Redirect after 2 seconds
+                }, 2000);
+            } else {
+                showErrorAlert();
+                submitButton.disabled = false; // Re-enable submit button if there's an error
             }
-            return;
-        }
-
-        const data = await response.json();
-
-        console.log('Server response data:', data); // Debug point 6
-
-        if (data.success) {
-            window.location.href = `/personal/admin/products`;
         } else {
-            alert('Error creating product: ' + data.message);
-            if (submitButton) {
-                submitButton.disabled = false; // Re-enable button on error
-            }
+            throw new Error('Error submitting the product');
         }
     } catch (error) {
-        console.error('Error uploading file or submitting product:', error); // Debug point 7
-        if (submitButton) {
-            submitButton.disabled = false; // Re-enable button on error
-        }
+        console.error('Error submitting product:', error);
+        alert('Error: ' + error.message);
+        submitButton.disabled = false; // Re-enable the submit button on error
     }
 }
+
+// Attach submit event listener to the form
+document.addEventListener('DOMContentLoaded', () => {
+    const productForm = document.getElementById('productForm');
+    if (productForm) {
+        productForm.addEventListener('submit', submitProduct);
+    }
+});
+

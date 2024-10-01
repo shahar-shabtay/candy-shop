@@ -10,38 +10,27 @@
     <body>
         <!-- Topbar -->
         <header>
-            <nav class="navbar">
-                <!-- Left elements -->
-                <div class="left-section">
-                    <img src="/public/images/shooping_cart.svg" alt="Icon 1" class="icon-nav">
-                    <img src="/public/images/logout.svg" alt="Icon 1" class="icon-nav" onclick="window.location.href='/logout'">
-                </div>
-        
-                <!-- Logo -->
-                <div class="center-section">
-                    <img src="/public/images/logo.svg" class="logo" onclick="window.location.href='/products'"> 
-                </div>
-        
-                <!-- Right elements (Hamburger menu and dropdown) -->
-                <div class="right-section">
-                    <img src="/public/images/nearMe.svg" class="icon nearMe" onclick="window.location.href='/nearMe'">
-                    <div class="menu-container">
-                        <!-- Hamburger menu icon -->
-                        <div class="hamburger-menu" id="hamburger-menu">
+            <nav class="main-navbar">
+                <section class="navbar-left">
+                    <img src="/public/images/shooping_cart.svg" class="navbar-icon">
+                    <img src="/public/images/logout.svg" class="navbar-icon" onclick="window.location.href='/logout'">
+                </section>
+                <section class="navbar-center">
+                    <img src="/public/images/logo.svg" class="logo">
+                </section>
+                <section class="navbar-right">
+                    <img src="/public/images/nearMe.svg" class="navbar-icon" onclick="window.location.href='/nearMe'">
+                    <div class="side-menu">
+                        <div class="sideMenu-sign" id="sideMenu-sign">
                             <span class="bar"></span>
                             <span class="bar"></span>
                             <span class="bar"></span>
                         </div>
-        
-                        <!-- Dropdown content -->
-                        <div class="dropdown-content" id="dropdown-content">
-                            <!-- Search bar -->
-                            <div class="search-bar">
+                        <div class="sideMenu-content" id="sideMenu-content">
+                            <div class="sideMenu-search">
                                 <input type="text" placeholder="Search for candies...">
                             </div>
-        
-                            <!-- Categories list -->
-                            <ul class="categories">
+                            <ul class="sideMenu-categories">
                                 <li>Chocolate</li>
                                 <li>Gummy Bears</li>
                                 <li>Licorice</li>
@@ -50,27 +39,27 @@
                                 <li>Sour Candies</li>
                                 <li>Caramel</li>
                             </ul>
-        
-                            <!-- Personal area and admin area icons -->
-                            <div class="menu-icons">
-                                <div class="icon-container">
-                                    <a href="/personal/myAccount">
-                                        <img src="/public/images/user.svg" alt="Personal Area" class="icon">
-                                        <div class="icon-label"><%= user.name %></div>
-                                    </a>
-                                </div>
-                                <% if (user.role === 'admin') { %> 
-                                <div class="icon-container">
-                                    <a href="/personal/admin">
-                                        <img src="/public/images/adminIcon.svg" alt="Admin Area" class="icon">
-                                        <div class="icon-label">Manage Shop</div>
-                                    </a>
-                                </div>
+                            <div class="sideMenu-personal">
+                                <% if (user.name) { %> 
+                                    <div class="sideMenu-iconContainer">
+                                        <a href="/personal/myAccount">
+                                            <img src="/public/images/user.svg" class="sideMenu-icon">
+                                            <div class="sideMenu-iconLabel"><%= user.name %></div>
+                                        </a>
+                                    </div>
                                 <% } %> 
-                            </div>                            
+                                <% if (user.role === 'admin') { %> 
+                                    <div class="sideMenu-iconContainer">
+                                        <a href="/personal/admin">
+                                            <img src="/public/images/adminIcon.svg" class="sideMenu-icon">
+                                            <div class="sideMenu-iconLabel">Manage Shop</div>
+                                        </a>
+                                    </div>
+                                <% } %> 
+                            </div>
                         </div>
                     </div>
-                </div>
+                </section>
             </nav>
         </header>
         <!-- Account Section -->

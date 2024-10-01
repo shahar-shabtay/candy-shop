@@ -25,3 +25,24 @@ document.querySelectorAll('.favorite').forEach(button => {
     });
 });
 
+
+
+document.querySelectorAll('.card').forEach(card => {
+    const quantityInput = card.querySelector('.quantity');
+    const increaseButton = card.querySelector('.increase');
+    const decreaseButton = card.querySelector('.decrease');
+
+    // Event listener for increasing quantity
+    increaseButton.addEventListener('click', () => {
+        let currentValue = parseInt(quantityInput.value);
+        quantityInput.value = currentValue + 1;
+    });
+
+    // Event listener for decreasing quantity
+    decreaseButton.addEventListener('click', () => {
+        let currentValue = parseInt(quantityInput.value);
+        if (currentValue > 1) {
+            quantityInput.value = currentValue - 1;
+        }
+    });
+});

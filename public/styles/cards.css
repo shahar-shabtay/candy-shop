@@ -1,0 +1,112 @@
+
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+.card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: white;
+    position: relative;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    }
+
+.product-image {
+    width: 100%;
+    height: auto;
+    border-radius: 0;
+    background-color: #fedde5;
+}
+
+.card .stock-banner {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: red;
+    color: white;
+    padding: 5px;
+    font-size: 12px;
+    border-bottom-right-radius: 10px;
+}
+
+.card .info {
+    padding: 10px;
+    background-color: #fff;
+}
+
+.card .info h3 {
+    margin: 10px 0;
+    font-size: 18px;
+}
+
+.card .info p {
+    margin: 5px 0;
+    font-size: 14px;
+    color: #666;
+}
+
+.card .info .price {
+    font-weight: bold;
+    color: #333;
+    margin-top: 10px;
+}
+
+.card .actions {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    align-items: center;
+    background-color: white;
+    margin-top: auto;
+}
+
+.card .actions .icon {
+    font-size: 20px;
+    cursor: pointer;
+    background-color: white;
+    padding: 5px;
+    border-radius: 50%;
+}
+
+.card .actions input[type="number"] {
+    width: 50px;
+    text-align: center;
+    margin: 0 5px;
+    -moz-appearance: textfield;
+}
+
+.card .actions input::-webkit-outer-spin-button,
+.card .actions input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.card .actions input {
+    appearance: textfield;
+}
+
+.card .actions button {
+    border: none;
+    background-color: white;
+    cursor: pointer;
+    padding: 5px 10px;
+    font-size: 16px;
+}
+
+.product-action {
+    width: 20px;
+}

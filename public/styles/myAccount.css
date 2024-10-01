@@ -58,11 +58,7 @@ body {
     font-size: 30px;
 }
 
-.account-header p {
-    margin: 0;
-    color: #666;
-    font-size: 14px;
-}
+
 
 .account-content {
     background-color: #ffffff;
@@ -144,10 +140,6 @@ body {
     padding: 20px;
     background: linear-gradient(to right, #FF99C8, #FCF6BD, #D0F4DE, #A9DEF9, #E4C1F9);
     border-radius: 5px;
-}
-
-.content-item {
-    display: none; /* By default, all content is hidden */
 }
 
 .content-item.active {

@@ -88,12 +88,19 @@ async function deleteOrder(orderId) {
     throw err; // Rethrow to handle in the controller
   }
 }
+
+exports.createOrder = async function(orderDetails) {
+  const order = new Orders(orderDetails);
+  return await order.save();
+}
+
 module.exports = {
     getCustomerOrders,
     updateOrderStatus,
     getAllOrders,
     getOrderDetailsById,
     getOrderById,
-    deleteOrder
+    deleteOrder,
+    createOrder
   };
   

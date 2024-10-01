@@ -2,7 +2,7 @@
 <html>
     <head>
         <title>Candy Shop - Products</title>
-        <link rel="stylesheet" type="text/css" href="public/styles/products.css">
+        <link rel="stylesheet" type="text/css" href="/public/styles/products.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
         <link rel="stylesheet" href="/public/styles/main.css">
         <link rel="stylesheet" href="/public/styles/cards.css">
@@ -76,13 +76,13 @@
                         <h3><%= product.name %></h3>
                         <p class="price">$<%= product.price %></p>
                     </div>
-                    <div class="actions">
+                    <form action="/cart/add" method="POST">
                         <button class="icon-button favorite" data-product-id="<%= product.productId %>"><i class="fas fa-heart"></i></button>
                         <button class="decrease">-</button>
                         <input type="number" class="quantity" min="1" value="1">
                         <button class="increase">+</button>
                         <button class="icon-button cart"><i class="fas fa-shopping-cart"></i></button>
-                    </div>
+                    </form>
                 </div>
                 <% }) %>
             </div>

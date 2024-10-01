@@ -44,7 +44,7 @@ const customerSchema = new mongoose.Schema({
         required: true,
         default: "user"
     }
-});
+}, { versionKey: false });
 
 const Customer = mongoose.model('Customer', customerSchema);
 

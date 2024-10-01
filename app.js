@@ -13,6 +13,8 @@ const loginRoutes = require('./routes/loginRoutes.js');
 const registerRoutes = require('./routes/registerRoutes.js');
 const adminRoute = require('./routes/adminRoute.js');
 const nearMeRoutes = require('./routes/nearMeRoutes');
+const cartRoutes = require('./routes/cartRoutes');
+
 
 
 // Connect to MongoDB

@@ -54,12 +54,19 @@ async function saveProduct(productId, updateData) {
         console.error('Error while update product ', err);
     }
 }
-
+async function updateProductInventory (productId, inventory) {
+    try {
+        return await Products.findOneAndUpdate({ productId: productId }, { $set: { inventory: inventory }}, {new: true}).exec();
+    } catch (error) {
+        throw Error("Error while updating product inventory");
+    }
+};
 module.exports = {
     getAllProducts,
     createProduct,
     deleteProduct,
     getProductById,
     saveProduct,
-    getLastProduct
+    getLastProduct,
+    updateProductInventory
 }

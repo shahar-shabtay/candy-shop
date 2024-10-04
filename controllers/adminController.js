@@ -2,6 +2,8 @@ const customerService = require('../services/customerService');
 const productService = require('../services/productsService');
 const favoriteService = require('../services/favoriteService');
 const orderService = require('../services/ordersService');
+const facebookInfoService = require('../services/facebookInfoService');
+const facebookPostService = require('../services/facebookPostService');
 const multer = require('multer');
 const path = require('path');
 const mongoose = require("mongoose");
@@ -33,6 +35,19 @@ async function renderAdminPage(req, res) {
     } catch (err) {
         res.render('notLogin');
         console.error('Error rendering admin page:', err);
+    }
+}
+
+async function getFacebookPageInfo(req, res) {
+    try {
+        const user = req.session.user;  // Get the user from the session
+        const facebookData = await facebookInfoService.getFacebookPageInfo(); // Fetch Facebook stats
+
+        // Render the facebookInfo.ejs view and pass the facebookData and user
+        res.render('facebookInfo', { facebookData, user });
+    } catch (err) {
+        console.error('Error fetching Facebook page info:', err);
+        res.status(500).send('Server Error - fetching Facebook page info');
     }
 }
 
@@ -134,7 +149,18 @@ async function addProductsPage(req, res) {
     }
 }
 
+async function postToFacebook(name, price) {
+    const message = `Wow! Check out our new product: ${name}, only for ${price}!`;
+    const url = `http://localhost:3000/products/${name.replace(/\s+/g, '').toLowerCase()}`; // Create URL based on the product name
 
+    try {
+        // Use your existing Facebook service to post the message
+        await facebookPostService.postMessageToFacebook(message, url);
+    } catch (error) {
+        console.error('Error posting to Facebook:', error);
+        throw error; // Handle errors here if needed
+    }
+}
 
 // Manage customers / orders / product
 async function adminUpdateCustomerDetails(req, res) {
@@ -181,8 +207,10 @@ module.exports = {
     updateCustomerDetails,
     getAllCustomers,
     renderAdminPage,
+    getFacebookPageInfo,
     getAllProducts,
     addProductsPage,
-    getFavoriteProducts,
+    postToFacebook,
+    renderFavoriteProducts,
     adminUpdateCustomerDetails,
 };

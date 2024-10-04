@@ -16,6 +16,7 @@ router.get('/myAccount/orders/:orderId', orderController.getCustomerOrderDetails
 router.get('/admin/orders/:orderId', orderController.getOrderDetailsById);
 router.get('/admin/orders', orderController.getAllOrders);
 router.get('/myAccount/orders', orderController.getCustomerOrders);
+router.get('/admin/facebookInfo', adminController.getFacebookPageInfo);
 
 
 

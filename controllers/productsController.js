@@ -1,6 +1,7 @@
 const productsService = require("../services/productsService.js");
 const customerService = require("../services/customerService.js");
 const favoriteService = require('../services/favoriteService');
+const facebookPostService = require('../services/facebookPostService.js');
 const multer = require('multer');
 const path = require('path');
 
@@ -53,7 +54,7 @@ async function addProduct(req, res) {
 
             
             // Proceed with product creation after file is uploaded
-            const { name, price, inventory, description, category} = req.body;
+            const { name, price, inventory, description, category, postToFacebook} = req.body;
             console.log('Received form data:', { name, price, inventory });
 
             // Use 'imageUrl' instead of 'image' to match the Mongoose schema
@@ -71,6 +72,16 @@ async function addProduct(req, res) {
                 imageUrl                 // Save the file path to the imageUrl field
             };
 
+            // Check if postToFacebook is checked and post to Facebook
+            if (postToFacebook === 'on') { // Checkbox value is 'on' when checked
+                const productUrl = `www.${name}`; // Use the product name as part of the URL
+                try {
+                    await facebookPostService.postMessageToFacebook(`Check out our new product: ${name} for just $${price}!`, productUrl);
+                    console.log('Posted to Facebook successfully.');
+                } catch (error) {
+                    console.error('Error posting to Facebook:', error);
+                }
+            }
             // Pass the data to the service to insert into the database
             const newProduct = await productsService.createProduct(productData);
             console.log('Product created successfully:', newProduct);

@@ -89,10 +89,13 @@ async function deleteOrder(orderId) {
   }
 }
 
-async function createOrder (orderDetails) {
+async function createOrder(orderDetails) {
+  // Debugging: Check if products are correctly passed
+  console.log(orderDetails);
   const order = new Orders(orderDetails);
   return await order.save();
 }
+
 
 module.exports = {
     getCustomerOrders,

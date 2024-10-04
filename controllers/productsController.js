@@ -23,12 +23,12 @@ async function getAllProducts (req, res) {
 
 
 async function addProduct(req, res) {
+    const productId = Math.floor(Math.random() * 10000000);
     console.log('Controller: addProduct called');
 
     try {
         // Get the next product ID
         const lastProduct = await productsService.getLastProduct();
-        const newProductId = lastProduct ? lastProduct.productId + 1 : 1;
 
         // Multer setup inside the handler
         const storage = multer.diskStorage({
@@ -36,7 +36,7 @@ async function addProduct(req, res) {
                 cb(null, path.join(__dirname, '../public/images')); // Adjust the path
             },
             filename: function (req, file, cb) {
-                const fileName = `product_${newProductId}.svg`;
+                const fileName = `product_${productId}.svg`;
                 console.log('Filename generated:', fileName); // Debug: Check filename
                 cb(null, fileName); // Save the file with the generated productId filename
             }
@@ -51,20 +51,23 @@ async function addProduct(req, res) {
                 return res.status(500).json({ success: false, message: 'Error uploading image' });
             }
 
+            
             // Proceed with product creation after file is uploaded
-            const { name, price, inventory } = req.body;
+            const { name, price, inventory, description, category} = req.body;
             console.log('Received form data:', { name, price, inventory });
 
             // Use 'imageUrl' instead of 'image' to match the Mongoose schema
-            const imageUrl = `/public/images/product_${newProductId}.svg`;
+            const imageUrl = `/public/images/product_${productId}.svg`;
             console.log('Uploaded file path:', imageUrl);
 
             // Create product data object
             const productData = {
-                productId: newProductId,  // Set the new product ID
+                productId:productId,  // Set the new product ID
                 name,                    // Product name from form data
                 price,                   // Product price from form data
-                inventory,               // Product inventory from form data
+                inventory,             // Product inventory from form data
+                description,
+                category,
                 imageUrl                 // Save the file path to the imageUrl field
             };
 
@@ -84,14 +87,15 @@ async function showDeleteProductForm (req, res) {
     res.render('deleteProduct', { error: null, productId: '' });
 };
 
-async function deleteProduct (req, res) {
-	const productId = req.body.productId;
-	console.log('controller: ', productId);
+async function deleteProduct(req, res) {
+    const productId = req.body.productId;
+    console.log('controller: ', productId);
+    
     try {
         await productsService.deleteProduct(productId);
         return res.json({ success: true });
     } catch (error) {
-        res.render('deleteProduct', { error: error.message });
+        return res.status(500).json({ error: error.message }); // Return error as JSON
     }
 };
 

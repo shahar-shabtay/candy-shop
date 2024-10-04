@@ -1,9 +1,10 @@
 const productsService = require("../services/productsService.js");
 const ordersService = require('../services/ordersService');
+const cartService = require('../services/cartService');
+
 
 // Adds an item to the cart
 function addToCart (req, res, next) {
-    
     const productId = req.body.productId;
     console.log(productId);
     const quantity = parseInt(req.body.quantity) || 1;
@@ -24,6 +25,7 @@ function addToCart (req, res, next) {
 
 // Display the cart
 async function showCart (req, res) {
+    let user = req.session.user;
     let cart = req.session.cart;
     let cartDetails = [];
     let totalPrice = 0;
@@ -40,11 +42,12 @@ async function showCart (req, res) {
     }
 
     totalPrice = totalPrice.toFixed(2);
-    res.render("cart", { cart: cartDetails, total: totalPrice });
+    res.render("cart", { cart: cartDetails, total: totalPrice, user });
 };
 
 // Remvoves item from cart
 function removeFromCart (req, res) {
+    console.log('in cart controller')
     const productId = req.body.productId;
     const cart = req.session.cart;
 
@@ -85,6 +88,7 @@ function updateCart(req, res) {
 
 // Checkout
 async function checkout (req, res) {
+    const customerId = req.session.user.customerId;
     const cart = req.session.cart;
     let orderProducts = [];
     let totalPrice = 0;
@@ -102,22 +106,21 @@ async function checkout (req, res) {
             }
         }
     }
-
     totalPrice = totalPrice.toFixed(2);
     
     let orderData = {
         orderId: Math.floor(Math.random() * 10000000),
-        customerId: "YOUR_CUSTOMER_ID",
+        customerId: customerId,
         orderDate: new Date(),
         totalPrice: totalPrice,
-        status: "completed",
+        status: "Pending",
         products: orderProducts
     };
 
     try {
         const order = await ordersService.createOrder(orderData);
-        req.session.cart = [];
-        res.redirect('/cart/complete');
+        const cart = [];
+        res.render('cart', cart);
     } catch (error) {
         console.log(error);
         res.redirect('/cart');
@@ -125,9 +128,38 @@ async function checkout (req, res) {
 }
 
 
+
 function completePurchase (req, res) {
     res.redirect('/products');
 }
+
+
+const updateCartQuantity = async (req, res) => {
+    try {
+        const { productId, quantity } = req.body;
+
+        // Validate input
+        if (!productId || !quantity) {
+            return res.status(400).json({ success: false, message: 'Product ID and quantity are required.' });
+        }
+
+        // Fetch the product price from productService (assuming you have this service)
+        const product = await productsService.getProductById(productId);
+        if (!product) {
+            return res.status(404).json({ success: false, message: 'Product not found.' });
+        }
+
+        // Update the quantity in the session cart
+        cartService.updateProductQuantity(req, productId, quantity);
+
+        // Respond with success and the product price to update the frontend
+        res.json({ success: true, price: product.price });
+    } catch (error) {
+        res.status(500).json({ success: false, message: `Error updating cart: ${error.message}` });
+    }
+};
+
+
 
 module.exports = {
     addToCart,
@@ -135,5 +167,6 @@ module.exports = {
     removeFromCart,
     checkout,
     completePurchase,
-    updateCart
+    updateCart,
+    updateCartQuantity
 }

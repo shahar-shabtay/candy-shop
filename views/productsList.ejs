@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <title>Candy Shop - Products</title>
         <link rel="stylesheet" type="text/css" href="/public/styles/products.css">
@@ -16,7 +16,7 @@
                     <img src="/public/images/logout.svg" class="navbar-icon" onclick="window.location.href='/logout'">
                 </section>
                 <section class="navbar-center">
-                    <img src="/public/images/logo.svg" class="logo">
+                    <img src="/public/images/logo.svg" class="logo" onclick="window.location.href='/products'">
                 </section>
                 <section class="navbar-right">
                     <img src="/public/images/nearMe.svg" class="navbar-icon" onclick="window.location.href='/nearMe'">
@@ -63,7 +63,7 @@
             </nav>
         </header>
         <!-- Product Section -->
-         <section class="page-content">
+        <section class="page-content">
             <h1 class="products-header">Our Products</h1>
             <div class="grid-container">
                 <% products.forEach(function(product) { %>
@@ -76,17 +76,25 @@
                         <h3><%= product.name %></h3>
                         <p class="price">$<%= product.price %></p>
                     </div>
-                    <form action="/cart/add" method="POST">
-                        <input type="hidden" name="productId" value="<%= product.productId %>">
-                        <button class="icon-button favorite" data-product-id="<%= product.productId %>"><i class="fas fa-heart"></i></button>
-                        <!-- <button class="decrease">-</button> -->
-                        <input type="number" name="quantity" class="quantity" min="1" max="<%= product.inventory %>" value="1">
-                        <!-- <button class="increase">+</button> -->
-                        <button class="icon-button cart"><i class="fas fa-shopping-cart"></i></button>
-                    </form>
+                    <div class="quantity-selector">
+                        <button class="icon-button decrease" onclick="updateQuantity('<%= product.productId %>', -1, event)">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <input type="number" id="quantity-<%= product.productId %>" name="quantity" class="quantity" 
+                               min="1" max="<%= product.inventory %>" value="1" readonly>
+                        <button class="icon-button increase" onclick="updateQuantity('<%= product.productId %>', 1, event)">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                    <button class="icon-button cart" data-product-id="<%= product.productId %>" 
+                            onclick="addToCart(this)">
+                        <i class="fas fa-shopping-cart"></i>
+                    </button>
                 </div>
                 <% }) %>
             </div>
+            <div id="favorite-alert" class="custom-alert hidden">Product added to favorite</div>
+            <div id="cart-alert" class="custom-alert hidden">Product added to cart</div>
         </section>
         <!-- Footer -->
         <footer class="footer">

@@ -1,5 +1,6 @@
-function showSuccessAlert() {
-    const alertBox = document.getElementById('success-alert');
+function showSuccessAlert(id) {
+    console.log(id);
+    const alertBox = document.getElementById(id);
     alertBox.classList.remove('hidden');
     alertBox.classList.add('visible');
 
@@ -222,6 +223,8 @@ document.querySelectorAll('.remove').forEach(icon => {
 
 // All Products
 // -------------
+
+// delete product
 document.querySelectorAll('.remove-product').forEach(icon => {
     icon.addEventListener('click', async () => {
         const productId = icon.getAttribute('data-product-id');
@@ -236,25 +239,30 @@ document.querySelectorAll('.remove-product').forEach(icon => {
             });
 
             const result = await response.json();
-            if (response.ok) {
-                icon.closest('.product-card').remove(); // Remove the product card from the DOM
+
+            console.log(response); // Debug the response here
+
+            if (response.ok && result.success) {
+                
+                icon.closest('.card').remove(); // Remove the product card from the DOM
+                showSuccessAlert('delete-alert');
             } else {
                 alert(result.error); // Show error message
             }
         } catch (error) {
-            console.error('Error removing favorite:', error);
-            alert('Failed to remove favorite product.');
+            console.error('Error removing product:', error);
+            alert('Failed to remove product.');
         }
     });
 });
 
-
+// edit product
 function editProduct(productId) {
-
-    const productCard = document.querySelector(`.product-card[data-product-id="${productId}"]`);
+    // Use the correct class name for the card
+    const productCard = document.querySelector(`.card[data-product-id="${productId}"]`);
 
     if (!productCard) {
-        console.error('Product card not found for ID:', productId); // Error if no product card is found
+        console.error('Product card not found for ID:', productId);
         return;
     }
 
@@ -270,10 +278,9 @@ function editProduct(productId) {
     const editButton = productCard.querySelector('.edit-btn');
     editButton.src = '/public/images/save.svg'; // Change icon to save
     editButton.onclick = () => saveProduct(productId); // Assign save function to the button
-
 }
 
-
+// save product
 function saveProduct(productId) {
     console.log('Saving product with ID:', productId); // Debug
 
@@ -284,11 +291,11 @@ function saveProduct(productId) {
         return;
     }
 
-    // Get values from the inputs
-    const name = productCard.querySelector('.product-input-name') ? productCard.querySelector('.product-input-name').value : null;
-    const price = productCard.querySelector('.product-input[name="price"]') ? productCard.querySelector('.product-input[name="price"]').value : null;
-    const description = productCard.querySelector('.product-input[name="description"]') ? productCard.querySelector('.product-input[name="description"]').value : null;
-    const inventory = productCard.querySelector('.product-input[name="inventory"]') ? productCard.querySelector('.product-input[name="inventory"]').value : null;
+    // Get values from the inputs using correct class selectors
+    const name = productCard.querySelector('input[name="name"]') ? productCard.querySelector('input[name="name"]').value : null;
+    const price = productCard.querySelector('input[name="price"]') ? productCard.querySelector('input[name="price"]').value : null;
+    const description = productCard.querySelector('input[name="description"]') ? productCard.querySelector('input[name="description"]').value : null;
+    const inventory = productCard.querySelector('input[name="inventory"]') ? productCard.querySelector('input[name="inventory"]').value : null;
 
     console.log('Product data to save:', { name, price, description, inventory }); // Debug
 
@@ -320,7 +327,7 @@ function saveProduct(productId) {
             const editButton = productCard.querySelector('.edit-btn');
             editButton.src = '/public/images/edit.svg'; // Change icon back to edit
             editButton.onclick = () => editProduct(productId); // Reassign the edit function
-            showSuccessAlert();
+            showSuccessAlert('success-alert');
         } else {
             alert('Failed to update product');
         }
@@ -329,7 +336,6 @@ function saveProduct(productId) {
         console.error('Error updating product:', error);
     });
 }
-
 
 
 

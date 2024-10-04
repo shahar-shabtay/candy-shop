@@ -84,14 +84,16 @@
                                     <!-- Form Card -->
                                     <div class="card">
                                         <form id="productForm">
-                                            <label for="name">Product Name</label>
-                                            <input type="text" id="name" name="name" required>
+                                            <input class="input-field" type="text" id="name" name="name" placeholder="Product Name" required>
+                                            <input class="input-field" type="text" id="price" name="price" placeholder="Product Price" required>
 
-                                            <label for="price">Product Price</label>
-                                            <input type="text" id="price" name="price" required>
+                                            
+                                            <input class="input-field" type="text" id="inventory" name="inventory" placeholder="Inventory" required>
 
-                                            <label for="inventory">Inventory</label>
-                                            <input type="text" id="inventory" name="inventory" required>
+                                            
+                                            <input class="input-field" type="text" id="description" name="description" placeholder="Description" required>
+
+                                            <input class="input-field" type="text" id="category" name="category" placeholder="Category" required>
 
                                             <label for="image">Product Image (SVG only):</label>
                                             <input type="file" id="fileInput" name="image" accept=".svg">
@@ -110,7 +112,7 @@
                                         </div>
                                     </div>
                                     <div id="success-alert" class="custom-alert hidden">
-                                        המוצר נוסף בהצלחה
+                                        Product Added
                                     </div>
                                     <div id="error-alert" class="custom-alert hidden">
                                             שגיאה ביצירת מוצר
@@ -153,7 +155,7 @@
                 </div>
             </div>
         </footer>
-        <script type="module" src="/public/js/adminPage.js"></script>
+        <script src="/public/js/adminPage.js"></script>
         <script src="/public/js/main.js"></script>
     </body>
 </html>

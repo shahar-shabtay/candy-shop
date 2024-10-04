@@ -10,6 +10,7 @@ async function getFavoriteProductsByCustomerId(customerId) {
         // Fetch product details for each favorite
         const productDetailsPromises = favorites.map(async (favorite) => {
             const productDetails = await productsService.getProductById(favorite.productId); // Fetch product by productId
+            console.log(productDetails);
             return {
                 product: productDetails,
                 productId: favorite.productId

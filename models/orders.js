@@ -20,7 +20,7 @@ const orderSchema = new mongoose.Schema({
   status: { type: String, required: true },
   products: [productSchema], // Array of product details
   address: addressSchema // Embedded address schema
-});
+}, { versionKey: false });
 
 const Orders = mongoose.model('Orders', orderSchema);
 

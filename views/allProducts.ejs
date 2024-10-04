@@ -106,10 +106,14 @@
                                                 <img class="remove-product" src="/public/images/trash.svg" data-product-id="<%= product.productId %>">
                                                 <img class="edit-btn" src="/public/images/edit.svg" data-product-id="<%= product.productId %>" onClick="editProduct('<%= product.productId %>')">
                                             </div>
+                                            
                                         </div>
                                     </div>
                                 <% }) %>
-                            </div>                         
+                            </div>   
+                            <div id="delete-alert" class="custom-alert hidden">
+                                Product Deleted
+                            </div>                      
                         </div>
                     </div>
                 </div>

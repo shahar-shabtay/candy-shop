@@ -1,5 +1,7 @@
 const productService = require('../services/productsService');
 const orderService = require('../services/ordersService');
+const customerService = require('../services/customerService');
+
 
 
 async function getAllOrders(req, res) {
@@ -25,15 +27,19 @@ async function getCustomerOrders (req, res) {
 
 async function getCustomerOrderDetailsById (req, res) {
   try {
-      const orderId = req.params.orderId; // Get orderId from the request
-  
-      // Fetch the order from the service
-      const order = await orderService.getOrderById(orderId);
-      console.log(order);
-      if (!order) {
-          return res.status(404).json({ message: 'Order not found' });
-      }
-  
+        const user = req.session.user;
+        const orderId = req.params.orderId; // Get orderId from the request
+    
+        // Fetch the order from the service
+        const order = await orderService.getOrderById(orderId);
+        console.log(order);
+        if (!order) {
+            return res.status(404).json({ message: 'Order not found' });
+        }
+        const customer = await customerService.getCustomerById(user.customerId);
+        if (!customer) {
+            return res.status(404).json({ message: 'Customer not found' });
+        }   
       // Prepare an array to hold products with full details
       const fullProductDetails = await Promise.all(order.products.map(async (product) => {
           // Fetch product details
@@ -58,19 +64,25 @@ async function getCustomerOrderDetailsById (req, res) {
       }));
   
       // Retrieve user from the session
-      const user = req.session.user;
+      
       
       // Pass the data to the view
       res.render('customerOrderDetails', {
-          orderDetails: {
-              orderId: order.orderId,
-              customerId: order.customerId,
-              orderDate: order.orderDate,
-              totalPrice: order.totalPrice,
-              status: order.status,
-              address: order.address,
-              products: fullProductDetails,
-          },
+            orderDetails: {
+                orderId: order.orderId,
+                customerId: order.customerId,
+                orderDate: order.orderDate,
+                totalPrice: order.totalPrice,
+                status: order.status,
+                address: order.address,
+                products: fullProductDetails,
+            },
+            customerDetails: {
+                name: customer.name,
+                email: customer.email,
+                phone: customer.phone,
+                address: customer.address,
+            },
           user: user, // Pass the user from the session
       });
   } catch (error) {
@@ -82,6 +94,7 @@ async function getCustomerOrderDetailsById (req, res) {
 
 async function getOrderDetailsById (req, res) {
     try {
+        const user = req.session.user;
         const orderId = req.params.orderId; // Get orderId from the request
     
         // Fetch the order from the service
@@ -90,7 +103,10 @@ async function getOrderDetailsById (req, res) {
         if (!order) {
           return res.status(404).json({ message: 'Order not found' });
         }
-    
+        const customer = await customerService.getCustomerById(user.customerId);
+        if (!customer) {
+            return res.status(404).json({ message: 'Customer not found' });
+        }  
         // Prepare an array to hold products with full details
         const fullProductDetails = await Promise.all(order.products.map(async (product) => {
           const productDetails = await productService.getProductById(product.productId);
@@ -113,7 +129,7 @@ async function getOrderDetailsById (req, res) {
         }));
     
         // Retrieve user from the session
-        const user = req.session.user;
+        
         console.log(order.status);
         // Pass the data to the view
         res.render('orderDetails', {
@@ -126,6 +142,12 @@ async function getOrderDetailsById (req, res) {
             address: order.address,
             products: fullProductDetails,
           },
+          customerDetails: {
+            name: customer.name,
+            email: customer.email,
+            phone: customer.phone,
+            address: customer.address,
+        },  
           user: user, // Pass the user from the session
         });
       } catch (error) {

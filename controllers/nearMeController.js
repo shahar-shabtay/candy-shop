@@ -2,13 +2,14 @@
 const nearMeService = require('../services/nearMeService');
 
 async function showNearestStore(req, res) {
+  const user = req.session.user;
   const { lat, lon } = req.query; // User's current latitude and longitude
   try {
     const nearestStore = await nearMeService.findNearestStore(lat, lon);
     if (nearestStore) {
-      res.render('nearMe', { store: nearestStore});
+      res.render('nearMe', { store: nearestStore, user});
     } else {
-      res.render('nearMe', { error: 'No stores found nearby' });
+      res.render('nearMe', { error: 'No stores found nearby' , user});
     }
   } catch (err) {
     console.error('Error finding nearest store:', err);

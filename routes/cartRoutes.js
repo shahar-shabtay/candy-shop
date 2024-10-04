@@ -4,6 +4,8 @@ const cartController = require('../controllers/cartController');
 
 // Display cart
 router.get('/', cartController.showCart);
+router.post('/cart/updateQuantity', cartController.updateCartQuantity);
+
 
 // Add to cart
 router.post('/add', cartController.addToCart);
@@ -13,7 +15,6 @@ router.post('/remove', cartController.removeFromCart);
 
 // Checkout
 router.post('/checkout', cartController.checkout);
-router.get('/checkout', cartController.checkout);
 
 router.get('/complete', cartController.completePurchase);
 router.post('/update', cartController.updateCart);

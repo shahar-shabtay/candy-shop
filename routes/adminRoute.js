@@ -11,7 +11,7 @@ router.get('/admin', adminController.getAllCustomers);
 router.get('/admin/customers', adminController.getAllCustomers);
 router.get('/admin/products', adminController.getAllProducts);
 router.get('/admin/addProducts', adminController.addProductsPage);
-router.get('/myAccount/favorite', adminController.renderFavoriteProducts,);
+router.get('/myAccount/favorite', adminController.getFavoriteProducts,);
 router.get('/myAccount/orders/:orderId', orderController.getCustomerOrderDetailsById);
 router.get('/admin/orders/:orderId', orderController.getOrderDetailsById);
 router.get('/admin/orders', orderController.getAllOrders);

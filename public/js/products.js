@@ -10,34 +10,30 @@ function showSuccessAlert(id) {
     }, 3000);
 }
 
-document.querySelectorAll('.favorite').forEach(button => {
-    button.addEventListener('click', async () => {
-        const productId = button.getAttribute('data-product-id');
-
-        try {
-            const response = await fetch('/products/add', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ productId: productId }),
-            });
-
-            const result = await response.json();
-            console.log(result);
-            if (response.ok) {
-                button.textContent = 'Added to Favorites'; // Change button text
-                button.disabled = true; // Disable button if needed
-                showSuccessAlert('favorite-alert');
-            } else {
-                alert(result.error); // Show error message if the product is already a favorite
-            }
-        } catch (error) {
-            console.error('Error adding favorite:', error);
-            alert('Failed to add favorite product.');
+function addToFavorites(productId) {
+    fetch('/products/addFav', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ productId: productId }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Product added to favorites!');
+            // Optionally, you can change the heart icon to indicate it's favorited
+            document.querySelector(`#favorite-icon-${productId}`).classList.add('favorited');
+        } else {
+            alert('Failed to add product to favorites: ' + data.message);
         }
+    })
+    .catch(error => {
+        console.error('Error adding product to favorites:', error);
+        alert('Error adding product to favorites.');
     });
-});
+}
+
 
 
 

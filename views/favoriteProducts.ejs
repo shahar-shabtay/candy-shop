@@ -5,11 +5,12 @@
         <link rel="stylesheet" href="/public/styles/myAccount.css ">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
         <link rel="stylesheet" href="/public/styles/main.css">
+        <link rel="stylesheet" href="/public/styles/cards.css">
         <link rel="stylesheet" href="/public/styles/peronsal.css">
-    </head>
+
     <body>
-       <!-- Topbar -->
-       <header>
+        <!-- Topbar -->
+        <header>
         <nav class="main-navbar">
             <section class="navbar-left">
                 <img src="/public/images/shooping_cart.svg" class="navbar-icon">
@@ -61,9 +62,9 @@
                 </div>
             </section>
         </nav>
-    </header>
+        </header>
         <!-- Account Section -->
-        <section class="account-section">
+        <section class="account-section"></section>
             <header class="account-header">
                 <h2>Hello <%= user.name %><s/h2>
             </header>
@@ -75,30 +76,92 @@
                 </nav>
                 <!-- Account Details -->
                 <div class="content">
-                    <section id="details" class="content-item"></section>
-                    <section id="favorit" class="content-item active">
+                    <section id="details" class="content-item active">
                         <div class="container">
-                            <% if (favoriteProducts.length > 0) { %>
-                                <div class="product-grid">
-                                    <% favoriteProducts.forEach(favorite => { %>
-                                        <div class="product-card">
-                                            <img src="<%= favorite.product.imageUrl %>" alt="<%= favorite.product.name %>" />
-                                            <h2><%= favorite.product.name %></h2>
-                                            <p>Price: $<%= favorite.product.price %></p>
-                                            <button class="icon-button cart"><i class="fas fa-shopping-cart" data-product-id="<%= favorite.product.productId %>"></i>Add to Cart</button>
-                                            <button class="icon-button remove remove-favorite" data-product-id="<%= favorite.product.productId %>"><i class="fas fa-trash-alt"></i> Remove from Favorites</button>
+                            <div class="products-grid">
+                                <% favorites.forEach(function(product) { %>
+                                    <div class="product-card">
+                                        <!-- Image and Favorite button (3/6 of the card) -->
+                                        <div class="product-image-container">
+                                            <img src="<%= product.imageUrl %>" alt="<%= product.name %>" class="product-image">
+                                            <button class="favorite-button">
+                                                <i class="fas fa-heart favorite" data-product-id="<%= product.productId %>"></i> <!-- Favorite Icon -->
+                                            </button>
                                         </div>
-                                    <% }) %>
-                                </div>
-                            <% } else { %>
-                                <p>You have no favorite products.</p>
-                            <% } %>     
+                                    
+                                        <!-- Divider -->
+                                        <hr class="product-divider">
+                                    
+                                        <!-- Name, Description, and Price (2/6 of the card) -->
+                                        <div class="product-info">
+                                                <div class="product-text">
+                                                    <p class="product-name"><%= product.name %></p><br>
+                                                    <p class="product-description"><%= product.description %></p>
+                                                </div>
+                                                <div class="product-price">₪<%= product.price %></div>
+                                        </div>
+                                        
+                                        
+                                    
+                                        <!-- Divider -->
+                                        <hr class="product-divider">
+                                    
+                                        <!-- Add to Cart and Quantity (1/6 of the card) -->
+                                        <div class="product-actions">
+                                            <div class="quantity-selector">
+                                                <button class="decrease" onclick="updateQuantity('<%= product.productId %>', -1, event)">-</button>
+                                                <input type="number" name="quantity" id="quantity-<%= product.productId %>" value="1" min="1" max="<%= product.inventory %>" class="quantity-input" readonly>
+                                                <button class="increase" onclick="updateQuantity('<%= product.productId %>', 1, event)">+</button>
+                                            </div>
+                                            <button class="add-to-cart" data-product-id="<%= product.productId %>" 
+                                                onclick="addToCart(this)">
+                                                Add 
+                                            </button>
+                                        </div>
+                                    </div>
+                                    
+                                    
+                                <% }) %>
+                            </div>                            
                         </div>
                     </section>
+                    <section id="favorit" class="content-item" style="display:none;">This is the content for Option 2.</section>
                     <section id="orders" class="content-item"></section>
                 </div>
             </div>
         </section>
+        <footer class="footer">
+            <div class="footer-left">
+                <p>© Sweetly | Adi Brodesky | Gal Ternovsky | Shahar Shabtay | Ziv Klein </p>
+            </div>
+            <div class="footer-right">
+                <div class="hover-container">
+                    <a href="#" class="about-us" id="openAboutModal">About Us</a>
+                    |
+                    <a href="#" class="talk-to-us" id="openTalkModal">Talk To Us</a>
+                    |
+                    <a href="https://tinyurl.com/sweetly-facebook" class="facebook">Facebook</a>
+                </div>
+                
+                <!-- Modal for About Us -->
+                <div id="aboutModal" class="modal">
+                    <div class="modal-content">
+                        <span class="close-button">&times;</span>
+                        <h2>About Us</h2>
+                        <p>At Sweetly, we make finding your favorite sweets easy and enjoyable. We have the most special candies and a lot of stores waiting for you!</p>
+                    </div>
+                </div>
+                
+                <!-- Modal for Talk To Us -->
+                <div id="talkModal" class="modal">
+                    <div class="modal-content">
+                        <span class="close-button">&times;</span>
+                        <h2>Talk To Us</h2>
+                        <p>You can reach us at support@candyshop.com or follow us on social media for the latest updates and tips!</p>
+                    </div>
+                </div>
+            </div>
+        </footer>
         <script src="/public/js/myAccount.js"></script>
         <script src="/public/js/main.js"></script>
         <script>

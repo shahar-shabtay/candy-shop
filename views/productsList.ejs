@@ -2,7 +2,6 @@
 <html lang="en">
     <head>
         <title>Candy Shop - Products</title>
-        <link rel="stylesheet" type="text/css" href="/public/styles/products.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
         <link rel="stylesheet" href="/public/styles/main.css">
         <link rel="stylesheet" href="/public/styles/cards.css">
@@ -65,34 +64,49 @@
         <!-- Product Section -->
         <section class="page-content">
             <h1 class="products-header">Our Products</h1>
-            <div class="grid-container">
+            <div class="products-grid">
                 <% products.forEach(function(product) { %>
-                <div class="card">
-                    <% if (product.inventory <= 5) { %>
-                        <span class="stock-banner"><%= product.inventory %> left</span>
-                    <% } %>
-                    <img src="<%= product.imageUrl %>" alt="Product Image">
-                    <div class="info">
-                        <h3><%= product.name %></h3>
-                        <p class="price">$<%= product.price %></p>
+                    <div class="product-card">
+                        <!-- Image and Favorite button (3/6 of the card) -->
+                        <div class="product-image-container">
+                            <img src="<%= product.imageUrl %>" alt="<%= product.name %>" class="product-image">
+                            <button class="favorite-button">
+                                <i class="fas fa-heart favorite" data-product-id="<%= product.productId %>"></i> <!-- Favorite Icon -->
+                            </button>
+                        </div>
+                    
+                        <!-- Divider -->
+                        <hr class="product-divider">
+                    
+                        <!-- Name, Description, and Price (2/6 of the card) -->
+                        <div class="product-info">
+                                <div class="product-text">
+                                    <p class="product-name"><%= product.name %></p><br>
+                                    <p class="product-description"><%= product.description %></p>
+                                </div>
+                                <div class="product-price">₪<%= product.price %></div>
+                        </div>    
+                        <!-- Divider -->
+                        <hr class="product-divider">
+                    
+                        <!-- Add to Cart and Quantity (1/6 of the card) -->
+                        <div class="product-actions">
+                            <div class="quantity-selector">
+                                <button class="decrease" onclick="updateQuantity('<%= product.productId %>', -1, event)">-</button>
+                                <input type="number" name="quantity" id="quantity-<%= product.productId %>" value="1" min="1" max="<%= product.inventory %>" class="quantity-input" readonly>
+                                <button class="increase" onclick="updateQuantity('<%= product.productId %>', 1, event)">+</button>
+                            </div>
+                            <button class="add-to-cart" data-product-id="<%= product.productId %>" 
+                                onclick="addToCart(this)">
+                                Add 
+                            </button>
+                        </div>
                     </div>
-                    <div class="quantity-selector">
-                        <button class="icon-button decrease" onclick="updateQuantity('<%= product.productId %>', -1, event)">
-                            <i class="fas fa-minus"></i>
-                        </button>
-                        <input type="number" id="quantity-<%= product.productId %>" name="quantity" class="quantity" 
-                               min="1" max="<%= product.inventory %>" value="1" readonly>
-                        <button class="icon-button increase" onclick="updateQuantity('<%= product.productId %>', 1, event)">
-                            <i class="fas fa-plus"></i>
-                        </button>
-                    </div>
-                    <button class="icon-button cart" data-product-id="<%= product.productId %>" 
-                            onclick="addToCart(this)">
-                        <i class="fas fa-shopping-cart"></i>
-                    </button>
-                </div>
+                    
+                    
                 <% }) %>
             </div>
+            
             <div id="favorite-alert" class="custom-alert hidden">Product added to favorite</div>
             <div id="cart-alert" class="custom-alert hidden">Product added to cart</div>
         </section>

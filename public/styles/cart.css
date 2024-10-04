@@ -51,6 +51,7 @@
 
 .update-button {
     background-color: #e84c3d;
+    border-radius: 5px;
     color: white;
     border: none;
     padding: 5px 10px;

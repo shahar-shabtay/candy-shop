@@ -1,112 +1,171 @@
-
-
-.grid-container {
+h1 {
+    color: #333;
+    text-align: center;
+}
+    
+.products-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Creates responsive columns */
+    gap: 20px; /* Adds space between the cards */
     padding: 20px;
+    justify-items: center
 }
 
-.card {
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    overflow: hidden;
-    background-color: white;
-    position: relative;
-    text-align: center;
+.product-card {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    height: 100%;
+    border: 1px solid #e1e1e1;
+    border-radius: 10px;
+    width: 280px;
+    height: 360px; /* Ensure uniform height for all cards */
+    text-align: left;
+    font-family: Arial, sans-serif;
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease;
 }
-
-.card:hover {
+.product-card:hover {
     transform: translateY(-5px);
     }
 
+.product-image-container {
+    flex: 3;
+    background: radial-gradient(circle at center, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0) 70%), 
+                repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.1) 0, rgba(255, 255, 255, 0.1) 10px, transparent 10px, transparent 20px),
+                #ffc0cb;
+    border-top-left-radius: 10px;  /* Set the desired radius */
+    border-top-right-radius: 10px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .product-image {
-    width: 100%;
-    height: auto;
-    border-radius: 0;
-    background-color: #fedde5;
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: cover;
 }
 
-.card .stock-banner {
+.favorite-button {
     position: absolute;
-    top: 0;
-    left: 0;
-    background-color: red;
-    color: white;
-    padding: 5px;
-    font-size: 12px;
-    border-bottom-right-radius: 10px;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
 }
 
-.card .info {
-    padding: 10px;
-    background-color: #fff;
-}
-
-.card .info h3 {
-    margin: 10px 0;
-    font-size: 18px;
-}
-
-.card .info p {
-    margin: 5px 0;
-    font-size: 14px;
-    color: #666;
-}
-
-.card .info .price {
-    font-weight: bold;
-    color: #333;
-    margin-top: 10px;
-}
-
-.card .actions {
+.product-info {
+    flex: 2;
     display: flex;
     justify-content: space-between;
     padding: 10px;
+}
+
+.product-details {
+    display: flex;
+    justify-content: space-between;
     align-items: center;
-    background-color: white;
-    margin-top: auto;
+    padding: 10px;
+    margin-bottom: 5px;
 }
 
-.card .actions .icon {
-    font-size: 20px;
-    cursor: pointer;
-    background-color: white;
-    padding: 5px;
-    border-radius: 50%;
+.product-text {
+    display: inline-block;
+    max-width: 70%; /* Ensures space for the price */
+    flex-grow: 1; /* Allows the product name section to grow */
 }
 
-.card .actions input[type="number"] {
-    width: 50px;
+.product-name {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    display: inline-block;
+}
+
+.product-description {
+    font-size: 14px;
+    color: #666;
+    display: inline-block;
+}
+
+.product-price {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    white-space: nowrap; /* Prevent price from wrapping */
+    text-align: right;
+    flex-shrink: 0; /* Ensures price stays on the right */
+}
+
+
+
+.product-divider {
+    width: 90%;
+    margin: 0 auto;
+    border: 0;
+    border-top: 1px solid #ddd;
+}
+
+.product-actions {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+}
+
+.quantity-selector {
+    display: flex;
+    align-items: center;
+}
+
+.quantity-input {
+    width: 40px;
     text-align: center;
     margin: 0 5px;
-    -moz-appearance: textfield;
+    text-align: center  ;
 }
 
-.card .actions input::-webkit-outer-spin-button,
-.card .actions input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
-
-.card .actions input {
-    appearance: textfield;
-}
-
-.card .actions button {
+.add-to-cart {
+    background-color: #e74c3c;
+    color: white;
     border: none;
-    background-color: white;
-    cursor: pointer;
     padding: 5px 10px;
-    font-size: 16px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 14px; /* Make the button smaller */
 }
 
-.product-action {
-    width: 20px;
+.add-to-cart:hover {
+    background-color: #c0392b;
+}
+
+.decrease, .increase {
+    background: none;
+    border: none;
+    width: 25px;
+    height: 25px;
+    text-align: center;
+    cursor: pointer;
+}
+
+
+
+.left-section {
+    display: flex;
+    flex-direction: column; /* Stacks product name and description vertically */
+    flex: 1; /* Ensures the left section takes the remaining space */
+}
+
+.right-section {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    text-align: right;
+    margin-left: 10px;
+    white-space: nowrap; /* Prevents price from wrapping */
+    flex-shrink: 0; /* Prevent the price from shrinking */
 }

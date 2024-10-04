@@ -99,22 +99,18 @@ async function deleteProduct(req, res) {
     }
 };
 
-async function addNewFavorite (req,res) {
-	try {
-		const customerId = req.session.user.customerId;
-		const user = req.session.user;
-		const productId = req.body.productId;
-		const result = await favoriteService.addNewFavorite(customerId, productId);
-		if (result.success) {
-            // Optionally, you can add a message to the session to display after rendering
-            res.redirect('/products');
-        } else {
-            res.redirect('/products'); // Flash error message
-        }
-		res.redirect('/products')
-	} catch(err) {
-		console.error('error add new product as favorite',err);
-	}
+async function addNewFavorite(req, res) {
+    try {
+        const customerId = req.session.user.customerId; // Assuming customerId is stored in session
+        const productId = req.body.productId; // Get the productId from the request body
+
+        await favoriteService.addFavorite(customerId, productId);
+
+        return res.status(200).json({ success: true });
+    } catch (error) {
+        console.error('Error adding product to favorites:', error);
+        return res.status(500).json({ success: false, message: error.message });
+    }
 }
 
 async function removeFavoriteProduct (req,res) {

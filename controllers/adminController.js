@@ -108,17 +108,16 @@ async function getAllProducts(req, res) {
 }
 
 // For specific customer - orders / details / favorite
-async function renderFavoriteProducts(req, res) {
+async function getFavoriteProducts(req, res) {
     try {
-        const user = req.session.user;
-        const favoriteProducts = await favoriteService.getFavoriteProductsByCustomerId(user.customerId);
-        if (favoriteProducts) {
-            res.render('favoriteProducts', { favoriteProducts , user});
-        }
-        // Render the favorite products view, passing the products data
-    } catch (err) {
-        console.error('Error rendering favorite products:', err);
-        res.status(500).send('Failed to fetch favorite products');
+        const customerId = req.session.user.customerId; // Fetching customerId from session
+        const favoriteProducts = await favoriteService.getFavoritesByUser(customerId);
+
+        // Render the EJS file and pass favorite products data to it
+        res.render('favorites', { favorites: favoriteProducts });
+    } catch (error) {
+        console.error('Error rendering favorites page:', error);
+        res.status(500).render('error', { message: 'Failed to load favorite products' });
     }
 }
 
@@ -184,6 +183,6 @@ module.exports = {
     renderAdminPage,
     getAllProducts,
     addProductsPage,
-    renderFavoriteProducts,
+    getFavoriteProducts,
     adminUpdateCustomerDetails,
 };

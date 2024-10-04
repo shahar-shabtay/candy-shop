@@ -1,16 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Candy Shop - Admin Page</title>
-        <link rel="stylesheet" href="/public/styles/main.css">
-        <link rel="stylesheet" href="/public/styles/personal.css">
-        <link rel="stylesheet" href="/public/styles/productPreview.css  ">
+        <title>Sweetly - Admin Page</title>
         <link rel="icon" href="/public/images/favicon.ico" type="image/x-icon">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+        <link rel="stylesheet" href="/public/styles/main.css">
+        <link rel="stylesheet" href="/public/styles/personal.css">        
+        <link rel="stylesheet" href="/public/styles/cards.css">
 
     </head>
-    <body>  
-        <!-- Topbar -->
+    <body>
         <header>
             <nav class="main-navbar">
                 <section class="navbar-left">
@@ -18,7 +16,7 @@
                     <img src="/public/images/logout.svg" class="navbar-icon" onclick="window.location.href='/logout'">
                 </section>
                 <section class="navbar-center">
-                    <img src="/public/images/logo.svg" class="logo" onclick="window.location.href='/products'">
+                    <img src="/public/images/logo.svg" class="logo">
                 </section>
                 <section class="navbar-right">
                     <img src="/public/images/nearMe.svg" class="navbar-icon" onclick="window.location.href='/nearMe'">
@@ -64,68 +62,40 @@
                 </section>
             </nav>
         </header>
-        <!-- Account Section -->
         <section class="page-content">
-                <div class="personal-header">
-                    <h2>Hello <%= user.name %></h2>
+            <header class="personal-header">
+                <h2>Hello <%= user.name %></h2>
+            </header>
+            <div class="personal-content">
+                <!-- Sub Menu -->
+                <div class="sub-menu">
+                    <button class="menu-option" onclick="window.location.href='/personal/admin/customers'">All Users</button>
+                    <button class="menu-option" onclick="window.location.href='/personal/admin/orders'">All Orders</button>
+                    <button class="menu-option" onclick="window.location.href='/personal/admin/products'">All Products</button>
+                    <button class="menu-option" onclick="window.location.href='/personal/admin/addProducts'">Add Product</button>
+                    <button class="menu-option active" onclick="window.location.href='/personal/admin/facebookInfo'">Facebook Info</button>
                 </div>
-                <div class="personal-content">
-                    <div class="sub-menu">
-                        <button class="menu-option" onclick="window.location.href='/personal/admin/customers'">All Users</button>
-                        <button class="menu-option" onclick="window.location.href='/personal/admin/orders'">All Orders</button>
-                        <button class="menu-option" onclick="window.location.href='/personal/admin/products'">All Products</button>
-                        <button class="menu-option active" onclick="window.location.href='/personal/admin/addProducts'">Add Product</button>
-                        <button class="menu-option" onclick="window.location.href='/personal/admin/facebookInfo'">Facebook Info</button>
-                    </div>
-                    <!-- Account Details -->
-                    <div class="main-content">
-                        <div id="customers" class="content-item active">
-                            <div class="container">                            
-                                <div class="product-preview-container">
-                                    <!-- Form Card -->
-                                    <div class="card">
-                                        <form id="productForm">
-                                            <input class="input-field" type="text" id="name" name="name" placeholder="Product Name" required>
-                                            <input class="input-field" type="text" id="price" name="price" placeholder="Product Price" required>
+                <!-- Facebook Info -->
+                <div class="main-content">
+                    <div id="facebook" class="content-item active">
+                        <div class="container">
+                            <div class="grid-container">
+                                <h3>Facebook Page Information</h3>
+                                <p><strong>Followers👥:</strong> <%= facebookData.followers %></p>
+                                <p><strong>Total Posts📝:</strong> <%= facebookData.postCount %></p>
+                                <p><strong>Total Likes❤️:</strong> <%= facebookData.totalLikes %></p>
 
-                                            
-                                            <input class="input-field" type="text" id="inventory" name="inventory" placeholder="Inventory" required>
-
-                                            
-                                            <input class="input-field" type="text" id="description" name="description" placeholder="Description" required>
-
-                                            <input class="input-field" type="text" id="category" name="category" placeholder="Category" required>
-
-                                            <label for="image">Product Image (SVG only):</label>
-                                            <input type="file" id="fileInput" name="image" accept=".svg">
-
-                                            <label for="postToFacebook">Post to Facebook:</label>
-                                            <input type="checkbox" id="postToFacebook" name="postToFacebook">
-                                        
-                                            <button id="submitButton" type="submit" onClick="submitProduct()">Create Product</button>
-                                        </form>
-                                    </div>
-
-                                    <!-- Live Preview Card -->
-                                    <div class="card" id="previewCard">
-                                        <img id="previewImage" src="/public/images/upload.svg">
-                                        <div class="info">
-                                            <h3 id="previewName"></h3>
-                                            <p id="previewPrice"></p>
-                                            <p id="previewInventory"></p>
-                                        </div>
-                                    </div>
-                                    <div id="success-alert" class="custom-alert hidden">
-                                        Product Added
-                                    </div>
-                                    <div id="error-alert" class="custom-alert hidden">
-                                            שגיאה ביצירת מוצר
-                                    </div>
-                                </div>
-                            </div>
+                                <% if (facebookData.errorMessage) { %>
+                                    <p class="error-message"><%= facebookData.errorMessage %></p>
+                                <% } %>
+                            </div>   
+                            <div id="delete-alert" class="custom-alert hidden">
+                                Product Deleted
+                            </div>                      
                         </div>
                     </div>
                 </div>
+            </div>
         </section>
         <footer class="footer">
             <div class="footer-left">
@@ -158,8 +128,8 @@
                     </div>
                 </div>
             </div>
-        </footer>       
-        <script src="/public/js/adminPage.js"></script>
+        </footer>
         <script src="/public/js/main.js"></script>
+        <script src="/public/js/adminPage.js"></script>
     </body>
 </html>

@@ -1,5 +1,4 @@
 function showSuccessAlert(id) {
-    console.log(id);
     const alertBox = document.getElementById(id);
     alertBox.classList.remove('hidden');
     alertBox.classList.add('visible');
@@ -11,19 +10,162 @@ function showSuccessAlert(id) {
     }, 3000);
 }
 
-function showErrorAlert() {
-    const alertBox = document.getElementById('error-alert');
-    alertBox.classList.remove('hidden');
-    alertBox.classList.add('visible');
+//--------------
+// Sub Menu     |
+//--------------
+// Ensure the default tab (Option 1) is shown on page load
+document.addEventListener('DOMContentLoaded', () => {
+    const activeTab = document.querySelector('.menu-option.active');
+    if (!activeTab) {
+        document.querySelector('.menu-option').click();
+    }
+});
 
-    // Hide after 3 seconds
-    setTimeout(() => {
-        alertBox.classList.remove('visible');
-        alertBox.classList.add('hidden');
-    }, 3000);
+// *****************
+// My Account      *
+// *****************   
+
+//--------------
+// My Deatails  |
+//--------------
+
+// make the password readable and ubreadable
+const togglePassword = document.querySelector('#togglePassword');
+const password = document.querySelector('#password');
+if (togglePassword){
+    togglePassword.addEventListener('click', function (e) {
+        // Toggle the type attribute
+        const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+        password.setAttribute('type', type);
+
+        // Toggle the eye / eye-slash icon
+        this.classList.toggle('fa-eye');
+        this.classList.toggle('fa-eye-slash');
+    });
 }
-// All customers
+
+// update user details
+document.getElementById('submitButton').addEventListener('click', function() {
+    document.getElementById('updateForm').submit();  // Submit the form
+});
+
+//--------------
+// My Favorite  |
+//--------------
+
+// Add Product To Favorite
+function addToFavorites(productId) {
+    fetch('/products/addFav', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ productId: productId }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+        if (data.success) {
+            // Optionally, you can change the heart icon to indicate it's favorited
+            document.querySelector(`#favorite-icon-${productId}`).classList.add('favorited');
+            showSuccessAlert('favorite-alert');
+        } else {
+            alert('Failed to add product to favorites: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error adding product to favorites:', error);
+    });
+}
+
+// Remove Product From Favorite
+async function removeFavorite(productId) {
+    try {
+        const response = await fetch('/personal/myAccount/favorite/remove', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ productId: productId }),
+        });
+
+        const result = await response.json();
+        console.log(result);
+        console.log(response);
+
+        console.log(response.ok);
+
+        if (response.ok) {
+            // Find the closest product card element and remove it
+            const productCard = document.querySelector(`[data-product-id="${productId}"]`).closest('.product-card');
+            productCard.remove();
+            showSuccessAlert('favorite-alert');
+        }
+    } catch (error) {
+        console.error('Error removing favorite:', error);
+    }
+}
+
+//--------------
+// My Orders    |
+//--------------
+
+// fetch order id for details
+document.querySelectorAll('.see-order-btn').forEach(button => {
+    button.addEventListener('click', function () {
+      const orderId = this.getAttribute('data-order-id');
+      console.log('Redirecting to order details for order ID:', orderId);
+  
+      // Redirect the user to the order details page
+      window.location.href = `/personal/myAccount/orders/${orderId}`;
+    });
+});
+  
+
+// Dynamic status bar logic
+const statusBar = document.getElementById('statusBar');
+const statusText = document.getElementById('statusText');
+const status = document.getElementById('status').innerText;
+let progress = 0;
+
+// Remove any existing status classes before adding new ones
+statusBar.classList.remove('status-pending', 'status-processing', 'status-shipped', 'status-delivered');
+
+switch (status) {
+    case "Pending":
+        progress = 25;
+        statusBar.classList.add('status-pending');
+        break;
+    case "Processing":
+        progress = 50;
+        statusBar.classList.add('status-processing');
+        break;
+    case "Shipped":
+        progress = 75;
+        statusBar.classList.add('status-shipped');
+        break;
+    case "Delivered":
+        progress = 100;
+        statusBar.classList.add('status-delivered');
+        break;
+    default:
+        progress = 0;
+}
+
+
+// Set the width of the progress bar based on the progress percentage
+statusBar.style.width = progress + "%";
+
+
+// *****************
+// *    Admin      *
+// *****************
+
 //---------------
+// All Customers |
+//---------------
+
+// Make all inputs editable
 function toggleEditMode(customerId) {
     const customerRow = document.querySelector(`tr[data-id="${customerId}"]`);
     const editButton = customerRow.querySelector('.edit-btn-cust');
@@ -48,6 +190,7 @@ function toggleEditMode(customerId) {
     customerRow.classList.add('edit-mode');
 }
 
+// Save new customer details
 function saveCustomer(customerId) {
     const customerRow = document.querySelector(`tr[data-id="${customerId}"]`);
     const editButton = customerRow.querySelector('.edit-btn-cust');
@@ -97,56 +240,12 @@ function saveCustomer(customerId) {
     });
 }
 
-// All Orders
-//-------------
-document.querySelectorAll('.see-order-btn').forEach(button => {
-    button.addEventListener('click', function () {
-      const orderId = this.getAttribute('data-order-id');
-      console.log('Redirecting to order details for order ID:', orderId);
-  
-      // Redirect the user to the order details page
-      window.location.href = `/personal/admin/orders/${orderId}`;
-    });
-});
 
-const statusBar = document.getElementById('statusBar');
-const statusText = document.getElementById('statusText');
-if (statusBar && statusText) {
-    const status = document.getElementById('status').innerText;
-    let progress = 0;
+//---------------
+// All Orders    |
+//---------------
 
-// Remove any existing status classes before adding new ones
-    statusBar.classList.remove('status-pending', 'status-processing', 'status-shipped', 'status-delivered', 'status-cancelled');
-
-    switch (status) {
-    case "Pending":
-        progress = 25;
-        statusBar.classList.add('status-pending');
-        break;
-    case "Processing":
-        progress = 50;
-        statusBar.classList.add('status-processing');
-        break;
-    case "Shipped":
-        progress = 75;
-        statusBar.classList.add('status-shipped');
-        break;
-    case "Delivered":
-        progress = 100;
-        statusBar.classList.add('status-delivered');
-        break;
-    case "Cancelled":
-        progress = 100;
-        statusBar.classList.add('status-cancelled');
-        break;
-    default:
-        progress = 0;
-    }
-
-    // Set the width of the progress bar based on the progress percentage
-    statusBar.style.width = progress + "%";
-}
-
+// make the order status editable
 function enableStatusEdit(orderId) {
     const statusSelect = document.getElementById(`orderStatus-${orderId}`);
     const saveButton = document.getElementById(`saveStatusButton-${orderId}`);
@@ -160,6 +259,7 @@ function enableStatusEdit(orderId) {
     editButton.style.display = 'none';
 }
 
+// Save the new order status
 function updateOrderStatus(orderId) {
     const selectedStatus = document.getElementById(`orderStatus-${orderId}`).value;
     console.log('Updating status to:', selectedStatus, 'for order ID:', orderId);
@@ -193,6 +293,7 @@ function updateOrderStatus(orderId) {
     });
 }
 
+// Delete the order
 document.querySelectorAll('.remove').forEach(icon => {
     icon.addEventListener('click', async () => {
         const orderId = icon.getAttribute('data-order-id');
@@ -221,86 +322,93 @@ document.querySelectorAll('.remove').forEach(icon => {
 });
 
 
-// All Products
-// -------------
+//---------------
+// All Products  |
+//---------------
+
 
 // delete product
-document.querySelectorAll('.remove-product').forEach(icon => {
-    icon.addEventListener('click', async () => {
-        const productId = icon.getAttribute('data-product-id');
-
-        try {
-            const response = await fetch('/personal/admin/products/remove', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ productId: productId }),
-            });
-
-            const result = await response.json();
-
-            console.log(response); // Debug the response here
-
-            if (response.ok && result.success) {
-                
-                icon.closest('.card').remove(); // Remove the product card from the DOM
-                showSuccessAlert('delete-alert');
-            } else {
-                alert(result.error); // Show error message
+function deleteProduct(productId) {
+        fetch(`/personal/admin/products/${productId}/delete`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
             }
-        } catch (error) {
-            console.error('Error removing product:', error);
-            alert('Failed to remove product.');
-        }
-    });
-});
+        })
+        .then(response => {
+            if (response.ok) {
+                document.querySelector(`[data-product-id="${productId}"]`).remove(); // Remove product card from view
+            } else {
+                return response.text().then(text => {
+                    try {
+                        const json = JSON.parse(text);
+                        throw new Error(json.message);
+                    } catch {
+                        throw new Error('Unexpected response: ' + text);
+                    }
+                });
+            }
+        })
+        .catch(error => {
+            alert('Error deleting product: ' + error.message);
+        });
+}
 
 // edit product
 function editProduct(productId) {
-    // Use the correct class name for the card
-    const productCard = document.querySelector(`.card[data-product-id="${productId}"]`);
+    // Select the correct product card using the provided productId
+    const productCard = document.querySelector(`[data-product-id="${productId}"]`);
 
     if (!productCard) {
         console.error('Product card not found for ID:', productId);
         return;
     }
 
+    // Find all input fields within the product card
     const inputs = productCard.querySelectorAll('input');
 
-    // Change all inputs to be editable
-    inputs.forEach(input => {
-        input.removeAttribute('readonly');
-        input.classList.add('editable');
-    });
+    // Check if the inputs exist and make them editable
+    if (inputs.length === 0) {
+        console.error('No input fields found in product card for ID:', productId);
+    } else {
+        inputs.forEach(input => {
+            input.removeAttribute('readonly');
+            input.classList.add('editable');  // Add a class to indicate that the input is now editable
+        });
+    }
 
     // Change the edit button to a save button
     const editButton = productCard.querySelector('.edit-btn');
-    editButton.src = '/public/images/save.svg'; // Change icon to save
-    editButton.onclick = () => saveProduct(productId); // Assign save function to the button
+    if (editButton) {
+        editButton.src = '/public/images/save.svg'; // Change icon to save
+        editButton.onclick = () => saveProduct(productId); // Assign save function to the button
+    } else {
+        console.error('Edit button not found in product card for ID:', productId);
+    }
 }
 
 // save product
 function saveProduct(productId) {
     console.log('Saving product with ID:', productId); // Debug
 
-    const productCard = document.querySelector(`.card[data-product-id="${productId}"]`);
+    // Select the correct product card using the productId
+    const productCard = document.querySelector(`[data-product-id="${productId}"]`);
 
     if (!productCard) {
         console.error('Product card not found for ID:', productId);
         return;
     }
 
-    // Get values from the inputs using correct class selectors
-    const name = productCard.querySelector('input[name="name"]') ? productCard.querySelector('input[name="name"]').value : null;
-    const price = productCard.querySelector('input[name="price"]') ? productCard.querySelector('input[name="price"]').value : null;
-    const description = productCard.querySelector('input[name="description"]') ? productCard.querySelector('input[name="description"]').value : null;
-    const inventory = productCard.querySelector('input[name="inventory"]') ? productCard.querySelector('input[name="inventory"]').value : null;
+    // Get values from the inputs using the correct class selectors
+    const name = productCard.querySelector('.product-name')?.value;
+    const price = productCard.querySelector('.product-price')?.value;
+    const description = productCard.querySelector('.product-description')?.value;
+    const inventory = productCard.querySelector('.product-inventory')?.value;
 
     console.log('Product data to save:', { name, price, description, inventory }); // Debug
 
-    // If any value is null, log an error and return
-    if (!name || !price || !description || !inventory) {
+    // Check if any of the values are null or undefined
+    if ([name, price, description, inventory].some(value => value === undefined || value === null || value === '')) {
         console.error('Missing product details:', { name, price, description, inventory });
         return;
     }
@@ -313,36 +421,40 @@ function saveProduct(productId) {
         },
         body: JSON.stringify({ name, price, description, inventory }),
     })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            // Make inputs readonly again after saving
-            const inputs = productCard.querySelectorAll('input');
-            inputs.forEach(input => {
-                input.setAttribute('readonly', 'readonly');
-                input.classList.remove('editable');
-            });
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Make inputs readonly again after saving
+                const inputs = productCard.querySelectorAll('input');
+                inputs.forEach(input => {
+                    input.setAttribute('readonly', 'readonly');
+                    input.classList.remove('editable');
+                });
 
-            // Change the save button back to an edit button
-            const editButton = productCard.querySelector('.edit-btn');
-            editButton.src = '/public/images/edit.svg'; // Change icon back to edit
-            editButton.onclick = () => editProduct(productId); // Reassign the edit function
-            showSuccessAlert('success-alert');
-        } else {
-            alert('Failed to update product');
-        }
-    })
-    .catch(error => {
-        console.error('Error updating product:', error);
-    });
+                // Change the save button back to an edit button
+                const editButton = productCard.querySelector('.edit-btn');
+                if (editButton) {
+                    editButton.src = '/public/images/edit.svg'; // Change icon back to edit
+                    editButton.onclick = () => editProduct(productId); // Reassign the edit function
+                } else {
+                    console.error('Edit button not found in product card for ID:', productId);
+                }
+
+            } else {
+                alert('Failed to update product');
+            }
+        })
+        .catch(error => {
+            console.error('Error updating product:', error);
+            alert('An error occurred while updating the product. Please try again.');
+        });
 }
 
 
+//---------------
+// Add Products  |
+//---------------
 
-
-// Add Product
-// ------------
-// Function to handle live preview updates
 document.addEventListener('DOMContentLoaded', () => {
     const productForm = document.getElementById('productForm');
     const previewName = document.getElementById('previewName');
@@ -425,4 +537,3 @@ document.addEventListener('DOMContentLoaded', () => {
         productForm.addEventListener('submit', submitProduct);
     }
 });
-

@@ -27,7 +27,6 @@ router.put('/admin/orders/status/:orderId', orderController.updateOrderStatus);
 // post
 router.post('/myAccount/update', adminController.updateCustomerDetails);
 router.post('/myAccount/favorite/remove', productsController.removeFavoriteProduct);
-router.post('/admin/products/remove', productsController.deleteProduct);
 router.post('/admin/orders/remove', orderController.deleteOrder);
 router.post('/admin/products/:productId/edit', productsController.editProducts);
 router.post('/admin/products/:productId/delete', productsController.deleteProduct);

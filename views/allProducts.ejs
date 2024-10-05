@@ -12,11 +12,11 @@
         <header>
             <nav class="main-navbar">
                 <section class="navbar-left">
-                    <img src="/public/images/shooping_cart.svg" class="navbar-icon">
+                    <img src="/public/images/shooping_cart.svg" class="navbar-icon" onclick="window.location.href='/cart'">
                     <img src="/public/images/logout.svg" class="navbar-icon" onclick="window.location.href='/logout'">
                 </section>
                 <section class="navbar-center">
-                    <img src="/public/images/logo.svg" class="logo">
+                    <img src="/public/images/logo.svg" class="logo" onclick="window.location.href='/products'">
                 </section>
                 <section class="navbar-right">
                     <img src="/public/images/nearMe.svg" class="navbar-icon" onclick="window.location.href='/nearMe'">
@@ -79,42 +79,37 @@
                 <div class="main-content">
                     <div id="products" class="content-item active">
                         <div class="container">
-                            <div class="grid-container">
+                            <div class="products-grid">
                                 <% products.forEach(function(product) { %>
-                                    <div class="card" data-product-id="<%= product.productId %>">
-                                        <% if (product.inventory <= 5) { %>
-                                            <span class="stock-banner"><%= product.inventory %> left</span>
-                                        <% } %>
-                                        <img src="<%= product.imageUrl %>" alt="Product Image" class="product-image"> 
-                                        <div class="product-details">
-                                            <div class="detail-item">
-                                                <label class="label" for="name">Name</label>
-                                                <input class="value" name="name" type="text" value="<%= product.name %>" readonly>
-                                            </div>
-                                            <div class="detail-item">
-                                                <label class="label" for="price">Price</label>
-                                                <input class="value" name="price" type="number" value="<%= product.price %>" readonly>
-                                            </div>
-                                            <div class="detail-item">
-                                                <label class="label" for="category">Description</label>
-                                                <input class="value" name="description" type="text" value="<%= product.description %>" readonly>
-                                            </div>
-                                            <div class="detail-item">
-                                                <label class="label" for="inventory">Stock</label>
-                                                <input class="value" name="inventory" type="number" value="<%= product.inventory %>" readonly>
-                                            </div>
+                                    <div class="product-card" data-product-id="<%= product.productId %>">
+                                        <div class="product-image-container">
+                                            <% if (product.inventory <= 5) { %>
+                                                <span class="stock-banner"><%= product.inventory %> left</span>
+                                            <% } %>
+                                            <img src="<%= product.imageUrl %>" alt="<%= product.name %>" class="product-image">
+                                        </div>
+                                        <!-- Name, Description, and Price (2/6 of the card) -->
+                                        <div class="product-info">
+                                                <div class="product-text">
+                                                    <input class="product-name left" name="name" value="<%= product.name %>" readonly><br>
+                                                    <input class="product-description left" name="description" value="<%= product.description %>" readonly><br>
+                                                    <input class="product-category left" name="category" value="<%= product.category %>" readonly>
+                                                </div>
+                                                <div class="product-text">
+                                                    <input class="product-price right" name="price" value="<%= product.price %>" readonly><br>
+                                                    <input class="product-inventory right" name="inventory" value="<%= product.inventory %>" readonly>
+                                                </div>
+                                        </div>    
+                                        <!-- Divider -->
+                                        <hr class="product-divider">
                                             <div class="product-actions">
-                                                <img class="remove-product" src="/public/images/trash.svg" data-product-id="<%= product.productId %>">
+                                                <img class="remove-product" src="/public/images/trash.svg" data-product-id="<%= product.productId %>" onclick="deleteProduct('<%= product.productId %>')">
                                                 <img class="edit-btn" src="/public/images/edit.svg" data-product-id="<%= product.productId %>" onClick="editProduct('<%= product.productId %>')">
                                             </div>
                                             
-                                        </div>
                                     </div>
                                 <% }) %>
-                            </div>   
-                            <div id="delete-alert" class="custom-alert hidden">
-                                Product Deleted
-                            </div>                      
+                            </div>              
                         </div>
                     </div>
                 </div>
@@ -153,6 +148,6 @@
             </div>
         </footer>
         <script src="/public/js/main.js"></script>
-        <script src="/public/js/adminPage.js"></script>
+        <script src="/public/js/personal.js"></script>
     </body>
 </html>

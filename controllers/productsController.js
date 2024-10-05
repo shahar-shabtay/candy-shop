@@ -99,23 +99,22 @@ async function showDeleteProductForm (req, res) {
 };
 
 async function deleteProduct(req, res) {
-    const productId = req.body.productId;
-    console.log('controller: ', productId);
-    
     try {
+        const { productId } = req.params;
         await productsService.deleteProduct(productId);
-        return res.json({ success: true });
+        res.status(200).json({ message: 'Product deleted successfully.' });
     } catch (error) {
-        return res.status(500).json({ error: error.message }); // Return error as JSON
+        console.error('Error deleting product:', error);
+        res.status(500).json({ message: 'Failed to delete product.', error: error.message });
     }
-};
+}
 
 async function addNewFavorite(req, res) {
     try {
         const customerId = req.session.user.customerId; // Assuming customerId is stored in session
         const productId = req.body.productId; // Get the productId from the request body
 
-        await favoriteService.addFavorite(customerId, productId);
+        await favoriteService.addNewFavorite(customerId, productId);
 
         return res.status(200).json({ success: true });
     } catch (error) {

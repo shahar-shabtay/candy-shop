@@ -83,55 +83,61 @@ async function placeOrder() {
 
 
 
-// Function to update quantity in the cart and update the total price
-function updateQuantity(inputElement) {
-    const productId = inputElement.getAttribute('data-item-id');
-    const newQuantity = parseInt(inputElement.value);
-    
-    if (newQuantity < 1) {
-        inputElement.value = 1; // Ensure the quantity doesn't go below 1
-        return;
+// Function to update the quantity of a specific item and recalculate the total price
+function updateQuantity(itemId, change) {
+    const quantityInput = document.getElementById(`quantity-${itemId}`);
+    let currentQuantity = parseInt(quantityInput.value);
+
+    // Update the quantity
+    const newQuantity = currentQuantity + change;
+    if (newQuantity >= 1) {
+        quantityInput.value = newQuantity;
     }
 
-    // Send AJAX request to update quantity on the server
-    fetch(`/cart/updateQuantity`, {
+    // Update the total price
+    updateTotalPrice();
+}
+
+// Function to update the total price of all items in the cart
+function updateTotalPrice() {
+    let totalPrice = 0;
+    const cartItems = document.querySelectorAll(".cart-item");
+
+    cartItems.forEach(item => {
+        const quantity = parseInt(item.querySelector("input[name='quantity']").value);
+        const price = parseFloat(item.querySelector(".price span").dataset.unitPrice);
+        totalPrice += price * quantity;
+    });
+
+    document.getElementById("total-price").textContent = `₪${totalPrice.toFixed(2)}`;
+}
+
+// Function to handle updating the cart when the 'Update' button is clicked (client-server communication)
+function updateCart(itemId) {
+    const quantityInput = document.getElementById(`quantity-${itemId}`);
+    const newQuantity = parseInt(quantityInput.value);
+
+    // Send an AJAX request to the server to update the cart session
+    fetch('/cart/update', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            productId: productId,
-            quantity: newQuantity,
+            productId: itemId,
+            newQuantity: newQuantity,
         }),
     })
-    .then((response) => response.json())
-    .then((data) => {
-        if (data.success) {
-            // Update the total price for the product
-            const itemTotalElement = document.querySelector(`#cart-item-${productId} .total`);
-            const newTotal = (data.price * newQuantity).toFixed(2);
-            itemTotalElement.innerHTML = `₪${newTotal}`;
-
-            // Update the overall total price in the summary
+    .then(response => {
+        if (response.ok) {
+            // Successfully updated cart on server, now update the total price
             updateTotalPrice();
         } else {
-            alert('Failed to update the quantity. Please try again.');
+            alert('Failed to update cart. Please try again.');
         }
     })
-    .catch((error) => {
-        console.error('Error updating quantity:', error);
+    .catch(error => {
+        console.error('Error updating cart:', error);
+        alert('An error occurred while updating the cart.');
     });
-}
-
-// Function to update the total price in the summary
-function updateTotalPrice() {
-    let totalPrice = 0;
-
-    document.querySelectorAll('.cart-item').forEach((item) => {
-        const itemTotal = parseFloat(item.querySelector('.total').textContent.replace('₪', ''));
-        totalPrice += itemTotal;
-    });
-
-    // Update the total price in the summary
-    document.querySelector('.summary-total span:nth-child(2)').innerHTML = `₪${totalPrice.toFixed(2)}`;
 }

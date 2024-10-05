@@ -1,4 +1,5 @@
 const Products = require("../models/products.js");
+const Favorites = require("../models/favorite.js");
 
 async function getAllProducts () {
     try {
@@ -9,10 +10,14 @@ async function getAllProducts () {
     }
 };
 
-async function deleteProduct (productId) {
-    console.log('service: ',productId);
-    const productToDelete = await Products.findOneAndDelete({ productId: productId });
-    return productToDelete.deletedCount > 0; };
+async function deleteProduct(productId) {
+    try {
+        await Products.findOneAndDelete ({productId:productId});
+    } catch (error) {
+        console.error('Error in productService:', error);
+        throw new Error('Error deleting product');
+    }
+}
 
 async function getProductById(productId) {
     try {
@@ -38,7 +43,6 @@ async function createProduct(productData) {
     }
 }
 
-
 async function saveProduct(productId, updateData) {
     try {
         const updateProduct = await Products.findOneAndUpdate(
@@ -54,6 +58,7 @@ async function saveProduct(productId, updateData) {
         console.error('Error while update product ', err);
     }
 }
+
 async function updateProductInventory (productId, inventory) {
     try {
         return await Products.findOneAndUpdate({ productId: productId }, { $set: { inventory: inventory }}, {new: true}).exec();
@@ -61,6 +66,8 @@ async function updateProductInventory (productId, inventory) {
         throw Error("Error while updating product inventory");
     }
 };
+
+
 module.exports = {
     getAllProducts,
     createProduct,

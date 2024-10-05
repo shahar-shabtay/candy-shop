@@ -108,20 +108,6 @@ async function getAllCustomers(req, res) {
     }
 }
 
-
-
-async function getAllProducts(req, res) {
-    try {
-        const user = req.session.user;
-        const customers = await customerService.getAllCustomers();
-        const products = await productService.getAllProducts();
-        res.render('allProducts', {customers, products, user});
-    } catch (err) {
-        console.error('Error fetching products: ', err);
-        res.status(500).send('Server Error (adminController - getAllProducts');
-    }
-}
-
 // For specific customer - orders / details / favorite
 async function getFavoriteProducts(req, res) {
     try {
@@ -136,7 +122,30 @@ async function getFavoriteProducts(req, res) {
     }
 }
 
+async function getAllProducts(req, res) {
+    try {
+        const user = req.session.user;
+        const customers = await customerService.getAllCustomers();
+        const products = await productService.getAllProducts();
+        res.render('allProducts', {customers, products, user});
+    } catch (err) {
+        console.error('Error fetching products: ', err);
+        res.status(500).send('Server Error (adminController - getAllProducts');
+    }
+}
 
+// For specific customer - orders / details / favorite
+async function getFavoriteProducts (req, res) {
+    const customerId = req.session.user.customerId;
+    const user = req.session.user;
+
+    try {
+        const favoriteProducts = await favoriteService.getFavoriteProductsByCustomerId(customerId);
+        res.render('favoriteProducts', {favoriteProducts, user});
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
 
 // Controller to render the add product part
 async function addProductsPage(req, res) {
@@ -208,9 +217,9 @@ module.exports = {
     getAllCustomers,
     renderAdminPage,
     getFacebookPageInfo,
+    getFavoriteProducts,
     getAllProducts,
     addProductsPage,
     postToFacebook,
-    renderFavoriteProducts,
     adminUpdateCustomerDetails,
 };

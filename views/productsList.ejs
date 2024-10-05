@@ -69,14 +69,16 @@
                     <div class="product-card">
                         <!-- Image and Favorite button (3/6 of the card) -->
                         <div class="product-image-container">
+                            <% if (product.inventory <= 5) { %>
+                                <span class="stock-banner"><%= product.inventory %> left</span>
+                            <% } %>
                             <img src="<%= product.imageUrl %>" alt="<%= product.name %>" class="product-image">
-                            <button class="favorite-button">
-                                <i class="fas fa-heart favorite" data-product-id="<%= product.productId %>"></i> <!-- Favorite Icon -->
+                            <button id="addFav" class="favorite-button" onclick="addToFavorites('<%= product.productId %>')">
+                                <i class="fas fa-heart favorite" data-product-id="<%= product.productId %>"></i>
                             </button>
                         </div>
                     
                         <!-- Divider -->
-                        <hr class="product-divider">
                     
                         <!-- Name, Description, and Price (2/6 of the card) -->
                         <div class="product-info">
@@ -102,8 +104,6 @@
                             </button>
                         </div>
                     </div>
-                    
-                    
                 <% }) %>
             </div>
             
@@ -143,8 +143,9 @@
                 </div>
             </div>
         </footer>
-        
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script src="/public/js/products.js"></script>
         <script src="/public/js/main.js"></script>
+        <script src="/public/js/personal.js"></script>
     </body>
 </html>

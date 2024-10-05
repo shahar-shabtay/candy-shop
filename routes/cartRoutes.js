@@ -4,7 +4,6 @@ const cartController = require('../controllers/cartController');
 
 // Display cart
 router.get('/', cartController.showCart);
-router.post('/cart/updateQuantity', cartController.updateCartQuantity);
 
 
 // Add to cart

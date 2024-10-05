@@ -10,29 +10,6 @@ function showSuccessAlert(id) {
     }, 3000);
 }
 
-function addToFavorites(productId) {
-    fetch('/products/addFav', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ productId: productId }),
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            alert('Product added to favorites!');
-            // Optionally, you can change the heart icon to indicate it's favorited
-            document.querySelector(`#favorite-icon-${productId}`).classList.add('favorited');
-        } else {
-            alert('Failed to add product to favorites: ' + data.message);
-        }
-    })
-    .catch(error => {
-        console.error('Error adding product to favorites:', error);
-        alert('Error adding product to favorites.');
-    });
-}
 
 
 

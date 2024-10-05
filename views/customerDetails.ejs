@@ -2,9 +2,8 @@
 <html lang="en">
     <head>
         <title>Candy Shop - Admin Page</title>
-        <link rel="stylesheet" href="/public/styles/myAccount.css ">
         <link rel="stylesheet" href="/public/styles/main.css">
-        <link rel="stylesheet" href="/public/styles/peronsal.css">
+        <link rel="stylesheet" href="/public/styles/personal.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     </head>
     <body>
@@ -12,11 +11,11 @@
         <header>
             <nav class="main-navbar">
                 <section class="navbar-left">
-                    <img src="/public/images/shooping_cart.svg" class="navbar-icon">
+                    <img src="/public/images/shooping_cart.svg" class="navbar-icon" onclick="window.location.href='/cart'">
                     <img src="/public/images/logout.svg" class="navbar-icon" onclick="window.location.href='/logout'">
                 </section>
                 <section class="navbar-center">
-                    <img src="/public/images/logo.svg" class="logo">
+                    <img src="/public/images/logo.svg" class="logo" onclick="window.location.href='/products'">
                 </section>
                 <section class="navbar-right">
                     <img src="/public/images/nearMe.svg" class="navbar-icon" onclick="window.location.href='/nearMe'">
@@ -63,21 +62,21 @@
             </nav>
         </header>
         <!-- Account Section -->
-        <section class="account-section">
-            <header class="account-header">
-                <h2>Hello <%= user.name %><s/h2>
+        <section class="page-content">
+            <header class="personal-header">
+                <h2>Hello <%= user.name %></h2>
             </header>
-            <div class="account-content">
-                <nav class="account-menu">
-                    <button class="menu-option active" onclick="window.location.href='/personal/myAccount/details'">Personal Details</button>
-                    <button class="menu-option" onclick="window.location.href='/personal/myAccount/favorite'">Favorits</button>
-                    <button class="menu-option" onclick="window.location.href='/personal/myAccount/orders'">My Orders</button>
-                </nav>
-                <!-- Account Details -->
-                <div class="content">
-                    <section id="details" class="content-item active">
+            <div class="personal-content">
+                <!-- Sub Menu -->
+                <div class="sub-menu">
+                    <button class="menu-option active" onclick="window.location.href='/personal/myAccount/details'">My Details</button>
+                    <button class="menu-option" onclick="window.location.href='/personal/myAccount/favorite'">My Favorites</button>
+                    <button class="menu-option" onclick="window.location.href='/personal/myAccount/orders'">My Orders</button>                    
+                </div>
+                <!-- All Products -->
+                <div class="main-content">
+                    <div id="products" class="content-item active">
                         <div class="container">
-                            <!-- Form with Details -->
                             <form action="/personal/myAccount/update" method="POST" id="updateForm">
                                 <div class="form-row">
                                     <div class="form-column">
@@ -139,13 +138,11 @@
                                 </div>
                             </form>
                         </div>
-                    </section>
-                    <section id="favorit" class="content-item" style="display:none;">This is the content for Option 2.</section>
-                    <section id="orders" class="content-item"></section>
+                    </div>
                 </div>
             </div>
         </section>
-        <script src="/public/js/myAccount.js"></script>
+        <script src="/public/js/personal.js"></script>
         <script src="/public/js/main.js"></script>
     </body>
 </html>

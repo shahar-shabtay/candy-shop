@@ -2,16 +2,17 @@ const Customer = require('../models/customer');
 
 async function registerUser(userData) {
   try {
-    const { name, email, ID, password, birtdate, address, role } = userData;
+    const { name, email, customerId, password, birthdate, address, role, phone} = userData;
 
     // Create a new customer instance
     const newCustomer = new Customer({
       name,
       email,
-      ID,
+      customerId,
       password,
-      birtdate,
+      birthdate,
       address,
+      phone,
       role
     });
 

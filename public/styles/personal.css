@@ -32,7 +32,7 @@
     border-radius: 5px;
 }
 
-.personal-content button {
+.personal-content {
     background-color: #f8f8f8;
     color: black;
     padding: 10px 20px;
@@ -435,3 +435,283 @@ margin-bottom: 15px;
 .remove-product:hover {
     transform: scale(1.1);
 }
+
+
+/* My Details
+------------- */
+.form-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    gap: 20px;
+}
+
+.form-column {
+    flex: 1;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="password"],
+input[type="date"] {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-bottom: 2px solid #ccc;
+    box-sizing: border-box;
+    transition: border-bottom-color 0.3s ease;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="tel"]:focus,
+input[type="password"]:focus,
+input[type="date"]:focus {
+    outline: none;
+    border-bottom-color: #FF99C8;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group.full-width {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.btn {
+    padding: 10px 20px;
+    background-color: #26C1DF;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    align-self: flex-end;
+}
+.btn:hover {
+    background-color: #FF99C8;
+}
+
+.password-container {
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: fit-content; /* Adjust the width to fit content */
+}
+
+.password-container input {
+    padding-right: 30px; /* Add padding to make room for the icon */
+    width: 700px; /* Adjust width as needed */
+}
+
+.password-container i {
+    position: absolute;
+    right: 10px;
+    cursor: pointer;
+}
+
+.address-container, .birthday-container {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.address-container input, .birthday-container select {
+    padding: 8px;
+    font-size: 16px;
+}
+
+#street, #city, #year {
+    flex: 1; 
+}
+
+.small-input {
+    flex: 0.2; 
+}
+
+
+/* My Favorites
+--------------- */
+
+/* My Orders
+--------------- */
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse; 
+    font-size: 16px;
+    text-align: left; 
+    background-color: white;
+   
+}
+
+th, td {
+    border-radius: 7px;
+    border-bottom : 1px solid #ddd; /* Light border between rows */
+    font-size: 14px;
+    text-align: center;
+}
+
+th {
+    background-color: #f4f4f4; /* Light background for table headers */
+    font-weight: bold; /* Make header text bold */
+    color: #333; /* Darker text color for contrast */
+    font-size: 16px;
+    padding: 15px;
+    text-align: center;
+}
+
+tr:hover {
+    background-color: #f1f1f1; 
+}
+
+.action-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: space-around;
+}
+
+.order-again {
+    background-color: #28a745; 
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.see-order {
+    background-color: #007bff; 
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.cancel-order {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.order-again:hover,
+.see-order:hover,
+.cancel-order:hover {
+    opacity: 0.9;
+}
+
+.order-actions {
+    width: 80px;
+    height: 80px;
+}
+
+
+/* Order details
+------------------ */
+.back-button {
+    position: absolute;    /* Position the back button absolutely within the header */
+    right: 10px;           /* Align it to the right */
+    top: 10px;             /* Adjust the vertical position */
+    width: 50px;           /* Make the back button small */
+    height: auto;          /* Maintain aspect ratio */
+    cursor: pointer;       /* Make it clickable */
+    transition: none;      /* Remove any hover transition effects */
+}
+.back-button:hover {
+    opacity: 1;            /* Ensure opacity or any other hover effects are not applied */
+}
+
+  .info-grid {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+
+  .info-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+
+  .info-container section {
+    flex: 1;
+  }
+
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 20px;
+  }
+
+  .product-item {
+    border: 1px solid #ddd;
+    padding: 15px;
+    text-align: center;
+  }
+
+  .product-item img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    margin-bottom: 10px;
+  }
+
+  .status-bar {
+    width: 100%; /* Full width */
+    height: 20px; /* Adjust height */
+    background-color: #ddd; /* Default background */
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.status-progress {
+    height: 100%;
+    width: 0; /* Initially empty */
+    transition: width 0.4s ease; /* Smooth transition */
+}
+
+.status-pending {
+    background-color: gray;
+}
+
+.status-processing {
+    background-color: blue;
+}
+
+.status-shipped {
+    background-color: pink;
+}
+
+.status-delivered {
+    background-color: green;
+}
+
+.status-cancelled {
+    background-color: red;
+}
+
+
+i {
+font-size: 24px; /* Change the size */
+color: pink; /* Change the color */
+}
+

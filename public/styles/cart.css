@@ -85,3 +85,14 @@
     border: none;
     cursor: pointer;
 }
+
+.stock-banner {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: red;
+    color: white;
+    padding: 5px;
+    font-size: 12px;
+    border-bottom-right-radius: 10px;
+}

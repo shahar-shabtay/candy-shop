@@ -5,20 +5,21 @@ function getRegisterPage(req, res) {
 }
 
 function postRegister(req, res) {
-  const { name, email, ID, password, birtdate, address, role } = req.body;
+  const { name, email, customerId, password, birthdate, address, role, phone } = req.body;
 
   registerService.registerUser({
     name: name,
     email: email,
-    ID: ID,
+    phone: phone,
+    customerId: customerId,
     password: password,
-    birtdate: birtdate,
+    birthdate: birthdate,
     address: address,
     role: role
   })
   .then(function(savedUser) {
     // Redirect to login or send success response
-    res.redirect('/login');
+    res.redirect('/');
   })
   .catch(function(error) {
     console.error('Registration error:', error);

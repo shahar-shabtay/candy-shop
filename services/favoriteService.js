@@ -1,39 +1,24 @@
 const Favorite = require('../models/favorite');
 const productsService = require('../services/productsService');
+const Product = require('../models/products');
 
 
 // Function to get customer favorite products
-async function getFavoritesByUser(customerId) {
+const getFavoriteProductsByCustomerId = async (customerId) => {
     try {
-        // Fetch all favorites for the customer
-        const favorites = await Favorite.find({ customerId: customerId });
-
-        if (!favorites || favorites.length === 0) {
-            throw new Error('No favorite products found');
-        }
-
-        // Fetch product details for each favorite product
-        const favoriteProducts = await Promise.all(favorites.map(async (favorite) => {
-            const product = await Product.findOne({ productId: favorite.productId });
-            if (!product) {
-                throw new Error('Product not found');
-            }
-
-            return {
-                productId: product.productId,
-                name: product.name,
-                price: product.price,
-                description: product.description,
-                imageUrl: product.imageUrl,
-            };
-        }));
-
-        return favoriteProducts;
+        const favorites = await Favorite.find({ customerId });
+        const productDetails = await Promise.all(
+            favorites.map(async (favorite) => {
+                const product = await Product.findOne({productId: favorite.productId});
+                console.log(product);
+                return product;
+            })
+        );
+        return productDetails;
     } catch (error) {
-        console.error('Error fetching favorite products:', error);
-        throw new Error('Failed to retrieve favorite products');
+        throw new Error('Error fetching favorite products: ' + error.message);
     }
-}
+};
 
 // Function to add favorite product to user
 async function addNewFavorite(customerId, productId) {
@@ -74,7 +59,7 @@ async function removeFavoriteProduct(customerId, productId) {
 
 
 module.exports = {
-    getFavoritesByUser,
+    getFavoriteProductsByCustomerId,
     addNewFavorite,
     removeFavoriteProduct
   };

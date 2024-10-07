@@ -184,6 +184,15 @@ async function editProducts (req,res) {
     }
 }
 
+async function getProductDetail (req, res) {
+    try {
+        const product = await productsService.getProductById(req.params.productId);
+        res.render('productDetail', { product: product });
+    } catch (error) {
+        console.log(error);
+        res.redirect('/products');
+    }
+};
 
 module.exports = {
 	getAllProducts,
@@ -192,5 +201,6 @@ module.exports = {
 	deleteProduct,
 	addNewFavorite,
 	removeFavoriteProduct,
-	addProduct
+	addProduct,
+    getProductDetail
 };

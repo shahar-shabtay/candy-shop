@@ -19,7 +19,11 @@ async function getCustomerOrders (req, res) {
     try {
         const user = req.session.user;
         const orders = await orderService.getCustomerOrders(user.customerId);
-        res.render('customerOrders', {orders, user});
+        if(user){
+            res.render('customerOrders', {orders, user});
+        } else {
+            res.render('notLogin');
+        }
     } catch (err) {
         res.status(500).send('Error fetching orders');
     }
@@ -32,7 +36,6 @@ async function getCustomerOrderDetailsById (req, res) {
     
         // Fetch the order from the service
         const order = await orderService.getOrderById(orderId);
-        console.log(order);
         if (!order) {
             return res.status(404).json({ message: 'Order not found' });
         }
@@ -99,7 +102,6 @@ async function getOrderDetailsById (req, res) {
     
         // Fetch the order from the service
         const order = await orderService.getOrderById(orderId);
-        console.log(order);
         if (!order) {
           return res.status(404).json({ message: 'Order not found' });
         }
@@ -130,7 +132,6 @@ async function getOrderDetailsById (req, res) {
     
         // Retrieve user from the session
         
-        console.log(order.status);
         // Pass the data to the view
         res.render('orderDetails', {
           orderDetails: {
@@ -158,12 +159,8 @@ async function getOrderDetailsById (req, res) {
 
 async function updateOrderStatus(req,res) {
     try {
-        console.log('UpdateOrderStatus called');
-        console.log('Request Params:', req.params);
-        console.log('Request Body:', req.body);
         const orderId = req.params.orderId;
         const { newStatus } = req.body;
-        console.log(orderId, newStatus);
         // Validate status (you may want to have valid statuses)
         const validStatuses = ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'];
         if (!validStatuses.includes(newStatus)) {
@@ -172,7 +169,6 @@ async function updateOrderStatus(req,res) {
 
         // Call the service to update the status
         const updatedOrder = await orderService.updateOrderStatus(orderId, newStatus);
-        console.log(updatedOrder);
         if (updatedOrder) {
             return res.status(200).json({ success: true, order: updatedOrder });
         } else {
@@ -186,9 +182,8 @@ async function updateOrderStatus(req,res) {
 
 async function deleteOrder (req, res) {
     try {
-        const orderId = req.body.orderId;
+        const orderId = req.params;
         const wasRemoved = await orderService.deleteOrder(orderId);
-        console.log(orderId);
 		if (wasRemoved) {
 			res.status(200).json({ message: 'order removed' }); // Respond with success
 		} else {

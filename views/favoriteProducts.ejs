@@ -87,7 +87,7 @@
                                                 <span class="stock-banner"><%= product.inventory %> left</span>
                                             <% } %>
                                             <img src="<%= product.imageUrl %>" alt="<%= product.name %>" class="product-image">
-                                            <button id="removeFav" class="favorite-button" onclick="removeFavorite('<%= product.productId %>')">
+                                            <button id="addFav" class="favorite-button" onclick="removeFavorite('<%= product.productId %>')">
                                                 <i class="fas fa-heart favorite" data-product-id="<%= product.productId %>"></i>
                                             </button>
                                         </div>

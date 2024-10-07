@@ -5,7 +5,8 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const path = require('path');
 const app = express();
-const session = require("express-session");
+const session = require('express-session');
+
 
 // Routes
 const productsRoutes = require('./routes/productsRoutes.js');
@@ -16,6 +17,17 @@ const nearMeRoutes = require('./routes/nearMeRoutes');
 const cartRoutes = require('./routes/cartRoutes');
 
 
+// Create session
+app.use(
+  session({
+    secret: "wusha",
+    saveUninitialized: false,
+    resave: false,
+    cookie: {
+      maxAge: 24 * 60 * 60 * 1000 // 1 day
+    }
+  })
+);
 
 // Connect to MongoDB
 mongoose.connect('mongodb://localhost:27017/candyShop', {
@@ -25,14 +37,7 @@ mongoose.connect('mongodb://localhost:27017/candyShop', {
 .then(() => console.log('MongoDB connected successfully'))
 .catch(err => console.error('MongoDB connection error:', err));
 
-// Create session
-app.use(
-  session({
-    secret: "wusha",
-    saveUninitialized: false,
-    resave: false,
-  })
-);
+
 
 // Middleware
 app.use(express.json());

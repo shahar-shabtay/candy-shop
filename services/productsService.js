@@ -12,12 +12,15 @@ async function getAllProducts () {
 
 async function deleteProduct(productId) {
     try {
-        await Products.findOneAndDelete ({productId:productId});
+        // Logic to delete the product from the database
+        // Assuming you're using a MongoDB-like database
+        await Products.findOneAndDelete({productId:productId});
+        await Favorites.deleteMany({productId:productId});
     } catch (error) {
-        console.error('Error in productService:', error);
-        throw new Error('Error deleting product');
+        throw new Error('Failed to delete product from database: ' + error.message);
     }
 }
+
 
 async function getProductById(productId) {
     try {

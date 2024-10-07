@@ -15,7 +15,7 @@ router.post('/remove', cartController.removeFromCart);
 // Checkout
 router.post('/checkout', cartController.checkout);
 
-router.get('/complete', cartController.completePurchase);
 router.post('/update', cartController.updateCart);
+
 
 module.exports = router;

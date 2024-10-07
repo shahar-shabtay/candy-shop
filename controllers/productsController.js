@@ -4,6 +4,7 @@ const favoriteService = require('../services/favoriteService');
 const facebookPostService = require('../services/facebookPostService.js');
 const multer = require('multer');
 const path = require('path');
+const fs = require('fs');
 
 
 async function getAllProducts (req, res) {
@@ -25,7 +26,6 @@ async function getAllProducts (req, res) {
 
 async function addProduct(req, res) {
     const productId = Math.floor(Math.random() * 10000000);
-    console.log('Controller: addProduct called');
 
     try {
         // Get the next product ID
@@ -38,7 +38,6 @@ async function addProduct(req, res) {
             },
             filename: function (req, file, cb) {
                 const fileName = `product_${productId}.svg`;
-                console.log('Filename generated:', fileName); // Debug: Check filename
                 cb(null, fileName); // Save the file with the generated productId filename
             }
         });
@@ -55,11 +54,9 @@ async function addProduct(req, res) {
             
             // Proceed with product creation after file is uploaded
             const { name, price, inventory, description, category, postToFacebook} = req.body;
-            console.log('Received form data:', { name, price, inventory });
 
             // Use 'imageUrl' instead of 'image' to match the Mongoose schema
             const imageUrl = `/public/images/product_${productId}.svg`;
-            console.log('Uploaded file path:', imageUrl);
 
             // Create product data object
             const productData = {
@@ -77,14 +74,12 @@ async function addProduct(req, res) {
                 const productUrl = `www.${name}`; // Use the product name as part of the URL
                 try {
                     await facebookPostService.postMessageToFacebook(`Check out our new product: ${name} for just $${price}!`, productUrl);
-                    console.log('Posted to Facebook successfully.');
                 } catch (error) {
                     console.error('Error posting to Facebook:', error);
                 }
             }
             // Pass the data to the service to insert into the database
             const newProduct = await productsService.createProduct(productData);
-            console.log('Product created successfully:', newProduct);
             return res.json({ success: true, product: newProduct });
         });
     } catch (error) {
@@ -101,13 +96,43 @@ async function showDeleteProductForm (req, res) {
 async function deleteProduct(req, res) {
     try {
         const { productId } = req.params;
+
+        // Fetch the product details to get the image name/path
+        const product = await productsService.getProductById(productId);
+        if (!product) {
+            return res.status(404).json({ message: 'Product not found.' });
+        }
+
+        // Construct the path to the product image
+        const imagePath = path.join(__dirname, '../public/images', `product_${productId}.svg`);
+
+        // Log the image path for debugging
+
+        // Check if the image file exists
+        if (fs.existsSync(imagePath)) {
+            // Delete the product image
+            fs.unlink(imagePath, (err) => {
+                if (err) {
+                    console.error('Error deleting product image:', err);
+                } else {
+                    console.log('Product image deleted successfully.');
+                }
+            });
+        } else {
+            console.warn('Product image not found at path:', imagePath);
+        }
+
+        // Delete the product from the database
         await productsService.deleteProduct(productId);
+
         res.status(200).json({ message: 'Product deleted successfully.' });
     } catch (error) {
         console.error('Error deleting product:', error);
         res.status(500).json({ message: 'Failed to delete product.', error: error.message });
     }
 }
+
+
 
 async function addNewFavorite(req, res) {
     try {
@@ -142,13 +167,11 @@ async function removeFavoriteProduct (req,res) {
 }
 
 async function editProducts (req,res) {
-	console.log('edit button called');
 	const { productId } = req.params; // Get product ID from URL
     const { name, price, description, inventory } = req.body; // Get updated data from the request body
 
     try {
         // Call the service to update the product
-		console.log(name, price, description, inventory);
 		
         const updateData = { productId, name, price, description, inventory };
 		const updatedProduct = await productsService.saveProduct(productId, updateData);

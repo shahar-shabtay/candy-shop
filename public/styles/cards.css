@@ -43,6 +43,7 @@ h1 {
     justify-content: center;
 }
 
+
 .product-image {
     max-height: 100%;
     max-width: 100%;
@@ -55,6 +56,7 @@ h1 {
     right: 10px;
     background: none;
     border: none;
+    color: black;
     cursor: pointer;
 }
 
@@ -150,29 +152,6 @@ input.product-name , input.product-price{
     font-weight: bold;          /* Makes the product name bold */
 }
 
-/* .product-name {
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 5px;
-    display: inline-block;
-} */
-
-/* .product-description {
-    font-size: 14px;
-    color: #666;
-    display: inline-block;
-} */
-
-/* .product-price {
-    font-size: 16px;
-    font-weight: bold;
-    color: #333;
-    white-space: nowrap; /* Prevent price from wrapping */
-    /* text-align: right;
-    flex-shrink: 0; /* Ensures price stays on the right */
-/* } */
-
-
 
 .product-divider {
     width: 90%;
@@ -252,4 +231,24 @@ input.product-name , input.product-price{
     padding: 5px;
     font-size: 12px;
     border-bottom-right-radius: 10px;
+}
+
+.sold-out {
+    opacity: 0.5; /* Reduce opacity to make it look dark */
+    pointer-events: none; /* Prevent interactions like clicking */
+    filter: grayscale(100%); /* Optional: Make it look grayed out */
+}
+
+.out-of-stock {
+    background: radial-gradient(circle at center, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0) 70%), 
+                repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.1) 0, rgba(255, 255, 255, 0.1) 10px, transparent 10px, transparent 20px),
+                #f61a3f;
+    flex: 3;
+    border-top-left-radius: 10px;  /* Set the desired radius */
+    border-top-right-radius: 10px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

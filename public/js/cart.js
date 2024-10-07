@@ -1,87 +1,15 @@
+const session = require("express-session");
+
 function showSuccessAlert(id) {
-    console.log(id);
     const alertBox = document.getElementById(id);
     alertBox.classList.remove('hidden');
     alertBox.classList.add('visible');
 
-    // Hide after 3 seconds
     setTimeout(() => {
         alertBox.classList.remove('visible');
         alertBox.classList.add('hidden');
-    }, 3000);
+    }, 1000);
 }
-
-
-// cart.js
-
-async function placeOrder() {
-    // Assuming customerId is provided from the session (rendered in the page)
-    const customerId = '<%= user._id %>'; // You need to dynamically inject this in your view
-
-    // Get shipping details
-    const city = document.getElementById('shipping-city').value;
-    const street = document.getElementById('shipping-address').value;
-    const number = document.getElementById('shipping-number').value;
-    
-
-    // Validate shipping details
-    if (!city || !street || !number) {
-        alert('Please fill in all address fields.');
-        return;
-    }
-
-    // Collect cart products and their quantities
-    const products = [];
-    document.querySelectorAll('.cart-item').forEach(item => {
-        const productId = item.getAttribute('data-product-id');
-        const quantity = item.querySelector('input[name="quantity"]').value;
-
-        if (quantity < 1) {
-            alert('Quantity cannot be less than 1.');
-            return;
-        }
-
-        products.push({ productId: Number(productId), quantity: Number(quantity) });
-    });
-
-    if (products.length === 0) {
-        alert('Your cart is empty.');
-        return;
-    }
-
-    // Prepare order data
-    const orderData = {
-        products,
-        address: {
-            city,
-            street,
-            number        }
-    };
-
-    try {
-        const response = await fetch('/cart/checkout', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(orderData),
-        });
-
-        const result = await response.json();
-
-        if (response.ok && result.success) {
-            showSuccessAlert();
-        } else {
-            alert(result.error || 'Failed to place order.');
-        }
-    } catch (error) {
-        console.error('Error placing order:', error);
-        alert('Failed to place order.');
-    }
-}
-
-
-
 
 // Function to update the quantity of a specific item and recalculate the total price
 function updateQuantity(itemId, change) {
@@ -141,3 +69,82 @@ function updateCart(itemId) {
         alert('An error occurred while updating the cart.');
     });
 }
+
+// Checkout
+async function checkoutCart() {
+    try {
+        // Collect product information from the cart
+        const cartItems = document.querySelectorAll('.cart-item');
+        const products = Array.from(cartItems).map(item => {
+            return {
+                productId: item.getAttribute('data-product-id'),
+                quantity: parseInt(item.querySelector('input[name="quantity"]').value)
+            };
+        });
+
+        // Gather address information from the form (if required)
+        const city = document.getElementById('shipping-city').value;
+        const street = document.getElementById('shipping-address').value;
+        const number = document.getElementById('shipping-number').value;
+
+        // Create the checkout data object
+        const checkoutData = {
+            products: products,
+            address: {
+                city: city,
+                street: street,
+                number: number
+            }
+        };
+
+        // Send a POST request to the server to checkout
+        const response = await fetch('/cart/checkout', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(checkoutData)
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        if (data.success) {
+            showSuccessAlert('order-alert');
+            // Update cart UI to indicate the cart is now empty
+            document.querySelector('.cart-container').innerHTML = '<p>Your cart is empty.</p>';
+            document.getElementById('total-price').textContent = '₪0.00';
+        } else {
+            alert('Failed to place order: ' + data.message);
+        }
+    } catch (error) {
+        console.error('Error during checkout:', error);
+        alert('An error occurred while placing the order. Please try again.');
+    }
+}
+
+// Calc total every enter to cart
+function recalculateTotal() {
+    let totalPrice = 0;
+
+    // Select only cart items that do not have the 'sold-out' class
+    const cartItems = document.querySelectorAll('.cart-item:not(.sold-out)');
+
+    cartItems.forEach(item => {
+        const price = parseFloat(item.querySelector('.product-price').textContent.replace('₪', ''));
+        const quantity = parseInt(item.querySelector('input[name="quantity"]').value, 10);
+
+        totalPrice += price * quantity;
+    });
+
+    // Update the total price in the UI
+    document.getElementById('total-price').textContent = `₪${totalPrice.toFixed(2)}`;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    recalculateTotal();
+});
+

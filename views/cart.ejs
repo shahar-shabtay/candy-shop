@@ -65,13 +65,15 @@
             <div class="cart-container" style="flex: 2; padding: 20px; background-color: white;">
                 <!-- List of cart items -->
                 <% cart.forEach(function(item) { %>
-                <div class="cart-item" id="cart-item-<%= item.id %>" style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #ddd;" data-product-id="<%= item.productId %>">
+                <div class="cart-item <%= item.inventory === 0 ? 'sold-out' : '' %>" data-inventory="<%= item.inventory %>" id="cart-item-<%= item.productId %>"  data-product-id="<%= item.productId %>">
                     <!-- Product Image -->
-                    <% if (item.inventory <= 5) { %>
-                        <span class="stock-banner"><%= item.inventory %> left</span>
-                    <% } %>
-                    <div class="product-image" style="width: 150px; margin-right: 20px;">
-                        <img src="<%= item.imageUrl %>" alt="<%= item.name %>" style="width: 100%; height: auto;">
+                    <div class="product-image-container">
+                        <% if (item.inventory === 0) { %>
+                            <span class="stock-banner out-of-stock">Sold Out</span>
+                        <% } else if (item.inventory <= 5) { %>
+                            <span class="stock-banner"><%= item.inventory %> left</span>
+                        <% } %>
+                        <img src="<%= item.imageUrl %>" alt="<%= item.name %>">
                     </div>
         
                     <!-- Product Details -->
@@ -80,11 +82,12 @@
                             <%= item.name %> | <%= item.description || 'No description available.' %>
                         </div>
                         <div class="product-price"><%= item.price %>₪</div><br>
+                        
                         <!-- Quantity Selector and Update -->
                         <form action="/cart/update" method="POST">
                             <input type="hidden" name="productId" value="<%= item.productId %>">
-                            <input type="number" name="newQuantity" min="1" max="<%= item.inventory %>" value="<%= item.quantity %>">
-                            <button class="update-button" type="submit">Update</button>
+                            <input type="number" name="quantity" min="1" max="<%= item.inventory %>" value="<%= item.quantity %>" <%= item.inventory === 0 ? 'disabled' : '' %>>
+                            <button class="update-button" type="submit" <%= item.inventory === 0 ? 'disabled' : '' %>>Update</button>
                         </form>
                     </div>
         
@@ -122,10 +125,11 @@
                 </div>
         
                 <!-- Place Order Button -->
-                <button type="submit" onclick="placeOrder()" style="background-color: green; color: white; padding: 10px 20px; border: none; cursor: pointer;">
-                    Place Order
-                </button>
+                <% if (cart && cart.length > 0) { %> 
+                        <button class="checkout-button" type="submit" onclick="checkoutCart()">Place Order</button>
+                <% } %>
             </div>
+            <div id="order-alert" class="custom-alert hidden">Order Placed</div>
         </section>
         
         <footer class="footer">

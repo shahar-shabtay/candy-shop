@@ -4,7 +4,8 @@
         <title>Candy Shop - Admin Page</title>
         <link rel="stylesheet" href="/public/styles/main.css">
         <link rel="stylesheet" href="/public/styles/personal.css">
-        <link rel="stylesheet" href="/public/styles/productPreview.css  ">
+        <link rel="stylesheet" href="/public/styles/productPreview.css">
+        <link rel="stylesheet" href="/public/styles/cards.css">
         <link rel="icon" href="/public/images/favicon.ico" type="image/x-icon">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
@@ -14,7 +15,7 @@
         <header>
             <nav class="main-navbar">
                 <section class="navbar-left">
-                    <img src="/public/images/shooping_cart.svg" class="navbar-icon" onclick="window.location.href='/cart'">
+                    <img src="/public/images/shooping_cart.svg" class="navbar-icon">
                     <img src="/public/images/logout.svg" class="navbar-icon" onclick="window.location.href='/logout'">
                 </section>
                 <section class="navbar-center">
@@ -85,41 +86,60 @@
                                     <!-- Form Card -->
                                     <div class="card">
                                         <form id="productForm">
-                                            <input class="input-field" type="text" id="name" name="name" placeholder="Product Name" required>
-                                            <input class="input-field" type="text" id="price" name="price" placeholder="Product Price" required>
-
+                                            <div class="input-group">
+                                                <input type="text" id="name" name="name" placeholder="Product Name" required>
+                                            </div>
+                                            <div class="input-row">
+                                                <div class="input-group">
+                                                    <input type="text" id="price" name="price" placeholder="Product Price" required>
+                                                </div>
+                                                <div class="input-group">
+                                                    <input type="text" id="inventory" name="inventory" placeholder="Inventory" required>
+                                                </div>
+                                            </div>
                                             
-                                            <input class="input-field" type="text" id="inventory" name="inventory" placeholder="Inventory" required>
-
                                             
-                                            <input class="input-field" type="text" id="description" name="description" placeholder="Description" required>
-
-                                            <input class="input-field" type="text" id="category" name="category" placeholder="Category" required>
-
-                                            <label for="image">Product Image (SVG only):</label>
-                                            <input type="file" id="fileInput" name="image" accept=".svg">
-
-                                            <label for="postToFacebook">Post to Facebook:</label>
-                                            <input type="checkbox" id="postToFacebook" name="postToFacebook">
-                                        
+                                            <div class="input-group">
+                                                <input type="text" id="description" name="description" placeholder="Description" required>
+                                            </div>
+                                            <div class="input-group">
+                                                <input type="text" id="category" name="category" placeholder="Category" required>
+                                            </div>
+                                            <div class="input-row">
+                                                <div class="input-group">
+                                                    <input type="file" id="fileInput" name="image" accept=".svg" required>
+                                                </div>
+                                                <div class="input-group">
+                                                    <label for="postToFacebook">Facebook:<input type="checkbox" id="postToFacebook" name="postToFacebook"></label>
+                                                </div>
+                                            </div>
                                             <button id="submitButton" type="submit" onClick="submitProduct()">Create Product</button>
                                         </form>
                                     </div>
-
                                     <!-- Live Preview Card -->
-                                    <div class="card" id="previewCard">
-                                        <img id="previewImage" src="/public/images/upload.svg">
-                                        <div class="info">
-                                            <h3 id="previewName"></h3>
-                                            <p id="previewPrice"></p>
-                                            <p id="previewInventory"></p>
+                                    <div class="product-card">
+                                        <div class="product-image-container">
+                                            <span class="stock-banner" id="previewInventory"></span>
+                                            <img class="product-image" id="previewImage">
                                         </div>
+                                        <!-- Name, Description, and Price (2/6 of the card) -->
+                                        <div class="product-info">
+                                                <div class="product-text">
+                                                    <div class="product-name left" id="previewName"></div>
+                                                    <div class="product-description left" id="previewDescription"></div>
+                                                    <div class="product-category left" id="previewCategory"></div>
+                                                </div>
+                                                    <div class="product-price right" id="previewPrice"></div>                                                
+                                        </div>    
+                                        <!-- Divider -->
+                                        <hr class="product-divider">
+                                            <div class="product-actions">
+                                                <img class="remove-product" src="/public/images/trash.svg">
+                                                <img class="edit-btn" src="/public/images/edit.svg">
+                                            </div>
                                     </div>
                                     <div id="success-alert" class="custom-alert hidden">
                                         Product Added
-                                    </div>
-                                    <div id="error-alert" class="custom-alert hidden">
-                                            שגיאה ביצירת מוצר
                                     </div>
                                 </div>
                             </div>

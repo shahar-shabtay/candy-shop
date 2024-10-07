@@ -13,7 +13,7 @@
     text-align: center;
     width: 300px; /* Adjust card width to be uniform */
     padding: 20px;
-    height: 450px; /* Adjust height to be the same for both cards */
+    height: 360px;; /* Adjust height to be the same for both cards */
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -34,11 +34,30 @@
 /* Input styling */
 .input-field {
     border: none;
-    background-color: transparent;
-    font-size: 10px;
+    background-color: #ffffff; /* Changed from transparent to white */
+    font-size: 12px; /* Increased font size for better visibility */
     text-align: center;
     border-bottom: 1px solid #ddd;
     width: 100%;
+    width: 5px;
+    line-height: 1;
+}
+
+.input-row {
+    display: flex;
+    gap: 10px; /* Adjust spacing between inputs */
+}
+
+.input-group {
+    flex: 1; /* This allows both input fields to share the same width */
+}
+
+.input-group input {
+    width: 100%;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
 }
 
 /* Image upload button with icon */
@@ -71,3 +90,5 @@
 .upload-img {
     width: 10px;
 }
+
+

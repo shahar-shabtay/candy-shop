@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html len="en>">
     <head>
         <title>Candy Shop - Products</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
@@ -66,12 +66,15 @@
             <h1 class="products-header">Our Products</h1>
             <div class="products-grid">
                 <% products.forEach(function(product) { %>
-                    <div class="product-card">
+                    <div class="product-card <%= product.inventory === 0 ? 'sold-out' : '' %>">
                         <!-- Image and Favorite button (3/6 of the card) -->
                         <div class="product-image-container">
-                            <% if (product.inventory <= 5) { %>
+                            <% if (product.inventory === 0) { %>
+                                <span class="stock-banner">Sold Out</span>
+                            <% } else if (product.inventory <= 5) { %>
                                 <span class="stock-banner"><%= product.inventory %> left</span>
                             <% } %>
+                                                                                 
                             <img src="<%= product.imageUrl %>" alt="<%= product.name %>" class="product-image">
                             <button id="addFav" class="favorite-button" onclick="addToFavorites('<%= product.productId %>')">
                                 <i class="fas fa-heart favorite" data-product-id="<%= product.productId %>"></i>
@@ -83,6 +86,7 @@
                         <!-- Name, Description, and Price (2/6 of the card) -->
                         <div class="product-info">
                                 <div class="product-text">
+                                    <input type="hidden" name="productId" id="productId" value="<%= product.productId %>">
                                     <p class="product-name"><%= product.name %></p><br>
                                     <p class="product-description"><%= product.description %></p>
                                 </div>
@@ -104,11 +108,11 @@
                             </button>
                         </div>
                     </div>
+                    <div id="favorite-alert" class="custom-alert hidden">Product added to favorite</div>
+                    <div id="cart-alert" class="custom-alert hidden">Product added to cart</div>
                 <% }) %>
             </div>
-            
-            <div id="favorite-alert" class="custom-alert hidden">Product added to favorite</div>
-            <div id="cart-alert" class="custom-alert hidden">Product added to cart</div>
+        
         </section>
         <!-- Footer -->
         <footer class="footer">
@@ -157,6 +161,7 @@
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script src="/public/js/statistics.js"></script>
         <script src="/public/js/products.js"></script>
+        <script src="/public/js/cart.js"></script>
         <script src="/public/js/main.js"></script>
         <script src="/public/js/personal.js"></script>
     </body>

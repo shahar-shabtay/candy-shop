@@ -11,7 +11,7 @@ hamburgerMenu.addEventListener('click', () => {
 });
 
 
-// Footer - About Us and Talk to Us
+// Footer -About Us and Talk to Us
 var aboutModal = document.getElementById("aboutModal");
 var talkModal = document.getElementById("talkModal");
 var statisticsModel = document.getElementById("statisticsModel");
@@ -22,19 +22,25 @@ var openstatisticsModel = document.getElementById("openstatisticsModel");
 
 var closeButtons = document.querySelectorAll(".close-button");
 
-openAboutModal.onclick = function(event) {
-    event.preventDefault();
-    aboutModal.style.display = "block";
+if(openAboutModal){
+    openAboutModal.onclick = function(event) {
+        event.preventDefault();
+        aboutModal.style.display = "block";
+    }
 }
 
-openTalkModal.onclick = function(event) {
-    event.preventDefault();
-    talkModal.style.display = "block";
+if(openTalkModal){
+    openTalkModal.onclick = function(event) {
+        event.preventDefault();
+        talkModal.style.display = "block";
+    }
 }
 
-openstatisticsModel.onclick = function(event) {
-    event.preventDefault();
-    statisticsModel.style.display = "block";
+if(openstatisticsModel){
+    openstatisticsModel.onclick = function(event) {
+        event.preventDefault();
+        statisticsModel.style.display = "block";
+    }
 }
 
 closeButtons.forEach(function(button) {
@@ -53,15 +59,4 @@ window.onclick = function(event) {
     }
 }
 
-function showSuccessAlert() {
-    const alertBox = document.getElementById('success-alert');
-    alertBox.classList.remove('hidden');
-    alertBox.classList.add('visible');
-
-    // Hide after 3 seconds
-    setTimeout(() => {
-        alertBox.classList.remove('visible');
-        alertBox.classList.add('hidden');
-    }, 3000);
-}
 

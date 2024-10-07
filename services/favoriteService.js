@@ -10,7 +10,6 @@ const getFavoriteProductsByCustomerId = async (customerId) => {
         const productDetails = await Promise.all(
             favorites.map(async (favorite) => {
                 const product = await Product.findOne({productId: favorite.productId});
-                console.log(product);
                 return product;
             })
         );
@@ -26,15 +25,14 @@ async function addNewFavorite(customerId, productId) {
         // Check if the product is already in the favorites list
         const favoriteExists = await Favorite.findOne({ customerId: customerId, productId: productId });
         
-        if (favoriteExists) {
-            throw new Error('Product already in favorites');
-        }
+        if (!favoriteExists) {
+            const favorite = new Favorite({ customerId: customerId, productId: productId });
+            await favorite.save();
+    
+            return favorite;        }
 
         // Add the product to the favorites collection
-        const favorite = new Favorite({ customerId: customerId, productId: productId });
-        await favorite.save();
-
-        return favorite;
+       
     } catch (error) {
         console.error('Error in adding favorite product:', error);
         throw new Error('Failed to add product to favorites');

@@ -1,18 +1,17 @@
+
 function showSuccessAlert(id) {
-    const alertBox = document.getElementById(id);
-    alertBox.classList.remove('hidden');
-    alertBox.classList.add('visible');
-
-    // Hide after 3 seconds
-    setTimeout(() => {
-        alertBox.classList.remove('visible');
-        alertBox.classList.add('hidden');
-    }, 3000);
+    const successAlert = document.getElementById(id);
+    if (successAlert) {
+        successAlert.classList.remove('hidden');
+        successAlert.classList.add('visible');
+    
+        
+        setTimeout(() => {
+            successAlert.classList.remove('visible');
+            successAlert.classList.add('hidden');
+        }, 1000);
+    }
 }
-
-
-
-
 
 function updateQuantity(productId, change, event) {
     // Prevent event from bubbling
@@ -36,8 +35,6 @@ function updateQuantity(productId, change, event) {
     quantityInput.value = currentQuantity;
 }
 
-
-
 function addToCart(button) {
     const productId = button.getAttribute('data-product-id');
     const quantityInput = document.getElementById(`quantity-${productId}`);
@@ -53,13 +50,11 @@ function addToCart(button) {
             quantity: quantity
         })
     })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
+    .then(response => {
+        if (response.ok) {
             showSuccessAlert('cart-alert');
-            // Optionally show a confirmation or update the cart UI
+
         }
-    })
-    .catch(error => console.error('Error:', error));
+    });
 }
 

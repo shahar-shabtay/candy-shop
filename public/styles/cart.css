@@ -28,9 +28,19 @@
     border-bottom: 1px solid #ddd; /* Separator line under each product */
 }
 
-.product-image img {
+.product-image-container img {
     width: 150px;
     height: auto;
+}
+
+.product-image-container {
+    border-top-left-radius: 10px;  /* Set the desired radius */
+    border-top-right-radius: 10px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .product-details {
@@ -78,7 +88,7 @@
     margin-bottom: 20px;
 }
 
-.summary-checkout button {
+.checkout-button {
     background-color: green;
     color: white;
     padding: 10px 20px;
@@ -95,4 +105,10 @@
     padding: 5px;
     font-size: 12px;
     border-bottom-right-radius: 10px;
+}
+
+.sold-out {
+    opacity: 0.5; /* Reduce opacity to make it look dark */
+    pointer-events: none; /* Prevent interactions like clicking */
+    filter: grayscale(100%); /* Optional: Make it look grayed out */
 }

@@ -1,25 +1,15 @@
 function showSuccessAlert(id) {
-    const alertBox = document.getElementById(id);
-    alertBox.classList.remove('hidden');
-    alertBox.classList.add('visible');
-
-    // Hide after 3 seconds
-    setTimeout(() => {
-        alertBox.classList.remove('visible');
-        alertBox.classList.add('hidden');
-    }, 3000);
-}
-
-//--------------
-// Sub Menu     |
-//--------------
-// Ensure the default tab (Option 1) is shown on page load
-document.addEventListener('DOMContentLoaded', () => {
-    const activeTab = document.querySelector('.menu-option.active');
-    if (!activeTab) {
-        document.querySelector('.menu-option').click();
+    const successAlert = document.getElementById(id);
+    if (successAlert) {
+        successAlert.classList.remove('hidden');
+        successAlert.classList.add('visible');
+    
+        setTimeout(() => {
+            successAlert.classList.remove('visible');
+            successAlert.classList.add('hidden');
+        }, 1000);
     }
-});
+}
 
 // *****************
 // My Account      *
@@ -45,9 +35,14 @@ if (togglePassword){
 }
 
 // update user details
-document.getElementById('submitButton').addEventListener('click', function() {
-    document.getElementById('updateForm').submit();  // Submit the form
-});
+if(document.getElementById('submitButton')){
+    document.getElementById('submitButton').addEventListener('click', function() {
+        showSuccessAlert('save-cust-alert');
+        if(document.getElementById('updateForm')){
+            document.getElementById('updateForm').submit();
+        }  // Submit the form
+    })
+};
 
 //--------------
 // My Favorite  |
@@ -62,20 +57,14 @@ function addToFavorites(productId) {
         },
         body: JSON.stringify({ productId: productId }),
     })
-    .then(response => response.json())
-    .then(data => {
-        console.log(data);
-        if (data.success) {
-            // Optionally, you can change the heart icon to indicate it's favorited
-            document.querySelector(`#favorite-icon-${productId}`).classList.add('favorited');
+    .then(response =>{
+        if(response.ok) {
+            if(document.querySelector(`#favorite-icon-${productId}`)){
+                document.querySelector(`#favorite-icon-${productId}`).classList.add('favorited');
+            }
             showSuccessAlert('favorite-alert');
-        } else {
-            alert('Failed to add product to favorites: ' + data.message);
         }
     })
-    .catch(error => {
-        console.error('Error adding product to favorites:', error);
-    });
 }
 
 // Remove Product From Favorite
@@ -90,11 +79,6 @@ async function removeFavorite(productId) {
         });
 
         const result = await response.json();
-        console.log(result);
-        console.log(response);
-
-        console.log(response.ok);
-
         if (response.ok) {
             // Find the closest product card element and remove it
             const productCard = document.querySelector(`[data-product-id="${productId}"]`).closest('.product-card');
@@ -111,10 +95,9 @@ async function removeFavorite(productId) {
 //--------------
 
 // fetch order id for details
-document.querySelectorAll('.see-order-btn').forEach(button => {
+document.querySelectorAll('.see-order2-btn').forEach(button => {
     button.addEventListener('click', function () {
       const orderId = this.getAttribute('data-order-id');
-      console.log('Redirecting to order details for order ID:', orderId);
   
       // Redirect the user to the order details page
       window.location.href = `/personal/myAccount/orders/${orderId}`;
@@ -125,11 +108,16 @@ document.querySelectorAll('.see-order-btn').forEach(button => {
 // Dynamic status bar logic
 const statusBar = document.getElementById('statusBar');
 const statusText = document.getElementById('statusText');
-const status = document.getElementById('status').innerText;
+const status = document.getElementById('status');
+if(status) {
+    status = status.innerText;
+}
 let progress = 0;
 
 // Remove any existing status classes before adding new ones
-statusBar.classList.remove('status-pending', 'status-processing', 'status-shipped', 'status-delivered');
+if(statusBar) {
+    statusBar.classList.remove('status-pending', 'status-processing', 'status-shipped', 'status-delivered');
+}
 
 switch (status) {
     case "Pending":
@@ -154,7 +142,9 @@ switch (status) {
 
 
 // Set the width of the progress bar based on the progress percentage
-statusBar.style.width = progress + "%";
+if(statusBar) {
+    statusBar.style.width = progress + "%";
+}
 
 
 // *****************
@@ -214,7 +204,6 @@ function saveCustomer(customerId) {
     });
 
     // Log the data to check if the values are correct
-    console.log("Saving customer data:", customerData);
 
     // Send the data to the server using fetch
     fetch(`/personal/admin/customers/update/${customerId}`, {
@@ -227,7 +216,7 @@ function saveCustomer(customerId) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            showSuccessAlert();
+            showSuccessAlert('save-alert');
 
             // Remove background color when exiting edit mode
             customerRow.classList.remove('edit-mode');
@@ -262,7 +251,6 @@ function enableStatusEdit(orderId) {
 // Save the new order status
 function updateOrderStatus(orderId) {
     const selectedStatus = document.getElementById(`orderStatus-${orderId}`).value;
-    console.log('Updating status to:', selectedStatus, 'for order ID:', orderId);
     // Make a PUT request to update the order status
     fetch(`/personal/admin/orders/status/${orderId}`, {
         method: 'PUT',
@@ -278,19 +266,15 @@ function updateOrderStatus(orderId) {
             // Disable the <select> dropdown after saving
             const statusSelect = document.getElementById(`orderStatus-${orderId}`);
             statusSelect.disabled = true;
-
+            
             // Reset the buttons: Hide Save, show Edit
             document.getElementById(`saveStatusButton-${orderId}`).style.display = 'none';
             document.getElementById(`editStatusButton-${orderId}`).style.display = 'inline-block';
-            
+            showSuccessAlert('order-status-alert');
         } else {
             alert('Failed to update status');
         }
     })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('Error updating status');
-    });
 }
 
 // Delete the order
@@ -299,7 +283,7 @@ document.querySelectorAll('.remove').forEach(icon => {
         const orderId = icon.getAttribute('data-order-id');
 
         try {
-            const response = await fetch('/personal/admin/orders/remove', 
+            const response = await fetch(`/personal/admin/orders/${orderId}/remove`, 
             {
                 method: 'POST',
                 headers: {
@@ -310,6 +294,7 @@ document.querySelectorAll('.remove').forEach(icon => {
 
             const result = await response.json();
             if (response.ok) {
+                showSuccessAlert('delete-alert');
                 window.location.href = `/personal/admin/orders`;
             } else {
                 alert(result.error); // Show error message
@@ -321,6 +306,14 @@ document.querySelectorAll('.remove').forEach(icon => {
     });
 });
 
+document.querySelectorAll('.see-order1-btn').forEach(button => {
+    button.addEventListener('click', function () {
+      const orderId = this.getAttribute('data-order-id');
+  
+      // Redirect the user to the order details page
+      window.location.href = `/personal/admin/orders/${orderId}`;
+    });
+});
 
 //---------------
 // All Products  |
@@ -329,29 +322,33 @@ document.querySelectorAll('.remove').forEach(icon => {
 
 // delete product
 function deleteProduct(productId) {
-        fetch(`/personal/admin/products/${productId}/delete`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-        .then(response => {
-            if (response.ok) {
-                document.querySelector(`[data-product-id="${productId}"]`).remove(); // Remove product card from view
-            } else {
-                return response.text().then(text => {
-                    try {
-                        const json = JSON.parse(text);
-                        throw new Error(json.message);
-                    } catch {
-                        throw new Error('Unexpected response: ' + text);
-                    }
-                });
-            }
-        })
-        .catch(error => {
-            alert('Error deleting product: ' + error.message);
-        });
+    const imagePath = `/public/images/product_${productId}.svg`;
+    
+    fetch(`/personal/admin/products/${productId}/delete`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ imagePath })
+    })
+    .then(response => {
+        if (response.ok) {
+            document.querySelector(`[data-product-id="${productId}"]`).remove(); // Remove product card from view
+            showSuccessAlert('delete-alert');
+        } else {
+            return response.text().then(text => {
+                try {
+                    const json = JSON.parse(text);
+                    throw new Error(json.message);
+                } catch {
+                    throw new Error('Unexpected response: ' + text);
+                }
+            });
+        }
+    })
+    .catch(error => {
+        alert('Error deleting product: ' + error.message);
+    });
 }
 
 // edit product
@@ -389,7 +386,6 @@ function editProduct(productId) {
 
 // save product
 function saveProduct(productId) {
-    console.log('Saving product with ID:', productId); // Debug
 
     // Select the correct product card using the productId
     const productCard = document.querySelector(`[data-product-id="${productId}"]`);
@@ -405,7 +401,6 @@ function saveProduct(productId) {
     const description = productCard.querySelector('.product-description')?.value;
     const inventory = productCard.querySelector('.product-inventory')?.value;
 
-    console.log('Product data to save:', { name, price, description, inventory }); // Debug
 
     // Check if any of the values are null or undefined
     if ([name, price, description, inventory].some(value => value === undefined || value === null || value === '')) {
@@ -425,6 +420,7 @@ function saveProduct(productId) {
         .then(data => {
             if (data.success) {
                 // Make inputs readonly again after saving
+                showSuccessAlert('save-alert');
                 const inputs = productCard.querySelectorAll('input');
                 inputs.forEach(input => {
                     input.setAttribute('readonly', 'readonly');
@@ -454,44 +450,75 @@ function saveProduct(productId) {
 //---------------
 // Add Products  |
 //---------------
+// JavaScript function to update the live preview of the product details
 
 document.addEventListener('DOMContentLoaded', () => {
-    const productForm = document.getElementById('productForm');
+    const nameInput = document.getElementById('name');
+    const priceInput = document.getElementById('price');
+    const inventoryInput = document.getElementById('inventory');
+    const descriptionInput = document.getElementById('description');
+    const categoryInput = document.getElementById('category');
+    const fileInput = document.getElementById('fileInput');
+
     const previewName = document.getElementById('previewName');
     const previewPrice = document.getElementById('previewPrice');
     const previewInventory = document.getElementById('previewInventory');
+    const previewDescription = document.getElementById('previewDescription');
+    const previewCategory = document.getElementById('previewCategory');
     const previewImage = document.getElementById('previewImage');
-    const fileInput = document.getElementById('fileInput');
 
-    if (productForm && previewPrice && previewName) {
-    // Update name, price, and inventory in live preview
-        productForm.name.addEventListener('input', function () {
-            previewName.textContent = this.value || 'Product Name';
+    // Update the name in the preview card
+    if (nameInput) {
+        nameInput.addEventListener('input', () => {
+            previewName.textContent = nameInput.value || 'Product Name';
         });
+    }
 
-        productForm.price.addEventListener('input', function () {
-            previewPrice.textContent = this.value ? `Price: $${this.value}` : 'Price: $0';
+    // Update the price in the preview card
+    if (priceInput) {
+        priceInput.addEventListener('input', () => {
+            previewPrice.textContent = priceInput.value ? `${priceInput.value}₪` : 'Price: $0';
         });
+    }
 
-        productForm.inventory.addEventListener('input', function () {
-            previewInventory.textContent = this.value ? `Inventory: ${this.value} items` : 'Inventory: 0 items';
+    // Update the inventory in the preview card
+    if (inventoryInput) {
+        inventoryInput.addEventListener('input', () => {
+            previewInventory.textContent = inventoryInput.value ? `${inventoryInput.value} items` : 'Inventory: 0 items';
         });
+    }
 
-        // Handle live image preview for SVG files
-        fileInput.addEventListener('change', function () {
-            const file = this.files[0];
+    // Update the description in the preview card
+    if (descriptionInput) {
+        descriptionInput.addEventListener('input', () => {
+            previewDescription.textContent = descriptionInput.value || 'Description';
+        });
+    }
+
+    // Update the category in the preview card
+    if (categoryInput) {
+        categoryInput.addEventListener('input', () => {
+            previewCategory.textContent = categoryInput.value || 'Category';
+        });
+    }
+
+    // Update the image in the preview card
+    if (fileInput) {
+        fileInput.addEventListener('change', () => {
+            const file = fileInput.files[0];
             if (file && file.type === 'image/svg+xml') {
                 const reader = new FileReader();
-                reader.onload = function (e) {
-                    previewImage.src = e.target.result;
+                reader.onload = function(event) {
+                    previewImage.src = event.target.result;
                 };
                 reader.readAsDataURL(file);
             } else {
-                previewImage.src = '/public/images/upload.svg'; // Default image if no valid SVG
+                previewImage.src = '/public/images/upload.svg';
             }
         });
     }
 });
+
 
 async function submitProduct(event) {
     event.preventDefault(); // Prevent default form submission behavior
@@ -512,7 +539,7 @@ async function submitProduct(event) {
         if (response.ok) {
             const data = await response.json();
             if (data.success) {
-                showSuccessAlert(); // Show success alert
+                showSuccessAlert('success-alert'); // Show success alert
                 setTimeout(() => {
                     window.location.href = '/personal/admin/products'; // Redirect after 2 seconds
                 }, 2000);
@@ -537,3 +564,6 @@ document.addEventListener('DOMContentLoaded', () => {
         productForm.addEventListener('submit', submitProduct);
     }
 });
+
+
+

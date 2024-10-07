@@ -29,8 +29,8 @@ async function renderAdminPage(req, res) {
         if(role === 'admin')
         {
             res.render('allCustomers', {customers, user});
-        } else {
-            res.render('accessDenied', {customers, user});
+        } else if(role == 'user') {
+            res.render('accessDenied', {user});
         }
     } catch (err) {
         res.render('notLogin');
@@ -44,7 +44,13 @@ async function getFacebookPageInfo(req, res) {
         const facebookData = await facebookInfoService.getFacebookPageInfo(); // Fetch Facebook stats
 
         // Render the facebookInfo.ejs view and pass the facebookData and user
-        res.render('facebookInfo', { facebookData, user });
+        if(role === 'admin')
+        {
+            res.render('facebookInfo', { facebookData, user });
+        } else if(role == 'user') {
+            res.render('accessDenied', {user});
+        }
+        
     } catch (err) {
         console.error('Error fetching Facebook page info:', err);
         res.status(500).send('Server Error - fetching Facebook page info');
@@ -54,7 +60,12 @@ async function getFacebookPageInfo(req, res) {
 async function renderAccountPage(req, res) {
     try {
         const user = req.session.user;
-        res.render('customerDetails', {user});
+        if(user){
+            res.render('customerDetails', {user});
+        } else {
+            res.render('notLogin');
+        }
+        
     } catch (err) {
         console.error('Error rendering admin page:', err);
         res.status(500).send('Server Error');
@@ -98,36 +109,38 @@ async function updateCustomerDetails(req, res) {
 // Get all about - orders / favorite / customers / products
 async function getAllCustomers(req, res) {
     try {
-        const user = req.session.user;  // Assume customerId is available in the session
-        const customers = await customerService.getAllCustomers(); // Fetch all customers from service
-        const customer = await customerService.getCustomerById(user.customerId);  // Search by customerId
-        res.render('allCustomers', { customers, customer, user}); // Render the view and pass customers
+        const user = req.session.user; 
+        if(user) {
+             // Assume customerId is available in the session
+            const customers = await customerService.getAllCustomers(); // Fetch all customers from service
+            const customer = await customerService.getCustomerById(user.customerId);  // Search by customerId
+            if(user.role == 'admin') {
+                res.render('allCustomers', { customers, customer, user}); // Render the view and pass customers
+            } else if(user.role == 'user') {
+            res.render('accessDenied', {user});
+        } else {
+            res.render('notLogin');
+        }
+    }
+        
     } catch (err) {
         console.error('Error fetching customers:', err);
         res.status(500).send('Server Error (adminController - getAllCustomers)');
     }
 }
 
-// For specific customer - orders / details / favorite
-async function getFavoriteProducts(req, res) {
-    try {
-        const customerId = req.session.user.customerId; // Fetching customerId from session
-        const favoriteProducts = await favoriteService.getFavoritesByUser(customerId);
-
-        // Render the EJS file and pass favorite products data to it
-        res.render('favorites', { favorites: favoriteProducts });
-    } catch (error) {
-        console.error('Error rendering favorites page:', error);
-        res.status(500).render('error', { message: 'Failed to load favorite products' });
-    }
-}
+// For specific customer - orders / details / favorit
 
 async function getAllProducts(req, res) {
     try {
         const user = req.session.user;
         const customers = await customerService.getAllCustomers();
         const products = await productService.getAllProducts();
-        res.render('allProducts', {customers, products, user});
+        if(user.role == 'admin') {
+            res.render('allProducts', {customers, products, user});
+        } else if(user.role == 'user') {
+            res.render('accessDenied', {user});
+        }
     } catch (err) {
         console.error('Error fetching products: ', err);
         res.status(500).send('Server Error (adminController - getAllProducts');
@@ -136,12 +149,16 @@ async function getAllProducts(req, res) {
 
 // For specific customer - orders / details / favorite
 async function getFavoriteProducts (req, res) {
-    const customerId = req.session.user.customerId;
     const user = req.session.user;
 
     try {
-        const favoriteProducts = await favoriteService.getFavoriteProductsByCustomerId(customerId);
-        res.render('favoriteProducts', {favoriteProducts, user});
+        if(user){
+            const favoriteProducts = await favoriteService.getFavoriteProductsByCustomerId(user.customerId);
+            res.render('favoriteProducts', {favoriteProducts, user});
+        } else {
+            res.render('notLogin');
+        }
+        
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -151,7 +168,12 @@ async function getFavoriteProducts (req, res) {
 async function addProductsPage(req, res) {
     try {
         const user = req.session.user;  // Assume customerId is available in the session
-        res.render('addProducts', {user}); // Render the view and pass customers
+         // Render the view and pass customers
+        if(user.role == 'admin') {
+            res.render('addProducts', {user});
+        } else if(user.role == 'user') {
+            res.render('accessDenied', {user});
+        }
     } catch (err) {
         console.error('Error fetching customers:', err);
         res.status(500).send('Server Error (adminController - addProducts)');

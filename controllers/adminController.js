@@ -42,7 +42,7 @@ async function getFacebookPageInfo(req, res) {
     try {
         const user = req.session.user;  // Get the user from the session
         const facebookData = await facebookInfoService.getFacebookPageInfo(); // Fetch Facebook stats
-
+        const role = user.role;
         // Render the facebookInfo.ejs view and pass the facebookData and user
         if(role === 'admin')
         {

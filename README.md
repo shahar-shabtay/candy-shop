@@ -23,4 +23,5 @@ Welcome to the Candy Shop Application repository! This application is designed t
 - [MongoDB](https://www.mongodb.com) for database management
 - [Google Maps API](https://developers.google.com/maps) for location services
 - [Facebook Graph API](https://developers.facebook.com/docs/graph-api) for Facebook integration
+- [Fixer](https://fixer.io) for currency conversion
 

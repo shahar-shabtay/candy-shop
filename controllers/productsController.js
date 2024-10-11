@@ -53,7 +53,28 @@ async function addProduct(req, res) {
 
             
             // Proceed with product creation after file is uploaded
-            const { name, price, inventory, description, category, postToFacebook} = req.body;
+            const { name, price, inventory, description, category, postToFacebook, sweetType, kosher} = req.body;
+            const flavorsData = req.body.flavors || '[]'; // Default to an empty array if flavors are missing
+            let flavors = [];
+
+            const allergansData = req.body.allergans || '[]'; // Default to an empty array if allergans are missing
+            let allergans = [];
+
+            //flavors array
+            try {
+                flavors = JSON.parse(flavorsData); // Convert the JSON string back to an array
+            } catch (error) {
+                console.error('Failed to parse flavors:', error);
+                return res.status(400).json({ error: 'Invalid flavors data' });
+            }
+
+            //allergans array
+            try {
+                allergans = JSON.parse(allergansData); // Convert the JSON string back to an array
+            } catch (error) {
+                console.error('Failed to parse allergans:', error);
+                return res.status(400).json({ error: 'Invalid allergans data' });
+            }
 
             // Use 'imageUrl' instead of 'image' to match the Mongoose schema
             const imageUrl = `/public/images/product_${productId}.svg`;
@@ -65,7 +86,10 @@ async function addProduct(req, res) {
                 price,                   // Product price from form data
                 inventory,             // Product inventory from form data
                 description,
-                category,
+                flavors,
+                allergans,
+                sweetType,
+                kosher,
                 imageUrl                 // Save the file path to the imageUrl field
             };
 

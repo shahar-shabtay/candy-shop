@@ -6,6 +6,19 @@
     padding: 20px;
 }
 
+.admin-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    text-align: center;
+    width: 300px; /* Adjust card width to be uniform */
+    padding: 20px;
+    height: 750px;; /* Adjust height to be the same for both cards */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
 .card {
     border: 1px solid #ddd;
     border-radius: 8px;

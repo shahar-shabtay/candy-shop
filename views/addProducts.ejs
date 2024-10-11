@@ -84,7 +84,7 @@
                             <div class="container">                            
                                 <div class="product-preview-container">
                                     <!-- Form Card -->
-                                    <div class="card">
+                                    <div class="admin-card">
                                         <form id="productForm">
                                             <div class="input-group">
                                                 <input type="text" id="name" name="name" placeholder="Product Name" required>
@@ -102,9 +102,53 @@
                                             <div class="input-group">
                                                 <input type="text" id="description" name="description" placeholder="Description" required>
                                             </div>
+
                                             <div class="input-group">
-                                                <input type="text" id="category" name="category" placeholder="Category" required>
+                                                <label for="FlavorDropdown">Select Flavors</label>
+                                                <select id="FlavorDropdown">
+                                                    <option value="" disabled selected>Flavors</option>
+                                                    <option value="Sweet">Sweet</option>
+                                                    <option value="Salty">Salty</option>
+                                                    <option value="Sour">Sour</option>
+                                                    <option value="Spicy">Spicy</option>
+                                                    <option value="Bitter">Bitter</option>
+                                                </select>
+                                                <div id="selectedFlavors"></div>
                                             </div>
+                                            <div class="input-group">
+                                                <label for="AllerganDropdown">Select Allergans</label>
+                                                <select id="AllerganDropdown">
+                                                    <option value="" disabled selected>Allergans</option>
+                                                    <option value="Gluten">Gluten</option>
+                                                    <option value="Dairy">Dairy</option>
+                                                    <option value="Nuts">Nuts</option>
+                                                    <option value="Soy">Soy</option>
+                                                    <option value="Eggs">Eggs</option>
+                                                </select>
+                                                <div id="selectedAllergans"></div>
+                                            </div>
+                                            <div class="input-group">
+                                                <label for="SweetTypeDropdown">Select Sweet Type</label>
+                                                <select id="SweetTypeDropdown">
+                                                    <option value="" disabled selected>Sweet Type</option>
+                                                    <option value="Chocolate">Chocolate</option>
+                                                    <option value="Gummy Bears">Gummy Bears</option>
+                                                    <option value="Licorice">Licorice</option>
+                                                    <option value="Lollipops">Lollipops</option>
+                                                    <option value="Candies">Candies</option>
+                                                </select>
+                                                <div id="selectedSweetType"></div>
+                                            </div>
+                                            <div class="input-group">
+                                                <label for="KosherDropdown">Select if Kosher</label>
+                                                <select id="KosherDropdown">
+                                                    <option value="" disabled selected>Kosher?</option>
+                                                    <option value="Yes">Yes</option>
+                                                    <option value="No">No</option>
+                                                </select>
+                                                <div id="selectedKosher"></div>
+                                            </div>
+
                                             <div class="input-row">
                                                 <div class="input-group">
                                                     <input type="file" id="fileInput" name="image" accept=".svg" required>
@@ -127,7 +171,6 @@
                                                 <div class="product-text">
                                                     <div class="product-name left" id="previewName"></div>
                                                     <div class="product-description left" id="previewDescription"></div>
-                                                    <div class="product-category left" id="previewCategory"></div>
                                                 </div>
                                                     <div class="product-price right" id="previewPrice"></div>                                                
                                         </div>    

@@ -1,50 +1,22 @@
-const session = require("express-session");
+document.addEventListener('DOMContentLoaded', () => {
+    recalculateTotal();
 
-function showSuccessAlert(id) {
-    const alertBox = document.getElementById(id);
-    alertBox.classList.remove('hidden');
-    alertBox.classList.add('visible');
-
-    setTimeout(() => {
-        alertBox.classList.remove('visible');
-        alertBox.classList.add('hidden');
-    }, 1000);
-}
+    // Bind update button click events to updateCart function
+    const updateButtons = document.querySelectorAll('.update-button');
+    updateButtons.forEach(button => {
+        button.addEventListener('click', (event) => {
+            event.preventDefault();
+            const form = button.closest('form');
+            const productId = form.querySelector('input[name="productId"]').value;
+            const quantityInput = form.querySelector('input[name="quantity"]');
+            const quantity = parseInt(quantityInput.value);
+            updateCart(productId, quantity);
+        });
+    });
+});
 
 // Function to update the quantity of a specific item and recalculate the total price
-function updateQuantity(itemId, change) {
-    const quantityInput = document.getElementById(`quantity-${itemId}`);
-    let currentQuantity = parseInt(quantityInput.value);
-
-    // Update the quantity
-    const newQuantity = currentQuantity + change;
-    if (newQuantity >= 1) {
-        quantityInput.value = newQuantity;
-    }
-
-    // Update the total price
-    updateTotalPrice();
-}
-
-// Function to update the total price of all items in the cart
-function updateTotalPrice() {
-    let totalPrice = 0;
-    const cartItems = document.querySelectorAll(".cart-item");
-
-    cartItems.forEach(item => {
-        const quantity = parseInt(item.querySelector("input[name='quantity']").value);
-        const price = parseFloat(item.querySelector(".price span").dataset.unitPrice);
-        totalPrice += price * quantity;
-    });
-
-    document.getElementById("total-price").textContent = `₪${totalPrice.toFixed(2)}`;
-}
-
-// Function to handle updating the cart when the 'Update' button is clicked (client-server communication)
-function updateCart(itemId) {
-    const quantityInput = document.getElementById(`quantity-${itemId}`);
-    const newQuantity = parseInt(quantityInput.value);
-
+function updateCart(itemId, newQuantity) {
     // Send an AJAX request to the server to update the cart session
     fetch('/cart/update', {
         method: 'POST',
@@ -58,8 +30,8 @@ function updateCart(itemId) {
     })
     .then(response => {
         if (response.ok) {
-            // Successfully updated cart on server, now update the total price
-            updateTotalPrice();
+            // Successfully updated cart on server, now update the total price and refresh
+            window.location.reload();
         } else {
             alert('Failed to update cart. Please try again.');
         }
@@ -70,7 +42,21 @@ function updateCart(itemId) {
     });
 }
 
-// Checkout
+// Function to update the total price of all items in the cart
+function updateTotalPrice() {
+    let totalPrice = 0;
+    const cartItems = document.querySelectorAll(".cart-item");
+
+    cartItems.forEach(item => {
+        const quantity = parseInt(item.querySelector("input[name='quantity']").value);
+        const price = parseFloat(item.querySelector(".product-price").textContent.replace('₪', ''));
+        totalPrice += price * quantity;
+    });
+
+    document.getElementById("total-price").textContent = `₪${totalPrice.toFixed(2)}`;
+}
+
+// Checkout function
 async function checkoutCart() {
     try {
         // Collect product information from the cart
@@ -126,7 +112,7 @@ async function checkoutCart() {
     }
 }
 
-// Calc total every enter to cart
+// Recalculate the total price every time the page is loaded
 function recalculateTotal() {
     let totalPrice = 0;
 
@@ -143,8 +129,3 @@ function recalculateTotal() {
     // Update the total price in the UI
     document.getElementById('total-price').textContent = `₪${totalPrice.toFixed(2)}`;
 }
-
-document.addEventListener('DOMContentLoaded', () => {
-    recalculateTotal();
-});
-

@@ -93,11 +93,32 @@
                                                 <div class="product-text">
                                                     <input class="product-name left" name="name" value="<%= product.name %>" readonly><br>
                                                     <input class="product-description left" name="description" value="<%= product.description %>" readonly><br>
-                                                    <input class="product-category left" name="category" value="<%= product.category %>" readonly>
+                                                    <!--<input class="product-category left" name="category" value="<%= product.category %>" readonly>-->
                                                 </div>
                                                 <div class="product-text">
                                                     <input class="product-price right" name="price" value="<%= product.price %>" readonly><br>
                                                     <input class="product-inventory right" name="inventory" value="<%= product.inventory %>" readonly>
+                                                    <div class="dropdown-container" style="display: none;">
+                                                        <select clacss="flavor-dropdown" multiple>
+                                                            <% ['Sweet', 'Salty', 'Sour', 'Spicy', 'Bitter'].forEach(flavor => { %>
+                                                                <option value="<%= flavor %>" <%= product.flavors.includes(flavor) ? 'selected' : '' %>><%= flavor %></option>
+                                                            <% }) %>
+                                                        </select>
+                                                        <select class="allergan-dropdown" multiple>
+                                                            <% ['Gluten', 'Dairy', 'Nuts', 'Soy', 'Eggs'].forEach(allergan => { %>
+                                                                <option value="<%= allergan %>" <%= product.allergans.includes(allergan) ? 'selected' : '' %>><%= allergan %></option>
+                                                            <% }) %>
+                                                        </select>
+                                                        <select class="sweet-type-dropdown">
+                                                            <% ['Chocolate', 'Gummy Bears', 'Licorice', 'Lollipops', 'Candies'].forEach(type => { %>
+                                                                <option value="<%= type %>" <%= product.sweetType === type ? 'selected' : '' %>><%= type %></option>
+                                                            <% }) %>
+                                                        </select>
+                                                        <select class="kosher-dropdown">
+                                                            <option value="Yes" <%= product.kosher === 'Yes' ? 'selected' : '' %>>Yes</option>
+                                                            <option value="No" <%= product.kosher === 'No' ? 'selected' : '' %>>No</option>
+                                                        </select>
+                                                    </div>
                                                 </div>
                                         </div>    
                                         <!-- Divider -->

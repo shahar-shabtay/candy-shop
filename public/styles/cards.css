@@ -252,3 +252,44 @@ input.product-name , input.product-price{
     align-items: center;
     justify-content: center;
 }
+
+
+.product-card.edit-mode {
+    height: auto; /* Allow the card to expand */
+    max-height: 600px; /* Set a maximum height */
+    overflow-y: auto; /* Add scrollbar if content exceeds max-height */
+}
+
+.dropdown-container {
+    display: none;
+    padding: 10px;
+    background-color: #f8f8f8;
+    border-top: 1px solid #e1e1e1;
+}
+
+.dropdown-container select {
+    width: 100%;
+    margin-bottom: 5px;
+    padding: 5px;
+}
+
+.edit-mode .dropdown-container {
+    display: block;
+}
+
+/* Adjust the product info section when in edit mode */
+.edit-mode .product-info {
+    flex-direction: column;
+}
+
+.edit-mode .product-text {
+    width: 100%;
+}
+
+/* Style for editable inputs */
+.edit-mode input.editable {
+    border: 1px solid #ccc;
+    padding: 5px;
+    margin: 2px 0;
+    width: calc(100% - 12px); /* Account for padding and border */
+}

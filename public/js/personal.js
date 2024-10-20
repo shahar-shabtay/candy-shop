@@ -361,6 +361,9 @@ function editProduct(productId) {
         return;
     }
 
+    // Add edit-mode class to the product card
+    productCard.classList.add('edit-mode');
+
     // Find all input fields within the product card
     const inputs = productCard.querySelectorAll('input');
 
@@ -372,6 +375,12 @@ function editProduct(productId) {
             input.removeAttribute('readonly');
             input.classList.add('editable');  // Add a class to indicate that the input is now editable
         });
+    }
+
+    // Show dropdowns
+    const dropdownContainer = productCard.querySelector('.dropdown-container');
+    if (dropdownContainer) {
+        dropdownContainer.style.display = 'block';
     }
 
     // Change the edit button to a save button
@@ -401,6 +410,16 @@ function saveProduct(productId) {
     const description = productCard.querySelector('.product-description')?.value;
     const inventory = productCard.querySelector('.product-inventory')?.value;
 
+    // Get selected flavors
+    const flavors = Array.from(productCard.querySelectorAll('.flavor-dropdown option:checked')).map(e => e.value);
+    
+    // Get selected allergans
+    const allergans = Array.from(productCard.querySelectorAll('.allergan-dropdown option:checked')).map(e => e.value);
+    
+    //const flavors = Array.from(productCard.querySelectorAll('.flavor-dropdown option:checked')).map(e => e.value);
+    //const allergans = Array.from(productCard.querySelectorAll('.allergan-dropdown option:checked')).map(e => e.value);
+    const sweetType = productCard.querySelector('.sweet-type-dropdown').value;
+    const kosher = productCard.querySelector('.kosher-dropdown').value;
 
     // Check if any of the values are null or undefined
     if ([name, price, description, inventory].some(value => value === undefined || value === null || value === '')) {
@@ -414,18 +433,26 @@ function saveProduct(productId) {
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name, price, description, inventory }),
+        body: JSON.stringify({ name, price, description, inventory, flavors: JSON.stringify(flavors), allergans: JSON.stringify(allergans), sweetType, kosher }),
     })
         .then(response => response.json())
         .then(data => {
             if (data.success) {
                 // Make inputs readonly again after saving
                 showSuccessAlert('save-alert');
+                // Remove edit-mode class from the product card
+                productCard.classList.remove('edit-mode');
                 const inputs = productCard.querySelectorAll('input');
                 inputs.forEach(input => {
                     input.setAttribute('readonly', 'readonly');
                     input.classList.remove('editable');
                 });
+
+                // Hide dropdowns
+                const dropdownContainer = productCard.querySelector('.dropdown-container');
+                if (dropdownContainer) {
+                    dropdownContainer.style.display = 'none';
+                }
 
                 // Change the save button back to an edit button
                 const editButton = productCard.querySelector('.edit-btn');
@@ -457,14 +484,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const priceInput = document.getElementById('price');
     const inventoryInput = document.getElementById('inventory');
     const descriptionInput = document.getElementById('description');
-    const categoryInput = document.getElementById('category');
     const fileInput = document.getElementById('fileInput');
 
     const previewName = document.getElementById('previewName');
     const previewPrice = document.getElementById('previewPrice');
     const previewInventory = document.getElementById('previewInventory');
     const previewDescription = document.getElementById('previewDescription');
-    const previewCategory = document.getElementById('previewCategory');
     const previewImage = document.getElementById('previewImage');
 
     // Update the name in the preview card
@@ -495,13 +520,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Update the category in the preview card
-    if (categoryInput) {
-        categoryInput.addEventListener('input', () => {
-            previewCategory.textContent = categoryInput.value || 'Category';
-        });
-    }
-
     // Update the image in the preview card
     if (fileInput) {
         fileInput.addEventListener('change', () => {
@@ -519,12 +537,145 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+//add the flavors array
+let selectedFlavors = [];
+
+document.getElementById('FlavorDropdown').addEventListener('change', function() {
+    const selectedValue = this.value;
+
+    if (!selectedFlavors.includes(selectedValue) && selectedValue !== "") {
+        selectedFlavors.push(selectedValue);
+        renderSelectedFlavors();
+    }
+});
+
+function renderSelectedFlavors() {
+    const selectedFlavorsDiv = document.getElementById('selectedFlavors');
+    selectedFlavorsDiv.innerHTML = ''; // Clear the div before rendering
+    
+    selectedFlavors.forEach((flavor, index) => {
+        const flavorSpan = document.createElement('span');
+        flavorSpan.textContent = flavor;
+        flavorSpan.classList.add('flavor-item');
+        
+        const removeButton = document.createElement('button');
+        removeButton.textContent = 'X';
+        removeButton.classList.add('remove-flavor');
+        removeButton.addEventListener('click', () => {
+            removeFlavor(index);
+        });
+        
+        flavorSpan.appendChild(removeButton);
+        selectedFlavorsDiv.appendChild(flavorSpan);
+    });
+}
+
+function removeFlavor(index) {
+    selectedFlavors.splice(index, 1);
+    renderSelectedFlavors();
+}
+
+//add the allergans array
+let selectedAllergans = [];
+
+document.getElementById('AllerganDropdown').addEventListener('change', function() {
+    const selectedValue = this.value;
+
+    if (!selectedAllergans.includes(selectedValue) && selectedValue !== "") {
+        selectedAllergans.push(selectedValue);
+        renderSelectedAllergans();
+    }
+});
+
+function renderSelectedAllergans() {
+    const selectedAllergansDiv = document.getElementById('selectedAllergans');
+    selectedAllergansDiv.innerHTML = ''; // Clear the div before rendering
+    
+    selectedAllergans.forEach((allergan, index) => {
+        const allerganSpan = document.createElement('span');
+        allerganSpan.textContent = allergan;
+        allerganSpan.classList.add('allergan-item');
+        
+        const removeButton = document.createElement('button');
+        removeButton.textContent = 'X';
+        removeButton.classList.add('remove-allergan');
+        removeButton.addEventListener('click', () => {
+            removeAllergan(index);
+        });
+        
+        allerganSpan.appendChild(removeButton);
+        selectedAllergansDiv.appendChild(allerganSpan);
+    });
+}
+
+function removeAllergan(index) {
+    selectedAllergans.splice(index, 1);
+    renderSelectedAllergans();
+}
+
+//add the sweet type
+let selectedSweetType = "";
+
+document.getElementById('SweetTypeDropdown').addEventListener('change', function() {
+    const selectedValue = this.value;
+
+    if (selectedValue !== "") {
+        selectedSweetType = selectedValue;
+        renderSelectedSweetType(); // Display the selected sweet type
+    }
+});
+
+function renderSelectedSweetType() {
+    const selectedSweetTypeDiv = document.getElementById('selectedSweetType');
+    selectedSweetTypeDiv.innerHTML = ''; // Clear the div before rendering
+    
+    const sweetTypeSpan = document.createElement('span');
+    sweetTypeSpan.textContent = selectedSweetType;
+    sweetTypeSpan.classList.add('sweet-type-item');
+
+    selectedSweetTypeDiv.appendChild(sweetTypeSpan);
+}
+
+//add if kosher
+let selectedKosher = "";
+
+document.getElementById('KosherDropdown').addEventListener('change', function() {
+    const selectedValue = this.value;
+
+    if (selectedValue !== "") {
+        selectedKosher = selectedValue;
+        renderSelectedKosher(); // Display the selected kosher
+    }
+});
+
+function renderSelectedKosher() {
+    const selectedKosherDiv = document.getElementById('selectedKosher');
+    selectedKosherDiv.innerHTML = ''; // Clear the div before rendering
+    
+    const kosherSpan = document.createElement('span');
+    kosherSpan.textContent = selectedKosher;
+    kosherSpan.classList.add('kosher-item');
+
+    selectedKosherDiv.appendChild(kosherSpan);
+}
 
 async function submitProduct(event) {
     event.preventDefault(); // Prevent default form submission behavior
 
     const form = document.getElementById('productForm');
     const formData = new FormData(form); // Get form data, including the file
+
+    // Add selected flavors to the form data
+    formData.append('flavors', JSON.stringify(selectedFlavors));
+
+    // Add selected allergans to the form data
+    formData.append('allergans', JSON.stringify(selectedAllergans));
+
+    // Add selected sweet type to the form data
+    formData.append('sweetType', selectedSweetType);
+
+    // Add selected kosher to the form data
+    formData.append('kosher', selectedKosher);
 
     // Disable the submit button to prevent multiple submissions
     const submitButton = document.getElementById('submitButton');

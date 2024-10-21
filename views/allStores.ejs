@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Sweetly - Admin Page</title>
-        <link rel="icon" href="/public/images/favicon.ico" type="image/x-icon">
+        <title>Candy Shop - Admin Page</title>
         <link rel="stylesheet" href="/public/styles/main.css">
-        <link rel="stylesheet" href="/public/styles/personal.css">        
-        <link rel="stylesheet" href="/public/styles/cards.css">
-
+        <link rel="stylesheet" href="/public/styles/personal.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     </head>
-    <body>
+    <body> 
+        <!-- Topbar -->
         <header>
             <nav class="main-navbar">
                 <section class="navbar-left">
@@ -62,37 +61,41 @@
                 </section>
             </nav>
         </header>
+        <!-- Account Section -->
         <section class="page-content">
             <header class="personal-header">
                 <h2>Hello <%= user.name %></h2>
             </header>
             <div class="personal-content">
-                <!-- Sub Menu -->
                 <div class="sub-menu">
                     <button class="menu-option" onclick="window.location.href='/personal/admin/customers'">All Users</button>
                     <button class="menu-option" onclick="window.location.href='/personal/admin/orders'">All Orders</button>
                     <button class="menu-option" onclick="window.location.href='/personal/admin/products'">All Products</button>
                     <button class="menu-option" onclick="window.location.href='/personal/admin/addProducts'">Add Product</button>
                     <button class="menu-option" onclick="window.location.href='/personal/admin/stores'">All Stores</button>
-                    <button class="menu-option active" onclick="window.location.href='/personal/admin/facebookInfo'">Facebook Info</button>
-                </div>
-                <!-- Facebook Info -->
-                <div class="main-content">
-                    <div id="facebook" class="content-item active">
-                        <div class="container">
-                            <div class="grid-container">
-                                <h3>Facebook Page Information</h3>
-                                <p><strong>Followers👥:</strong> <%= facebookData.followers %></p>
-                                <p><strong>Total Posts📝:</strong> <%= facebookData.postCount %></p>
-                                <p><strong>Total Likes❤️:</strong> <%= facebookData.totalLikes %></p>
+                    <button class="menu-option" onclick="window.location.href='/personal/admin/facebookInfo'">Facebook Info</button>
 
-                                <% if (facebookData.errorMessage) { %>
-                                    <p class="error-message"><%= facebookData.errorMessage %></p>
-                                <% } %>
-                            </div>   
-                            <div id="delete-alert" class="custom-alert hidden">
-                                Product Deleted
-                            </div>                      
+                </div>
+                <!-- Account Details -->
+                <div class="main-content">
+                    <!-- ...existing tabs... -->
+
+                    <!-- New "All Stores" view -->
+                    <div id="stores" class="content-item">
+                        <div class="container">
+                            <% if(stores && stores.length > 0) { %> 
+                                <ul class="stores-list">
+                                    <% stores.forEach(store => { %>
+                                    <li class="store-item">
+                                        <h3 class="store-name"><%= store.name %></h3>
+                                        <p class="store-address"><%= store.address %></p>
+                                        <p class="store-coordinates">Coordinates: <%= store.coordinates.join(', ') %></p>
+                                    </li>
+                                    <% }) %>
+                                </ul>
+                            <% } else { %>
+                                <p>No stores are available</p>
+                            <% } %> 
                         </div>
                     </div>
                 </div>
@@ -130,7 +133,25 @@
                 </div>
             </div>
         </footer>
-        <script src="/public/js/main.js"></script>
         <script src="/public/js/personal.js"></script>
+        <script src="/public/js/main.js"></script>
+        <script type="text/javascript">
+          // JavaScript to make the clicked menu option active and display the related content
+          const subMenuOptions = [...document.getElementsByClassName('menu-option')];
+          subMenuOptions.forEach(option => {
+              option.addEventListener('click', () => {
+                  subMenuOptions.forEach(o => o.classList.remove('active'))
+                  option.classList.add('active');
+
+                  const contentItems = [...document.getElementsByClassName('content-item')];
+                  contentItems.forEach(item => {
+                      item.style.display = "none";
+                  });
+
+                  const activeContent = document.getElementById(option.innerText.trim());
+                  activeContent.style.display = "block";
+              });
+          });
+        </script>
     </body>
 </html>

@@ -32,6 +32,7 @@ function updateCart(itemId, newQuantity) {
         if (response.ok) {
             // Successfully updated cart on server, now update the total price and refresh
             window.location.reload();
+            showSuccessAlert('update-alert');
         } else {
             alert('Failed to update cart. Please try again.');
         }
@@ -49,11 +50,28 @@ function updateTotalPrice() {
 
     cartItems.forEach(item => {
         const quantity = parseInt(item.querySelector("input[name='quantity']").value);
-        const price = parseFloat(item.querySelector(".product-price").textContent.replace('₪', ''));
-        totalPrice += price * quantity;
+        const priceElement = item.querySelector(".product-price");
+        const price = parseFloat(priceElement ? priceElement.textContent : 0);
+        
+        if (!isNaN(price) && !isNaN(quantity)) {
+            totalPrice += price * quantity;
+        }
     });
 
-    document.getElementById("total-price").textContent = `₪${totalPrice.toFixed(2)}`;
+    // עדכון הסכום הכולל עם סימן המטבע
+    const totalElement = document.getElementById("total-price");
+    const selectedCurrency = document.getElementById('currency-selector') ? document.getElementById('currency-selector').value : 'ILS'; // מניח שיש dropdown לבחירת מטבע או משתמש בברירת מחדל
+
+    let currencySymbol = '₪'; // ברירת מחדל לשקל
+    if (selectedCurrency === 'USD') {
+        currencySymbol = '$';
+    } else if (selectedCurrency === 'EUR') {
+        currencySymbol = '€';
+    }
+
+    if (totalElement) {
+        totalElement.textContent = `${totalPrice.toFixed(2)}${currencySymbol}`; 
+    }
 }
 
 // Checkout function
@@ -102,7 +120,7 @@ async function checkoutCart() {
             showSuccessAlert('order-alert');
             // Update cart UI to indicate the cart is now empty
             document.querySelector('.cart-container').innerHTML = '<p>Your cart is empty.</p>';
-            document.getElementById('total-price').textContent = '₪0.00';
+            document.getElementById('total-price').textContent = '0.00';
         } else {
             alert('Failed to place order: ' + data.message);
         }
@@ -120,12 +138,27 @@ function recalculateTotal() {
     const cartItems = document.querySelectorAll('.cart-item:not(.sold-out)');
 
     cartItems.forEach(item => {
-        const price = parseFloat(item.querySelector('.product-price').textContent.replace('₪', ''));
-        const quantity = parseInt(item.querySelector('input[name="quantity"]').value, 10);
+        const priceElement = item.querySelector('.product-price');
+        const price = parseFloat(priceElement ? priceElement.textContent : 0);
+        const quantityElement = item.querySelector('input[name="quantity"]');
+        const quantity = parseInt(quantityElement ? quantityElement.value : 0, 10);
 
-        totalPrice += price * quantity;
+        if (!isNaN(price) && !isNaN(quantity)) {
+            totalPrice += price * quantity;
+        }
     });
 
-    // Update the total price in the UI
-    document.getElementById('total-price').textContent = `₪${totalPrice.toFixed(2)}`;
+    const totalElement = document.getElementById("total-price");
+    const selectedCurrency = document.getElementById('currency-selector') ? document.getElementById('currency-selector').value : 'ILS';
+
+    let currencySymbol = '₪';
+    if (selectedCurrency === 'USD') {
+        currencySymbol = '$';
+    } else if (selectedCurrency === 'EUR') {
+        currencySymbol = '€';
+    }
+
+    if (totalElement) {
+        totalElement.textContent = `${totalPrice.toFixed(2)}${currencySymbol}`;
+    }
 }

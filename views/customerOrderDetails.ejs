@@ -12,18 +12,18 @@
         <header>
             <nav class="main-navbar">
                 <section class="navbar-left">
-                    <img src="/public/images/shooping_cart.svg" class="navbar-icon" onclick="window.location.href='/carts'">
+                    <img src="/public/images/shooping_cart.svg" class="navbar-icon" onclick="window.location.href='/cart'">
                     <img src="/public/images/logout.svg" class="navbar-icon" onclick="window.location.href='/logout'">
                 </section>
                 <section class="navbar-center">
                     <img src="/public/images/logo.svg" class="logo" onclick="window.location.href='/products'">
                 </section>
                 <section class="navbar-right">
-                    <select class="currency-dropdown" id="currency-dropdown">
-                        <option value="ILS">Israeli Shekel (₪)</option>
-                        <option value="USD">US Dollar ($)</option>
-                        <option value="EUR">Euro (€)</option>
-                    </select>
+                    <select class="currency-dropdown" id="currency-selector" onchange="changeCurrency()">
+                        <option value="ILS" <%= currency === 'ILS' ? 'selected' : '' %>>₪ ILS</option>
+                        <option value="USD" <%= currency === 'USD' ? 'selected' : '' %>>$ USD</option>
+                        <option value="EUR" <%= currency === 'EUR' ? 'selected' : '' %>>€ EUR</option>
+                    </select>  
                     <img src="/public/images/nearMe.svg" class="navbar-icon" onclick="window.location.href='/nearMe'">
                     <div class="side-menu">
                         <div class="sideMenu-sign" id="sideMenu-sign">
@@ -102,7 +102,16 @@
                                 <section>
                                     <h2><i class="fas fa-map-marker-alt order-icon"></i> Delivery Address</h2>
                                     <p><%= orderDetails.street %> <%= orderDetails.number %>, <%= orderDetails.city %></p>
-                                    <h3>Total Price: $<%= orderDetails.totalPrice.toFixed(2) %></h3>
+                                    <h3>Total Price:
+                                        <% let totalPrice = orderDetails.totalPrice.toFixed(2); %>
+                                        <% if (currency === 'USD' && rates['USD']) { %>
+                                        <%= (totalPrice * rates['USD']).toFixed(2) %> $
+                                        <% } else if (currency === 'EUR' && rates['EUR']) { %>
+                                        <%= (totalPrice * rates['EUR']).toFixed(2) %> €
+                                        <% } else { %>
+                                        <%= totalPrice %> ₪
+                                        <% } %>
+                                    </h3>
                                 </section>
 
                                 <!-- Order Status -->
@@ -124,7 +133,16 @@
                                         <img src="<%= product.image %>" alt="<%= product.name %>">
                                         <h4><%= product.name %></h4>
                                         <p>Quantity: <%= product.quantity %></p>
-                                        <p>Total: $<%= (product.price * product.quantity).toFixed(2) %></p>
+                                        <p>Total:
+                                            <% let total = (product.price * product.quantity).toFixed(2); %>
+                                            <% if (currency === 'USD' && rates['USD']) { %>
+                                            <%= (total * rates['USD']).toFixed(2) %> $
+                                            <% } else if (currency === 'EUR' && rates['EUR']) { %>
+                                            <%= (total * rates['EUR']).toFixed(2) %> €
+                                            <% } else { %>
+                                            <%= total %> ₪
+                                            <% } %>
+                                        </p>
                                     </div>
                                     <% }) %>
                                 </div>
@@ -139,5 +157,6 @@
         </section>
         <script src="/public/js/personal.js"></script>
         <script src="/public/js/main.js"></script>
+        <script src="/public/js/currency.js"></script>
     </body>
 </html>

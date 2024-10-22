@@ -18,11 +18,11 @@
                     <img src="/public/images/logo.svg" class="logo" onclick="window.location.href='/products'">
                 </section>
                 <section class="navbar-right">
-                    <select class="currency-dropdown" id="currency-dropdown">
-                        <option value="ILS">Israeli Shekel (₪)</option>
-                        <option value="USD">US Dollar ($)</option>
-                        <option value="EUR">Euro (€)</option>
-                    </select>
+                    <select class="currency-dropdown" id="currency-selector" onchange="changeCurrency()">
+                        <option value="ILS" <%= currency === 'ILS' ? 'selected' : '' %>>₪ ILS</option>
+                        <option value="USD" <%= currency === 'USD' ? 'selected' : '' %>>$ USD</option>
+                        <option value="EUR" <%= currency === 'EUR' ? 'selected' : '' %>>€ EUR</option>
+                    </select> 
                     <img src="/public/images/nearMe.svg" class="navbar-icon" onclick="window.location.href='/nearMe'">
                     <div class="side-menu">
                         <div class="sideMenu-sign" id="sideMenu-sign">
@@ -95,7 +95,16 @@
                                     <p class="product-name"><%= product.name %></p><br>
                                     <p class="product-description"><%= product.description %></p>
                                 </div>
-                                <div class="product-price">₪<%= product.price %></div>
+                                <div class="product-price">
+                                    <% let price = product.price; %>
+                                    <% if (currency === 'USD' && rates['USD']) { %>
+                                    <%= (price * rates['USD']).toFixed(2) %> $
+                                    <% } else if (currency === 'EUR' && rates['EUR']) { %>
+                                    <%= (price * rates['EUR']).toFixed(2) %> €
+                                    <% } else { %>
+                                    <%= price %> ₪
+                                    <% } %>
+                                </div>
                         </div>    
                         <!-- Divider -->
                         <hr class="product-divider">
@@ -169,5 +178,6 @@
         <script src="/public/js/cart.js"></script>
         <script src="/public/js/main.js"></script>
         <script src="/public/js/personal.js"></script>
+        <script src="/public/js/currency.js"></script>
     </body>
 </html>

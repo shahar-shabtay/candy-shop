@@ -17,6 +17,11 @@
                     <img src="/public/images/logo.svg" class="logo" onclick="window.location.href='/products'">
                 </section>
                 <section class="navbar-right">
+                    <select class="currency-dropdown" id="currency-selector" onchange="changeCurrency()">
+                        <option value="ILS" <%= currency === 'ILS' ? 'selected' : '' %>>₪ ILS</option>
+                        <option value="USD" <%= currency === 'USD' ? 'selected' : '' %>>$ USD</option>
+                        <option value="EUR" <%= currency === 'EUR' ? 'selected' : '' %>>€ EUR</option>
+                    </select>                
                     <img src="/public/images/nearMe.svg" class="navbar-icon" onclick="window.location.href='/nearMe'">
                     <div class="side-menu">
                         <div class="sideMenu-sign" id="sideMenu-sign">
@@ -81,7 +86,16 @@
                         <div class="product-name" style="font-weight: bold; margin-bottom: 5px;">
                             <%= item.name %> | <%= item.description || 'No description available.' %>
                         </div>
-                        <div class="product-price"><%= item.price %>₪</div><br>
+                        <div class="product-price">
+                            <% let price = item.price; %>
+                            <% if (currency === 'USD' && rates['USD']) { %>
+                            <%= (price * rates['USD']).toFixed(2) %> $
+                            <% } else if (currency === 'EUR' && rates['EUR']) { %>
+                            <%= (price * rates['EUR']).toFixed(2) %> €
+                            <% } else { %>
+                            <%= price %> ₪
+                            <% } %>
+                        </div><br>
                         
                         <!-- Quantity Selector and Update -->
                         <form action="/cart/update" method="POST">
@@ -93,7 +107,16 @@
         
                     <!-- Price -->
                     <div class="price" style="font-size: 18px; text-align: right;">
-                        <span>₪<%= (item.price * item.quantity).toFixed(2) %></span>
+                        <% let subTotalPrice = (item.price * item.quantity).toFixed(2); %>
+                        <span class="price">
+                            <% if (currency === 'USD' && rates['USD']) { %>
+                            <%= (subTotalPrice * rates['USD']).toFixed(2) %> $
+                            <% } else if (currency === 'EUR' && rates['EUR']) { %>
+                            <%= (subTotalPrice * rates['EUR']).toFixed(2) %> €
+                            <% } else { %>
+                            <%= subTotalPrice %> ₪
+                            <% } %>   
+                        </span>
                     </div>
         
                     <!-- Remove Product Button -->
@@ -121,7 +144,18 @@
                 <!-- Total Price -->
                 <div class="summary-total" style="font-size: 18px; margin-bottom: 20px;">
                     <span>Total Price:</span>
-                    <span id="total-price" style="font-weight: bold;">₪<%= cart.reduce((total, item) => total + (item.price * item.quantity), 0).toFixed(2) %></span>
+                    <% let totalPrice = cart.reduce((total, item) => total + (item.price * item.quantity), 0); %>
+                    <span id="total-price" style="font-weight: bold;">
+                        <% if (currency === 'USD' && rates['USD']) { %>
+                            <%= (totalPrice * rates['USD']).toFixed(2) %>$
+                        <% } else if (currency === 'EUR' && rates['EUR']) { %>
+                            <%= (totalPrice * rates['EUR']).toFixed(2) %>€
+                        <% } else { %>
+                            <%= totalPrice.toFixed(2) %>₪
+                        <% } %>
+                    </span>
+
+
                 </div>
         
                 <!-- Place Order Button -->
@@ -167,5 +201,6 @@
         <script src="/public/js/products.js"></script>
         <script src="/public/js/main.js"></script>
         <script src="/public/js/cart.js"></script>
+        <script src="/public/js/currency.js"></script>
 </html>
 

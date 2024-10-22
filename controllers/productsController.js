@@ -7,6 +7,7 @@ const path = require('path');
 const fs = require('fs');
 
 
+
 async function getAllProducts (req, res) {
 	const user = req.session.user;
 	if (!user){
@@ -14,9 +15,11 @@ async function getAllProducts (req, res) {
 	}
 	try {
 		const email = user.email;
-		const customer = await customerService.getCustomerByEmail(email);
+        const currency = req.session.currency || 'ILS';
+        const rates = req.session.rates || {};
 		const products = await productsService.getAllProducts();
-		res.render('productsList', { products,user, customer}); 
+        console.log(currency);
+		res.render('productsList', { products,user,currency,rates}); 
 	} catch (err) {
 		console.error('Error getting products:', err);
 		res.status(500).send('Server Error (productsController - getAllProducts)');

@@ -1,12 +1,9 @@
 const customerService = require('../services/customerService');
 const productService = require('../services/productsService');
 const favoriteService = require('../services/favoriteService');
-const orderService = require('../services/ordersService');
 const facebookInfoService = require('../services/facebookInfoService');
 const facebookPostService = require('../services/facebookPostService');
-const multer = require('multer');
-const path = require('path');
-const mongoose = require("mongoose");
+
 
 
 // Helper function to convert address object to a string
@@ -136,8 +133,10 @@ async function getAllProducts(req, res) {
         const user = req.session.user;
         const customers = await customerService.getAllCustomers();
         const products = await productService.getAllProducts();
+        const currency = req.session.currency;
+        const rates = req.session.rates;
         if(user.role == 'admin') {
-            res.render('allProducts', {customers, products, user});
+            res.render('allProducts', {customers, products, user, currency, rates});
         } else if(user.role == 'user') {
             res.render('accessDenied', {user});
         }
@@ -150,11 +149,13 @@ async function getAllProducts(req, res) {
 // For specific customer - orders / details / favorite
 async function getFavoriteProducts (req, res) {
     const user = req.session.user;
+    const currency = req.session.currency;
+    const rates = req.session.rates;
 
     try {
         if(user){
             const favoriteProducts = await favoriteService.getFavoriteProductsByCustomerId(user.customerId);
-            res.render('favoriteProducts', {favoriteProducts, user});
+            res.render('favoriteProducts', {favoriteProducts, user, currency, rates});
         } else {
             res.render('notLogin');
         }

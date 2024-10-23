@@ -181,11 +181,17 @@ body {
 }
 
 .sideMenu-iconContainer:hover {
-    background: linear-gradient(to right, #d74a6b, #FF6C8E);
+    background: linear-gradient(25deg, #ff6ec4, #7873f5);
     transition: background 0.3s ease;
+    font-weight: bold;
 }
 
 .sideMenu-icon {
+    width: 50px;
+    height: auto;
+}
+
+.sideMenu-icon:hover {
     width: 50px;
     height: auto;
 }

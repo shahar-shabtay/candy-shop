@@ -127,12 +127,17 @@ input[type="date"] {
 }
 
 form {
-    width: 100%;
-    max-width: 500px;
-    padding: 20px;
+    width: 40%; 
+    padding: 20px; 
+    text-align: center; 
+    font-size: 18px;
+    padding: 40px;
     border-radius: 10px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-    background-color: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(2px);
+    transition: all 0.3s ease;
 }
 
 form h3 {
@@ -167,4 +172,16 @@ form button:hover {
 }
 
 
+.back-icon {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 24px;
+    color: #ff6ec4;
+    text-decoration: none;
+    z-index: 10; /* מבטיח שהאייקון יהיה מעל אלמנטים אחרים */
+}
 
+.back-icon:hover {
+    color: #7873f5;
+}

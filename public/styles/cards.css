@@ -50,6 +50,10 @@ h1 {
     object-fit: cover;
 }
 
+.favorite:hover {
+    color: #7873f5;
+}
+
 .favorite-button {
     position: absolute;
     top: 10px;
@@ -181,7 +185,7 @@ input.product-name , input.product-price{
 }
 
 .add-to-cart {
-    background-color: #e74c3c;
+    background-color: #ff6ec4;
     color: white;
     border: none;
     padding: 5px 10px;
@@ -191,7 +195,7 @@ input.product-name , input.product-price{
 }
 
 .add-to-cart:hover {
-    background-color: #c0392b;
+    background: linear-gradient(25deg, #ff6ec4, #7873f5);
 }
 
 .decrease, .increase {

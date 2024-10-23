@@ -108,40 +108,42 @@ document.querySelectorAll('.see-order2-btn').forEach(button => {
 // Dynamic status bar logic
 const statusBar = document.getElementById('statusBar');
 const statusText = document.getElementById('statusText');
-const status = document.getElementById('status').innerText;
-console.log(status);
-let progress = 0;
+const statusEl = document.getElementById('status');
+if (statusEl){
+    const status = statusEl.innerText;
+    let progress = 0;
 
-// Remove any existing status classes before adding new ones
-if(statusBar) {
-    statusBar.classList.remove('status-pending', 'status-processing', 'status-shipped', 'status-delivered');
-}
+    // Remove any existing status classes before adding new ones
+    if(statusBar) {
+        statusBar.classList.remove('status-pending', 'status-processing', 'status-shipped', 'status-delivered');
+    }
 
-switch (status) {
-    case "Pending":
-        progress = 25;
-        statusBar.classList.add('status-pending');
-        break;
-    case "Processing":
-        progress = 50;
-        statusBar.classList.add('status-processing');
-        break;
-    case "Shipped":
-        progress = 75;
-        statusBar.classList.add('status-shipped');
-        break;
-    case "Delivered":
-        progress = 100;
-        statusBar.classList.add('status-delivered');
-        break;
-    default:
-        progress = 0;
-}
+    switch (status) {
+        case "Pending":
+            progress = 25;
+            statusBar.classList.add('status-pending');
+            break;
+        case "Processing":
+            progress = 50;
+            statusBar.classList.add('status-processing');
+            break;
+        case "Shipped":
+            progress = 75;
+            statusBar.classList.add('status-shipped');
+            break;
+        case "Delivered":
+            progress = 100;
+            statusBar.classList.add('status-delivered');
+            break;
+        default:
+            progress = 0;
+    }
 
 
-// Set the width of the progress bar based on the progress percentage
-if(statusBar) {
-    statusBar.style.width = progress + "%";
+    // Set the width of the progress bar based on the progress percentage
+    if(statusBar) {
+        statusBar.style.width = progress + "%";
+    }
 }
 
 

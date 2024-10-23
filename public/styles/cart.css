@@ -60,13 +60,17 @@
 }
 
 .update-button {
-    background-color: #e84c3d;
+    background-color: #ff6ec4;
     border-radius: 5px;
     color: white;
     border: none;
     padding: 5px 10px;
     cursor: pointer;
     margin-left: 10px;
+}
+
+.update-button:hover {
+    background: linear-gradient(25deg, #ff6ec4, #7873f5);;
 }
 
 .price {
@@ -80,8 +84,9 @@
 
 .remove-button i {
     font-size: 24px;
-    color: red;
+    color: black;
 }
+
 
 .summary-total {
     font-size: 18px;
@@ -89,11 +94,16 @@
 }
 
 .checkout-button {
-    background-color: green;
+    background-color: #ff6ec4;
     color: white;
     padding: 10px 20px;
     border: none;
+    border-radius: 5px;
     cursor: pointer;
+}
+
+.checkout-button:hover {
+    background: linear-gradient(25deg, #ff6ec4, #7873f5);
 }
 
 .stock-banner {

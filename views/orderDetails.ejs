@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Candy Shop - Admin Page</title>
+        <title>Sweetly - Admin</title>
         <link rel="stylesheet" href="/public/styles/main.css">
         <link rel="stylesheet" href="/public/styles/personal.css">
+        <link rel="icon" href="/public/images/favicon.ico" type="image/x-icon">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     </head>
     <body> 
@@ -18,11 +19,11 @@
                     <img src="/public/images/logo.svg" class="logo" onclick="window.location.href='/products'">
                 </section>
                 <section class="navbar-right">
-                    <select clsss="currency-dropdown" id="currency-selector" onchange="changeCurrency()">
+                    <select class="currency-dropdown" id="currency-selector" onchange="changeCurrency()">
                         <option value="ILS" <%= currency === 'ILS' ? 'selected' : '' %>>₪ ILS</option>
                         <option value="USD" <%= currency === 'USD' ? 'selected' : '' %>>$ USD</option>
                         <option value="EUR" <%= currency === 'EUR' ? 'selected' : '' %>>€ EUR</option>
-                    </select>
+                    </select>  
                     <img src="/public/images/nearMe.svg" class="navbar-icon" onclick="window.location.href='/nearMe'">
                     <div class="side-menu">
                         <div class="sideMenu-sign" id="sideMenu-sign">
@@ -66,7 +67,7 @@
                 </section>
             </nav>
         </header>
-        <!-- Account Section -->
+        <!-- Page Content -->
         <section class="page-content">
             <header class="personal-header">
                 <h2>Hello <%= user.role %></h2>
@@ -77,6 +78,7 @@
                     <button class="menu-option active" onclick="window.location.href='/personal/admin/orders'">All Orders</button>
                     <button class="menu-option" onclick="window.location.href='/personal/admin/products'">All Products</button>
                     <button class="menu-option" onclick="window.location.href='/personal/admin/addProducts'">Add Product</button>
+                    <button class="menu-option" onclick="window.location.href='/personal/admin/facebookInfo'">Facebook Info</button>
                 </div>
                 <!-- Account Details -->
                 <div class="main-content">
@@ -165,7 +167,7 @@
                     |
                     <a href="#" class="talk-to-us" id="openTalkModal">Talk To Us</a>
                     |
-                    <a href="https://tinyurl.com/sweetly-facebook" class="facebook">Facebook</a>
+                    <a href="https://tinyurl.com/sweetly-facebook" target="_blank" class="facebook">Facebook</a>
                 </div>
                 
                 <!-- Modal for About Us -->
@@ -187,8 +189,9 @@
                 </div>
             </div>
         </footer>
-        <script src="/public/js/adminPage.js"></script>
+        <!-- Scripts -->
         <script src="/public/js/main.js"></script>
+        <script src="/public/js/personal.js"></script>
         <script src="/public/js/currency.js"></script>
     </body>
 </html>

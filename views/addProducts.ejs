@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Candy Shop - Admin Page</title>
+        <title>Sweetly - Admin</title>
         <link rel="stylesheet" href="/public/styles/main.css">
         <link rel="stylesheet" href="/public/styles/personal.css">
         <link rel="stylesheet" href="/public/styles/productPreview.css">
@@ -65,7 +65,7 @@
                 </section>
             </nav>
         </header>
-        <!-- Account Section -->
+        <!-- Page Content -->
         <section class="page-content">
                 <div class="personal-header">
                     <h2>Hello <%= user.name %></h2>
@@ -190,6 +190,7 @@
                     </div>
                 </div>
         </section>
+        <!-- Footer -->
         <footer class="footer">
             <div class="footer-left">
                 <p>© Sweetly | Adi Brodesky | Gal Ternovsky | Shahar Shabtay | Ziv Klein </p>
@@ -200,7 +201,7 @@
                     |
                     <a href="#" class="talk-to-us" id="openTalkModal">Talk To Us</a>
                     |
-                    <a href="https://tinyurl.com/sweetly-facebook" class="facebook">Facebook</a>
+                    <a href="https://tinyurl.com/sweetly-facebook" target="_blank" class="facebook">Facebook</a>
                 </div>
                 
                 <!-- Modal for About Us -->
@@ -221,7 +222,8 @@
                     </div>
                 </div>
             </div>
-        </footer>       
+        </footer>
+        <!-- Scripts --> 
         <script src="/public/js/personal.js"></script>
         <script src="/public/js/main.js"></script>
     </body>

@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html len="en>">
     <head>
-        <title>Candy Shop - Products</title>
+        <title>Sweetly</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+        <link rel="icon" href="/public/images/favicon.ico" type="image/x-icon">
         <link rel="stylesheet" href="/public/styles/main.css">
         <link rel="stylesheet" href="/public/styles/cards.css">
     </head>
@@ -85,9 +86,6 @@
                                 <i class="fas fa-heart favorite" data-product-id="<%= product.productId %>"></i>
                             </button>
                         </div>
-                    
-                        <!-- Divider -->
-                    
                         <!-- Name, Description, and Price (2/6 of the card) -->
                         <div class="product-info">
                                 <div class="product-text">
@@ -125,8 +123,7 @@
                     <div id="favorite-alert" class="custom-alert hidden">Product added to favorite</div>
                     <div id="cart-alert" class="custom-alert hidden">Product added to cart</div>
                 <% }) %>
-            </div>
-        
+            </div>  
         </section>
         <!-- Footer -->
         <footer class="footer">
@@ -139,7 +136,7 @@
                     |
                     <a href="#" class="talk-to-us" id="openTalkModal">Talk To Us</a>
                     |
-                    <a href="https://tinyurl.com/sweetly-facebook" class="facebook">Facebook</a>
+                    <a href="https://tinyurl.com/sweetly-facebook" target="_blank" class="facebook">Facebook</a>
                     |
                     <a href="#" class="statistics" id="openstatisticsModel">Statistics</a>
                 </div>
@@ -172,6 +169,7 @@
                 </div>
             </div>
         </footer>
+        <!-- Scripts -->
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script src="/public/js/statistics.js"></script>
         <script src="/public/js/products.js"></script>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Sweetly - Admin Page</title>
+        <title>Sweetly - Admin</title>
         <link rel="icon" href="/public/images/favicon.ico" type="image/x-icon">
         <link rel="stylesheet" href="/public/styles/main.css">
         <link rel="stylesheet" href="/public/styles/personal.css">        
@@ -9,6 +9,7 @@
 
     </head>
     <body>
+        <!-- Topbar -->
         <header>
             <nav class="main-navbar">
                 <section class="navbar-left">
@@ -67,6 +68,7 @@
                 </section>
             </nav>
         </header>
+        <!-- Page Content -->
         <section class="page-content">
             <header class="personal-header">
                 <h2>Hello <%= user.name %></h2>
@@ -154,6 +156,7 @@
                 </div>
             </div>
         </section>
+        <!-- Footer -->
         <footer class="footer">
             <div class="footer-left">
                 <p>© Sweetly | Adi Brodesky | Gal Ternovsky | Shahar Shabtay | Ziv Klein </p>
@@ -164,7 +167,7 @@
                     |
                     <a href="#" class="talk-to-us" id="openTalkModal">Talk To Us</a>
                     |
-                    <a href="https://tinyurl.com/sweetly-facebook" class="facebook">Facebook</a>
+                    <a href="https://tinyurl.com/sweetly-facebook" target="_blank" class="facebook">Facebook</a>
                 </div>
                 
                 <!-- Modal for About Us -->
@@ -186,6 +189,7 @@
                 </div>
             </div>
         </footer>
+        <!-- Scripts -->
         <script src="/public/js/main.js"></script>
         <script src="/public/js/personal.js"></script>
         <script src="/public/js/currency.js"></script>

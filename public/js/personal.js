@@ -108,10 +108,8 @@ document.querySelectorAll('.see-order2-btn').forEach(button => {
 // Dynamic status bar logic
 const statusBar = document.getElementById('statusBar');
 const statusText = document.getElementById('statusText');
-const status = document.getElementById('status');
-if(status) {
-    status = status.innerText;
-}
+const status = document.getElementById('status').innerText;
+console.log(status);
 let progress = 0;
 
 // Remove any existing status classes before adding new ones

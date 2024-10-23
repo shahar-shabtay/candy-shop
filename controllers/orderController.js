@@ -8,7 +8,9 @@ async function getAllOrders(req, res) {
     try {
         const user = req.session.user;  // Assume customerId is available in the session
         const orders = await orderService.getAllOrders();
-        res.render('allOrders', { orders, user}); // Render the view and pass customers
+        const currency = req.session.currency || 'ILS';
+        const rates = req.session.rates || {};
+        res.render('allOrders', { orders, user, currency, rates}); // Render the view and pass customers
     } catch (err) {
         console.error('Error fetching customers:', err);
         res.status(500).send('Server Error (adminController - getAllOrders)');
@@ -19,8 +21,10 @@ async function getCustomerOrders (req, res) {
     try {
         const user = req.session.user;
         const orders = await orderService.getCustomerOrders(user.customerId);
+        const currency = req.session.currency || 'ILS';
+        const rates = req.session.rates || {};
         if(user){
-            res.render('customerOrders', {orders, user});
+            res.render('customerOrders', {orders, user, currency, rates});
         } else {
             res.render('notLogin');
         }
@@ -33,7 +37,9 @@ async function getCustomerOrderDetailsById (req, res) {
   try {
         const user = req.session.user;
         const orderId = req.params.orderId; // Get orderId from the request
-    
+        const currency = req.session.currency || 'ILS';
+        const rates = req.session.rates || {};
+
         // Fetch the order from the service
         const order = await orderService.getOrderById(orderId);
         if (!order) {
@@ -86,7 +92,9 @@ async function getCustomerOrderDetailsById (req, res) {
                 phone: customer.phone,
                 address: customer.address,
             },
-          user: user, // Pass the user from the session
+          user: user, 
+          currency: currency,
+          rates: rates,
       });
   } catch (error) {
       console.error(error);
@@ -99,7 +107,9 @@ async function getOrderDetailsById (req, res) {
     try {
         const user = req.session.user;
         const orderId = req.params.orderId; // Get orderId from the request
-    
+        const currency = req.session.currency || 'ILS';
+        const rates = req.session.rates || {};
+
         // Fetch the order from the service
         const order = await orderService.getOrderById(orderId);
         if (!order) {
@@ -149,7 +159,9 @@ async function getOrderDetailsById (req, res) {
             phone: customer.phone,
             address: customer.address,
         },  
-          user: user, // Pass the user from the session
+          user: user,
+          currency: currency,
+          rates: rates, // Pass the user from the session
         });
       } catch (error) {
         console.error(error);

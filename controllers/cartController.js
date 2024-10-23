@@ -4,7 +4,6 @@ const cartService = require('../services/cartService');
 const customerService = require('../services/customerService');
 
 
-
 // Adds an item to the cart
 function addToCart (req, res) {
     const productId = req.body.productId;
@@ -26,6 +25,9 @@ function addToCart (req, res) {
 
 // Display the cart
 async function showCart (req, res) {
+    const currency = req.session.currency || 'ILS';
+    const rates = req.session.rates || {};
+    console.log(currency);
     let user = req.session.user;
     let cart = req.session.cart;
     let cartDetails = [];
@@ -43,7 +45,7 @@ async function showCart (req, res) {
     }
 
     totalPrice = totalPrice.toFixed(2);
-    res.render("cart", { cart: cartDetails, total: totalPrice, user });
+    res.render("cart", { cart: cartDetails, total: totalPrice, user, currency, rates });
 };
 
 // Remvoves item from cart

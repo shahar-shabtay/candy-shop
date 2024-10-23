@@ -1,50 +1,22 @@
-const session = require("express-session");
+document.addEventListener('DOMContentLoaded', () => {
+    recalculateTotal();
 
-function showSuccessAlert(id) {
-    const alertBox = document.getElementById(id);
-    alertBox.classList.remove('hidden');
-    alertBox.classList.add('visible');
-
-    setTimeout(() => {
-        alertBox.classList.remove('visible');
-        alertBox.classList.add('hidden');
-    }, 1000);
-}
+    // Bind update button click events to updateCart function
+    const updateButtons = document.querySelectorAll('.update-button');
+    updateButtons.forEach(button => {
+        button.addEventListener('click', (event) => {
+            event.preventDefault();
+            const form = button.closest('form');
+            const productId = form.querySelector('input[name="productId"]').value;
+            const quantityInput = form.querySelector('input[name="quantity"]');
+            const quantity = parseInt(quantityInput.value);
+            updateCart(productId, quantity);
+        });
+    });
+});
 
 // Function to update the quantity of a specific item and recalculate the total price
-function updateQuantity(itemId, change) {
-    const quantityInput = document.getElementById(`quantity-${itemId}`);
-    let currentQuantity = parseInt(quantityInput.value);
-
-    // Update the quantity
-    const newQuantity = currentQuantity + change;
-    if (newQuantity >= 1) {
-        quantityInput.value = newQuantity;
-    }
-
-    // Update the total price
-    updateTotalPrice();
-}
-
-// Function to update the total price of all items in the cart
-function updateTotalPrice() {
-    let totalPrice = 0;
-    const cartItems = document.querySelectorAll(".cart-item");
-
-    cartItems.forEach(item => {
-        const quantity = parseInt(item.querySelector("input[name='quantity']").value);
-        const price = parseFloat(item.querySelector(".price span").dataset.unitPrice);
-        totalPrice += price * quantity;
-    });
-
-    document.getElementById("total-price").textContent = `₪${totalPrice.toFixed(2)}`;
-}
-
-// Function to handle updating the cart when the 'Update' button is clicked (client-server communication)
-function updateCart(itemId) {
-    const quantityInput = document.getElementById(`quantity-${itemId}`);
-    const newQuantity = parseInt(quantityInput.value);
-
+function updateCart(itemId, newQuantity) {
     // Send an AJAX request to the server to update the cart session
     fetch('/cart/update', {
         method: 'POST',
@@ -58,8 +30,9 @@ function updateCart(itemId) {
     })
     .then(response => {
         if (response.ok) {
-            // Successfully updated cart on server, now update the total price
-            updateTotalPrice();
+            // Successfully updated cart on server, now update the total price and refresh
+            window.location.reload();
+            showSuccessAlert('update-alert');
         } else {
             alert('Failed to update cart. Please try again.');
         }
@@ -70,7 +43,38 @@ function updateCart(itemId) {
     });
 }
 
-// Checkout
+// Function to update the total price of all items in the cart
+function updateTotalPrice() {
+    let totalPrice = 0;
+    const cartItems = document.querySelectorAll(".cart-item");
+
+    cartItems.forEach(item => {
+        const quantity = parseInt(item.querySelector("input[name='quantity']").value);
+        const priceElement = item.querySelector(".product-price");
+        const price = parseFloat(priceElement ? priceElement.textContent : 0);
+        
+        if (!isNaN(price) && !isNaN(quantity)) {
+            totalPrice += price * quantity;
+        }
+    });
+
+    // עדכון הסכום הכולל עם סימן המטבע
+    const totalElement = document.getElementById("total-price");
+    const selectedCurrency = document.getElementById('currency-selector') ? document.getElementById('currency-selector').value : 'ILS'; // מניח שיש dropdown לבחירת מטבע או משתמש בברירת מחדל
+
+    let currencySymbol = '₪'; // ברירת מחדל לשקל
+    if (selectedCurrency === 'USD') {
+        currencySymbol = '$';
+    } else if (selectedCurrency === 'EUR') {
+        currencySymbol = '€';
+    }
+
+    if (totalElement) {
+        totalElement.textContent = `${totalPrice.toFixed(2)}${currencySymbol}`; 
+    }
+}
+
+// Checkout function
 async function checkoutCart() {
     try {
         // Collect product information from the cart
@@ -116,7 +120,7 @@ async function checkoutCart() {
             showSuccessAlert('order-alert');
             // Update cart UI to indicate the cart is now empty
             document.querySelector('.cart-container').innerHTML = '<p>Your cart is empty.</p>';
-            document.getElementById('total-price').textContent = '₪0.00';
+            document.getElementById('total-price').textContent = '0.00';
         } else {
             alert('Failed to place order: ' + data.message);
         }
@@ -126,7 +130,7 @@ async function checkoutCart() {
     }
 }
 
-// Calc total every enter to cart
+// Recalculate the total price every time the page is loaded
 function recalculateTotal() {
     let totalPrice = 0;
 
@@ -134,17 +138,27 @@ function recalculateTotal() {
     const cartItems = document.querySelectorAll('.cart-item:not(.sold-out)');
 
     cartItems.forEach(item => {
-        const price = parseFloat(item.querySelector('.product-price').textContent.replace('₪', ''));
-        const quantity = parseInt(item.querySelector('input[name="quantity"]').value, 10);
+        const priceElement = item.querySelector('.product-price');
+        const price = parseFloat(priceElement ? priceElement.textContent : 0);
+        const quantityElement = item.querySelector('input[name="quantity"]');
+        const quantity = parseInt(quantityElement ? quantityElement.value : 0, 10);
 
-        totalPrice += price * quantity;
+        if (!isNaN(price) && !isNaN(quantity)) {
+            totalPrice += price * quantity;
+        }
     });
 
-    // Update the total price in the UI
-    document.getElementById('total-price').textContent = `₪${totalPrice.toFixed(2)}`;
+    const totalElement = document.getElementById("total-price");
+    const selectedCurrency = document.getElementById('currency-selector') ? document.getElementById('currency-selector').value : 'ILS';
+
+    let currencySymbol = '₪';
+    if (selectedCurrency === 'USD') {
+        currencySymbol = '$';
+    } else if (selectedCurrency === 'EUR') {
+        currencySymbol = '€';
+    }
+
+    if (totalElement) {
+        totalElement.textContent = `${totalPrice.toFixed(2)}${currencySymbol}`;
+    }
 }
-
-document.addEventListener('DOMContentLoaded', () => {
-    recalculateTotal();
-});
-

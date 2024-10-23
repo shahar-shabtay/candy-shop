@@ -350,4 +350,10 @@ footer {
     background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
 }
 
-
+.currency-dropdown {
+    background-color: #FF6C8E;
+    color: white;
+    border: none;
+    font-weight: bold;
+    font-size: 16px;
+}

@@ -90,8 +90,8 @@
                         <div class="product-info">
                                 <div class="product-text">
                                     <input type="hidden" name="productId" id="productId" value="<%= product.productId %>">
-                                    <p class="product-name"><%= product.name %></p><br>
-                                    <p class="product-description"><%= product.description %></p>
+                                    <p class="product"><b><%= product.name %></b> - <%= product.description %></p>
+                                    <p class="product-kosher"><u>Kosher:</u> <%= product.kosher %></p>
                                 </div>
                                 <div class="product-price">
                                     <% let price = product.price; %>

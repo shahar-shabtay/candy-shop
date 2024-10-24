@@ -18,6 +18,7 @@ async function getAllProducts (req, res) {
         const currency = req.session.currency || 'ILS';
         const rates = req.session.rates || {};
 		const products = await productsService.getAllProducts();
+        console.log(products);
         console.log(currency);
 		res.render('productsList', { products,user,currency,rates}); 
 	} catch (err) {

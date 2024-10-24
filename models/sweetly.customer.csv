@@ -1,3 +1,0 @@
-_id,customerId,name,email,password,birthdate,phone,address.city,address.street,address.number,createdAt,role
-66d9ca61e30f7747e7ad1d77,111111111,Ziv Klein,zivklein21gmail.com,,2000-08-14T21:00:00.000Z,052-8221823,Shoham,Haetrog,5,2024-09-05T00:00:00Z,admin
-66d9ca61e30f7747e7ad1d78,222222222,Shahar Shabtay,shaharshabtay28@gmail.com,Aa123456,2001-02-28T00:00:00.000Z,054-6644691,Modiin,Nahal Hayarkon,132,2024-09-05T00:00:00Z,user

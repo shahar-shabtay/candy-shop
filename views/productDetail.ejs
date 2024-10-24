@@ -2,12 +2,138 @@
 <html>
     <head>
         <title>Product Details</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+        <link rel="stylesheet" href="/public/styles/main.css">
+        <link rel="stylesheet" href="/public/styles/product_page.css">
         <!-- Add additional HTML header stuff here -->
     </head>
     <body>
-        <h1><%= product.name %></h1>
-        <img src="<%= product.imageUrl %>" alt="<%= product.name %>">
-        <p><%= product.description %></p>
-        <p>Price: <%= product.price %></p>
+        <!-- Topbar -->
+        <header>
+            <nav class="main-navbar">
+                <section class="navbar-left">
+                    <img src="/public/images/shooping_cart.svg" class="navbar-icon" onclick="window.location.href='/cart'">
+                    <img src="/public/images/logout.svg" class="navbar-icon" onclick="window.location.href='/logout'">
+                </section>
+                <section class="navbar-center">
+                    <img src="/public/images/logo.svg" class="logo" onclick="window.location.href='/products'">
+                </section>
+                <section class="navbar-right">
+                    <img src="/public/images/nearMe.svg" class="navbar-icon" onclick="window.location.href='/nearMe'">
+                    <div class="side-menu">
+                        <div class="sideMenu-sign" id="sideMenu-sign">
+                            <span class="bar"></span>
+                            <span class="bar"></span>
+                            <span class="bar"></span>
+                        </div>
+                        <div class="sideMenu-content" id="sideMenu-content">
+                            <div class="sideMenu-search">
+                                <input type="text" placeholder="Search for candies...">
+                            </div>
+                            <ul class="sideMenu-categories">
+                                <li>Chocolate</li>
+                                <li>Gummy Bears</li>
+                                <li>Licorice</li>
+                                <li>Lollipops</li>
+                                <li>Hard Candies</li>
+                                <li>Sour Candies</li>
+                                <li>Caramel</li>
+                            </ul>
+                            <div class="sideMenu-personal">
+                                <% if (user.name) { %> 
+                                    <div class="sideMenu-iconContainer">
+                                        <a href="/personal/myAccount">
+                                            <img src="/public/images/user.svg" class="sideMenu-icon">
+                                            <div class="sideMenu-iconLabel"><%= user.name %></div>
+                                        </a>
+                                    </div>
+                                <% } %> 
+                                <% if (user.role === 'admin') { %> 
+                                    <div class="sideMenu-iconContainer">
+                                        <a href="/personal/admin">
+                                            <img src="/public/images/adminIcon.svg" class="sideMenu-icon">
+                                            <div class="sideMenu-iconLabel">Manage Shop</div>
+                                        </a>
+                                    </div>
+                                <% } %> 
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </nav>
+        </header>
+        <section class="page-content">
+            <div class="product-container">
+                <!-- Image Section -->
+                <div class="product-image-section">
+                    <img src="<%= product.imageUrl %>" alt="<%= product.name %>" class="product-image-large">
+                </div>
+                <!-- Details Section -->
+                <div class="product-details-section">
+                    <!-- Product Name -->
+                    <h1 class="product-name"><%= product.name %></h1>
+                    <!-- Product Description -->
+                    <p class="product-description"><%= product.description %></p>
+                    <!-- Additional Information Placeholder -->
+                    <div class="product-additional-info">
+                        <!-- כאן תוכל להוסיף עוד פרטים נוספים על המוצר -->
+                    </div>
+                    <!-- Product Price -->
+                    <div class="product-price">
+                        <span><%= product.price %> ₪</span>
+                    </div>
+                    <!-- Add to Cart Section -->
+                    <div class="add-to-cart-section">
+                        <label for="quantity">Quantity:</label>
+                        <input type="number" id="quantity" name="quantity" min="1" value="1" class="product-quantity">
+                        <button class="add-to-cart-btn" onclick="addToCart('<%= product.productId %>')">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-left">
+                <p>© Sweetly | Adi Brodesky | Gal Ternovsky | Shahar Shabtay | Ziv Klein </p>
+            </div>
+            <div class="footer-right">
+                <div class="hover-container">
+                    <a href="#" class="about-us" id="openAboutModal">About Us</a>
+                    |
+                    <a href="#" class="talk-to-us" id="openTalkModal">Talk To Us</a>
+                    |
+                    <a href="https://tinyurl.com/sweetly-facebook" class="facebook">Facebook</a>
+                    |
+                    <a href="#" class="statistics" id="openstatisticsModel">Statistics</a>
+                </div>
+                
+                <!-- Modal for About Us -->
+                <div id="aboutModal" class="modal">
+                    <div class="modal-content">
+                        <span class="close-button">&times;</span>
+                        <h2>About Us</h2>
+                        <p>At Sweetly, we make finding your favorite sweets easy and enjoyable. We have the most special candies and a lot of stores waiting for you!</p>
+                    </div>
+                </div>
+                
+                <!-- Modal for Talk To Us -->
+                <div id="talkModal" class="modal">
+                    <div class="modal-content">
+                        <span class="close-button">&times;</span>
+                        <h2>Talk To Us</h2>
+                        <p>You can reach us at support@candyshop.com or follow us on social media for the latest updates and tips!</p>
+                    </div>
+                </div>
+
+                <!-- Modal for Statistics -->
+                <div id="statisticsModel" class="modal">
+                    <div class="modal-content">
+                        <span class="close-button">&times;</span>
+                        <h2>Candies Statistics</h2>
+                        <canvas id="candiesChart" width="400" height="400"></canvas>
+                    </div>
+                </div>
+            </div>
+        </footer>
     </body>
 </html>

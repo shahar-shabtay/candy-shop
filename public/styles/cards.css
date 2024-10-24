@@ -252,3 +252,12 @@ input.product-name , input.product-price{
     align-items: center;
     justify-content: center;
 }
+
+.product-link {
+    text-decoration: none; /* ביטול קו תחתון */
+    color: inherit; /* שמירה על הצבע המקורי */
+    display: block; /* הרחבת הקישור לכל הכרטיס */
+    padding: 0; /* ביטול רווח פנימי */
+    margin: 0; /* ביטול רווח חיצוני */
+    border: none; /* ביטול גבולות */
+}

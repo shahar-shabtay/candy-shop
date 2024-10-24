@@ -81,32 +81,34 @@
                         <div class="container">
                             <div class="products-grid">
                                 <% products.forEach(function(product) { %>
-                                    <div class="product-card" data-product-id="<%= product.productId %>">
-                                        <div class="product-image-container <%= product.inventory === 0 ? 'out-of-stock' : '' %>">
-                                            <% if (product.inventory <= 5) { %>
-                                                <span class="stock-banner"><%= product.inventory %> left</span>
-                                            <% } %>
-                                            <img src="<%= product.imageUrl %>" alt="<%= product.name %>" class="product-image">
+                                    <a href="/products/<%= product.productId %>" class="product-link">
+                                        <div class="product-card" data-product-id="<%= product.productId %>">
+                                            <div class="product-image-container <%= product.inventory === 0 ? 'out-of-stock' : '' %>">
+                                                <% if (product.inventory <= 5) { %>
+                                                    <span class="stock-banner"><%= product.inventory %> left</span>
+                                                <% } %>
+                                                <img src="<%= product.imageUrl %>" alt="<%= product.name %>" class="product-image">
+                                            </div>
+                                            <!-- Name, Description, and Price (2/6 of the card) -->
+                                            <div class="product-info">
+                                                    <div class="product-text">
+                                                        <input class="product-name left" name="name" value="<%= product.name %>" readonly><br>
+                                                        <input class="product-description left" name="description" value="<%= product.description %>" readonly><br>
+                                                        <input class="product-category left" name="category" value="<%= product.category %>" readonly>
+                                                    </div>
+                                                    <div class="product-text">
+                                                        <input class="product-price right" name="price" value="<%= product.price %>" readonly><br>
+                                                        <input class="product-inventory right" name="inventory" value="<%= product.inventory %>" readonly>
+                                                    </div>
+                                            </div>    
+                                            <!-- Divider -->
+                                            <hr class="product-divider">
+                                                <div class="product-actions">
+                                                    <img class="remove-product" src="/public/images/trash.svg" data-product-id="<%= product.productId %>" onclick="deleteProduct('<%= product.productId %>')">
+                                                    <img class="edit-btn" src="/public/images/edit.svg" data-product-id="<%= product.productId %>" onClick="editProduct('<%= product.productId %>')">
+                                                </div>   
                                         </div>
-                                        <!-- Name, Description, and Price (2/6 of the card) -->
-                                        <div class="product-info">
-                                                <div class="product-text">
-                                                    <input class="product-name left" name="name" value="<%= product.name %>" readonly><br>
-                                                    <input class="product-description left" name="description" value="<%= product.description %>" readonly><br>
-                                                    <input class="product-category left" name="category" value="<%= product.category %>" readonly>
-                                                </div>
-                                                <div class="product-text">
-                                                    <input class="product-price right" name="price" value="<%= product.price %>" readonly><br>
-                                                    <input class="product-inventory right" name="inventory" value="<%= product.inventory %>" readonly>
-                                                </div>
-                                        </div>    
-                                        <!-- Divider -->
-                                        <hr class="product-divider">
-                                            <div class="product-actions">
-                                                <img class="remove-product" src="/public/images/trash.svg" data-product-id="<%= product.productId %>" onclick="deleteProduct('<%= product.productId %>')">
-                                                <img class="edit-btn" src="/public/images/edit.svg" data-product-id="<%= product.productId %>" onClick="editProduct('<%= product.productId %>')">
-                                            </div>   
-                                    </div>
+                                    </a>
                                 <% }) %>
                                 <div id="delete-alert" class="custom-alert hidden">
                                     Product Deleted

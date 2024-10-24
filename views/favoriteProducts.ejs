@@ -80,40 +80,42 @@
                         <div class="container">
                             <div class="products-grid">
                                 <% favoriteProducts.forEach(function(product) { %>
-                                    <div class="product-card">
-                                        <!-- Image and Favorite button (3/6 of the card) -->
-                                        <div class="product-image-container">
-                                            <% if (product.inventory <= 5) { %>
-                                                <span class="stock-banner"><%= product.inventory %> left</span>
-                                            <% } %>
-                                            <img src="<%= product.imageUrl %>" alt="<%= product.name %>" class="product-image">
-                                            <button id="addFav" class="favorite-button" onclick="removeFavorite('<%= product.productId %>')">
-                                                <i class="fas fa-heart favorite" data-product-id="<%= product.productId %>"></i>
-                                            </button>
-                                        </div>
-                                        <!-- Name, Description, and Price (2/6 of the card) -->
-                                        <div class="product-info">
-                                                <div class="product-text">
-                                                    <p class="product-name"><%= product.name %></p><br>
-                                                    <p class="product-description"><%= product.description %></p>
-                                                </div>
-                                                <div class="product-price">₪<%= product.price %></div>
-                                        </div>
-                                        <!-- Divider -->
-                                        <hr class="product-divider">
-                                        <!-- Add to Cart and Quantity (1/6 of the card) -->
-                                        <div class="product-actions">
-                                            <div class="quantity-selector">
-                                                <button class="decrease" onclick="updateQuantity('<%= product.productId %>', -1, event)">-</button>
-                                                <input type="number" name="quantity" id="quantity-<%= product.productId %>" value="1" min="1" max="<%= product.inventory %>" class="quantity-input" readonly>
-                                                <button class="increase" onclick="updateQuantity('<%= product.productId %>', 1, event)">+</button>
+                                    <a href="/products/<%= product.productId %>" class="product-link">
+                                        <div class="product-card">
+                                            <!-- Image and Favorite button (3/6 of the card) -->
+                                            <div class="product-image-container">
+                                                <% if (product.inventory <= 5) { %>
+                                                    <span class="stock-banner"><%= product.inventory %> left</span>
+                                                <% } %>
+                                                <img src="<%= product.imageUrl %>" alt="<%= product.name %>" class="product-image">
+                                                <button id="addFav" class="favorite-button" onclick="removeFavorite('<%= product.productId %>')">
+                                                    <i class="fas fa-heart favorite" data-product-id="<%= product.productId %>"></i>
+                                                </button>
                                             </div>
-                                            <button class="add-to-cart" data-product-id="<%= product.productId %>" 
-                                                onclick="addToCart(this)">
-                                                Add 
-                                            </button>
+                                            <!-- Name, Description, and Price (2/6 of the card) -->
+                                            <div class="product-info">
+                                                    <div class="product-text">
+                                                        <p class="product-name"><%= product.name %></p><br>
+                                                        <p class="product-description"><%= product.description %></p>
+                                                    </div>
+                                                    <div class="product-price">₪<%= product.price %></div>
+                                            </div>
+                                            <!-- Divider -->
+                                            <hr class="product-divider">
+                                            <!-- Add to Cart and Quantity (1/6 of the card) -->
+                                            <div class="product-actions">
+                                                <div class="quantity-selector">
+                                                    <button class="decrease" onclick="updateQuantity('<%= product.productId %>', -1, event)">-</button>
+                                                    <input type="number" name="quantity" id="quantity-<%= product.productId %>" value="1" min="1" max="<%= product.inventory %>" class="quantity-input" readonly>
+                                                    <button class="increase" onclick="updateQuantity('<%= product.productId %>', 1, event)">+</button>
+                                                </div>
+                                                <button class="add-to-cart" data-product-id="<%= product.productId %>" 
+                                                    onclick="addToCart(this)">
+                                                    Add 
+                                                </button>
+                                            </div>
                                         </div>
-                                    </div>
+                                    </a>
                                     <% }) %>
                                     <div id="favorite-alert" class="custom-alert hidden">Product Remove from favorites</div> 
                                 </div>

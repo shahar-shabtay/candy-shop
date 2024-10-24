@@ -186,8 +186,9 @@ async function editProducts (req,res) {
 
 async function getProductDetail (req, res) {
     try {
+        const user = req.session.user;
         const product = await productsService.getProductById(req.params.productId);
-        res.render('productDetail', { product: product });
+        res.render('productDetail', { product: product, user:user });
     } catch (error) {
         console.log(error);
         res.redirect('/products');

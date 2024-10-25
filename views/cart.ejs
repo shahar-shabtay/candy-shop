@@ -73,7 +73,7 @@
                         <% } else if (item.inventory <= 5) { %>
                             <span class="stock-banner"><%= item.inventory %> left</span>
                         <% } %>
-                        <a href="/products/<%= product.productId %>" class="product-link">
+                        <a href="/products/<%= item.productId %>" class="product-link">
                             <img src="<%= item.imageUrl %>" alt="<%= item.name %>">
                         </a>
                     </div>

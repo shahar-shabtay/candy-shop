@@ -63,33 +63,40 @@
             </nav>
         </header>
         <section class="page-content">
-            <div class="product-container">
-                <!-- Image Section -->
-                <div class="product-image-section">
-                    <img src="<%= product.imageUrl %>" alt="<%= product.name %>" class="product-image-large">
+            <div class="product-card">
+                <div class="product-image">
+                  <img src="<%= product.imageUrl %>" alt="<%= product.name %>">
+                  <button id="addFav" class="favorite-button" onclick="addToFavorites('<%= product.productId %>')">
+                    <i class="fas fa-heart favorite" data-product-id="<%= product.productId %>"></i>
+                </button>
                 </div>
-                <!-- Details Section -->
-                <div class="product-details-section">
-                    <!-- Product Name -->
-                    <h1 class="product-name"><%= product.name %></h1>
-                    <!-- Product Description -->
-                    <p class="product-description"><%= product.description %></p>
-                    <!-- Additional Information Placeholder -->
-                    <div class="product-additional-info">
-                        <!-- כאן תוכל להוסיף עוד פרטים נוספים על המוצר -->
+                <div class="vertical-divider"></div>
+                <div class="product-info">
+                    <h4 class="category"><%= product.sweetType %></h4>
+                    <h2 class="product-name"><%= product.name %> | <%= product.description %></h2>
+                    <p class="product-price"><%= product.price %> ILS</p>
+                    <hr class="product-divider">
+                    <div class="details">
+                        <p><strong>Kosher:</strong> <%= product.kosher %></p>
+                        <p><strong>Allergans:</strong> <%= product.allergans %></p>
+                        <p><strong>Flavors:</strong> <%= product.flavors %></p>
                     </div>
-                    <!-- Product Price -->
-                    <div class="product-price">
-                        <span><%= product.price %> ₪</span>
-                    </div>
-                    <!-- Add to Cart Section -->
-                    <div class="add-to-cart-section">
-                        <label for="quantity">Quantity:</label>
-                        <input type="number" id="quantity" name="quantity" min="1" value="1" class="product-quantity">
-                        <button class="add-to-cart-btn" onclick="addToCart('<%= product.productId %>')">Add to Cart</button>
+                    <div class="product-actions">
+                    <hr class="product-divider">
+
+                    <div class="quantity-selector">
+                        <button class="decrease" onclick="updateQuantity('<%= product.productId %>', -1, event)">-</button>
+                        <input type="number" name="quantity" id="quantity-<%= product.productId %>" value="1" min="1" max="<%= product.inventory %>" class="quantity-input" readonly>
+                        <button class="increase" onclick="updateQuantity('<%= product.productId %>', 1, event)">+</button>
+                        <button class="add-to-cart" data-product-id="<%= product.productId %>" 
+                            onclick="addToCart(this)">
+                            Add 
+                        </button>
                     </div>
                 </div>
             </div>
+            <div id="favorite-alert" class="custom-alert hidden">Product added to favorite</div>
+            <div id="cart-alert" class="custom-alert hidden">Product added to cart</div>
         </section>
         <!-- Footer -->
         <footer class="footer">
@@ -135,5 +142,9 @@
                 </div>
             </div>
         </footer>
+        <script src="/public/js/products.js"></script>
+        <script src="/public/js/cart.js"></script>
+        <script src="/public/js/main.js"></script>
+        <script src="/public/js/personal.js"></script>
     </body>
 </html>

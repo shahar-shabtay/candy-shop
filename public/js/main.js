@@ -1,6 +1,55 @@
 // Side menu
 const hamburgerMenu = document.getElementById('sideMenu-sign');
 const dropdownContent = document.getElementById('sideMenu-content');
+const sideMenuVideos = document.getElementById('sideMenu-videos');
+const videos = document.querySelectorAll('.sideMenu-video');
+const closeButton = document.getElementById('close-button');
+let currentVideoIndex = 0;
+
+// Function to play videos
+function playNextVideo() {
+    // Hide all videos first
+    videos.forEach(video => {
+        video.style.display = 'none';
+        video.pause();
+    });
+
+    // Show and play current video
+    if (currentVideoIndex < videos.length) {
+        const currentVideo = videos[currentVideoIndex];
+        currentVideo.style.display = 'block';
+        
+        // Try to play the video
+        const playPromise = currentVideo.play();
+        if (playPromise !== undefined) {
+            playPromise.catch(error => {
+                console.log("Video play error:", error);
+            });
+        }
+
+        // Set up the ended event for the current video
+        currentVideo.onended = () => {
+            currentVideo.style.display = 'none';
+            currentVideoIndex = (currentVideoIndex + 1) % videos.length;
+            playNextVideo();
+        };
+    }
+}
+
+// Initialize the video display
+function initializeVideos() {
+    sideMenuVideos.style.display = 'flex'; // Show the video section
+    playNextVideo(); // Start playing the videos
+}
+
+// Close button event
+closeButton.addEventListener('click', () => {
+    sideMenuVideos.style.display = 'none';
+    videos.forEach(video => {
+        video.pause();
+        video.style.display = 'none';
+    });
+});
 
 hamburgerMenu.addEventListener('click', () => {
     // Toggle the active class on the hamburger menu
@@ -8,6 +57,18 @@ hamburgerMenu.addEventListener('click', () => {
     
     // Toggle the visibility of the dropdown content
     dropdownContent.classList.toggle('active');
+
+    if (dropdownContent.classList.contains('active')) {
+        sideMenuVideos.style.display = 'none'; // Hide videos when menu is active
+    } else {
+        sideMenuVideos.style.display = 'flex'; // Show videos when menu is inactive
+        playNextVideo();
+    }
+});
+
+// Initialize everything when the page loads
+document.addEventListener('DOMContentLoaded', () => {
+    initializeVideos();
 });
 
 

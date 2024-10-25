@@ -15,6 +15,7 @@ const registerRoutes = require('./routes/registerRoutes.js');
 const adminRoute = require('./routes/adminRoute.js');
 const nearMeRoutes = require('./routes/nearMeRoutes');
 const cartRoutes = require('./routes/cartRoutes');
+const searchRoutes = require('./routes/searchRoute.js');
 
 
 // Create session
@@ -61,6 +62,7 @@ app.use('/personal',adminRoute);
 app.use('/nearMe', nearMeRoutes)
 app.use('/', loginRoutes);
 app.use('/cart', cartRoutes);
+app.use('/', searchRoutes);
 
 
 // Start the server

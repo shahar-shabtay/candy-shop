@@ -24,13 +24,14 @@
                         <% } else if (item.inventory <= 5) { %>
                             <span class="stock-banner"><%= item.inventory %> left</span>
                         <% } %>
+                        
                         <img src="<%= item.imageUrl %>" alt="<%= item.name %>">
                     </div>
         
                     <!-- Product Details -->
                     <div class="product-details" style="flex-grow: 2; margin-right: 20px;">
                         <div class="product-name" style="font-weight: bold; margin-bottom: 5px;">
-                            <%= item.name %> | <%= item.description || 'No description available.' %>
+                            <a href="/products/<%= item.productId %>"><%= item.name %></a> | <%= item.description || 'No description available.' %>
                         </div>
                         <div class="product-price">
                             <% let price = item.price; %>

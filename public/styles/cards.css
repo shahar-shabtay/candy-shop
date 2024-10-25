@@ -297,3 +297,11 @@ input.product-name , input.product-price{
     margin: 2px 0;
     width: calc(100% - 12px); /* Account for padding and border */
 }
+.product-link {
+    text-decoration: none; /* ביטול קו תחתון */
+    color: inherit; /* שמירה על הצבע המקורי */
+    display: block; /* הרחבת הקישור לכל הכרטיס */
+    padding: 0; /* ביטול רווח פנימי */
+    margin: 0; /* ביטול רווח חיצוני */
+    border: none; /* ביטול גבולות */
+}

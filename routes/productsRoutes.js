@@ -9,6 +9,8 @@ router.get('/', productsController.getAllProducts);
 
 // Get new product form
 
+// Get product detail
+router.get('/:productId', productsController.getProductDetail);
 
 // Get delete product form
 router.get('/delete', productsController.showDeleteProductForm);

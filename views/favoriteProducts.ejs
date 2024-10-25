@@ -29,6 +29,8 @@
                         <div class="container">
                             <div class="products-grid">
                                 <% favoriteProducts.forEach(function(product) { %>
+                                    <a href="/products/<%= product.productId %>" class="product-link">
+
                                     <div class="product-card">
                                         <!-- Image and Favorite button (3/6 of the card) -->
                                         <div class="product-image-container">
@@ -46,16 +48,7 @@
                                                     <p class="product-name"><%= product.name %></p><br>
                                                     <p class="product-description"><%= product.description %></p>
                                                 </div>
-                                                <div class="product-price">
-                                                    <% let price = product.price; %>
-                                                    <% if (currency === 'USD' && rates['USD']) { %>
-                                                    <%= (price * rates['USD']).toFixed(2) %> $
-                                                    <% } else if (currency === 'EUR' && rates['EUR']) { %>
-                                                    <%= (price * rates['EUR']).toFixed(2) %> €
-                                                    <% } else { %>
-                                                    <%= price %> ₪
-                                                    <% } %>
-                                                </div>
+                                                <div class="product-price">₪<%= product.price %></div>
                                         </div>
                                         <!-- Divider -->
                                         <hr class="product-divider">
@@ -72,6 +65,7 @@
                                             </button>
                                         </div>
                                     </div>
+                                    </a>
                                     <% }) %>
                                     <div id="favorite-alert" class="custom-alert hidden">Product Remove from favorites</div> 
                                 </div>

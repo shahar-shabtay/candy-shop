@@ -29,9 +29,12 @@
 }
 
 .product-image-container img {
-    width: 150px;
-    height: auto;
+    width: auto;
+    height: 100px;
+    max-width: 150px;
+    object-fit: contain;
 }
+
 
 .product-image-container {
     border-top-left-radius: 10px;  /* Set the desired radius */

@@ -34,7 +34,7 @@
                             <div class="product-info">
                                 <div class="product-text">
                                     <input type="hidden" name="productId" id="productId" value="<%= product.productId %>">
-                                    <p class="product-name"><%= product.name %></p><br>
+                                    <h2><a href="/products/<%= product.productId %>"><%= product.name %></a></h2>
                                     <p class="product-description"><%= product.description %></p>
                                 </div>
                                 <div class="product-price">₪<%= product.price %></div>

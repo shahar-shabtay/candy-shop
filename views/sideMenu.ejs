@@ -16,6 +16,11 @@
                     <img src="/public/images/logo.svg" class="logo" onclick="window.location.href='/products'">
                 </section>
                 <section class="navbar-right">
+                    <select class="currency-dropdown" id="currency-selector" onchange="changeCurrency()">
+                        <option value="ILS" <%= currency === 'ILS' ? 'selected' : '' %>>₪ ILS</option>
+                        <option value="USD" <%= currency === 'USD' ? 'selected' : '' %>>$ USD</option>
+                        <option value="EUR" <%= currency === 'EUR' ? 'selected' : '' %>>€ EUR</option>
+                    </select>  
                     <img src="/public/images/nearMe.svg" class="navbar-icon" onclick="window.location.href='/nearMe'">
                     <div class="side-menu">
                         <div class="sideMenu-sign" id="sideMenu-sign">

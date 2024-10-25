@@ -212,6 +212,17 @@ async function editProducts (req,res) {
     }
 }
 
+async function getProductDetail (req, res) {
+    try {
+        const user = req.session.user;
+        const product = await productsService.getProductById(req.params.productId);
+        console.log(product);
+        res.render('productDetail', { product: product, user:user });
+    } catch (error) {
+        console.log(error);
+        res.redirect('/products');
+    }
+};
 
 module.exports = {
 	getAllProducts,
@@ -220,5 +231,6 @@ module.exports = {
 	deleteProduct,
 	addNewFavorite,
 	removeFavoriteProduct,
-	addProduct
+	addProduct,
+    getProductDetail
 };

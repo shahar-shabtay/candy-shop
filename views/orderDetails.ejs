@@ -74,21 +74,24 @@
                                 <h2><i class="fas fa-candy-cane order-icon"></i> Products in Order</h2>
                                 <div class="product-grid">
                                     <% orderDetails.products.forEach(product => { %>
-                                    <div class="product-item">
-                                        <img src="<%= product.image %>" alt="<%= product.name %>">
-                                        <h4><%= product.name %></h4>
-                                        <p>Quantity: <%= product.quantity %></p>
-                                        <p>Total
-                                            <% let total = (product.price * product.quantity).toFixed(2); %>
-                                            <% if (currency === 'USD' && rates['USD']) { %>
-                                            <%= (total * rates['USD']).toFixed(2) %> $
-                                            <% } else if (currency === 'EUR' && rates['EUR']) { %>
-                                            <%= (total * rates['EUR']).toFixed(2) %> €
-                                            <% } else { %>
-                                            <%= total %> ₪
-                                            <% } %>
-                                        </p>
-                                    </div>
+                                    <a href="/products/<%= product.productId %>" class="product-link">
+
+                                        <div class="product-item">
+                                            <img src="<%= product.image %>" alt="<%= product.name %>">
+                                            <h4><%= product.name %></h4>
+                                            <p>Quantity: <%= product.quantity %></p>
+                                            <p>Total
+                                                <% let total = (product.price * product.quantity).toFixed(2); %>
+                                                <% if (currency === 'USD' && rates['USD']) { %>
+                                                <%= (total * rates['USD']).toFixed(2) %> $
+                                                <% } else if (currency === 'EUR' && rates['EUR']) { %>
+                                                <%= (total * rates['EUR']).toFixed(2) %> €
+                                                <% } else { %>
+                                                <%= total %> ₪
+                                                <% } %>
+                                            </p>
+                                        </div>
+                                    </a>
                                     <% }) %>
                                 </div>
                             </section>

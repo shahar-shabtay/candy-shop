@@ -154,6 +154,7 @@ async function getFavoriteProducts (req, res) {
     try {
         if(user){
             const favoriteProducts = await favoriteService.getFavoriteProductsByCustomerId(user.customerId);
+            console.log(favoriteProducts);
             res.render('favoriteProducts', {favoriteProducts, user});
         } else {
             res.render('notLogin');

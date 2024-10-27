@@ -31,16 +31,16 @@ h1 {
 
 .product-image-container {
     flex: 3;
-    background: radial-gradient(circle at center, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0) 70%), 
-                repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.1) 0, rgba(255, 255, 255, 0.1) 10px, transparent 10px, transparent 20px),
-                #ffc0cb;
-    border-top-left-radius: 10px;  /* Set the desired radius */
-    border-top-right-radius: 10px;
-    position: relative;
-    overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
+    height: 200px; /* Set a fixed height to keep consistency */
+    overflow: hidden;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    background: radial-gradient(circle at center, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0) 70%), 
+                repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.1) 0, rgba(255, 255, 255, 0.1) 10px, transparent 10px, transparent 20px),
+                #ffc0cb;
 }
 
 
@@ -297,11 +297,9 @@ input.product-name , input.product-price{
     margin: 2px 0;
     width: calc(100% - 12px); /* Account for padding and border */
 }
+
 .product-link {
-    text-decoration: none; /* ביטול קו תחתון */
-    color: inherit; /* שמירה על הצבע המקורי */
-    display: block; /* הרחבת הקישור לכל הכרטיס */
-    padding: 0; /* ביטול רווח פנימי */
-    margin: 0; /* ביטול רווח חיצוני */
-    border: none; /* ביטול גבולות */
+    display: block;
+    text-decoration: none;
+    color: inherit;
 }

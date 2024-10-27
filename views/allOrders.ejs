@@ -9,9 +9,11 @@
     </head>
     <body> 
         <!-- Topbar -->
-        <%- include('sideMenu.ejs') %>
+        <header>
+            <%- include('sideMenu.ejs') %>
+        </header>
         <!-- Product Section -->
-        <section class="page-content">
+        <section class="page-content" id="page-content">
             <header class="personal-header">
                 <h2>Hello <%= user.name %></h2>
             </header>

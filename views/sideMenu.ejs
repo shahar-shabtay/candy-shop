@@ -10,7 +10,7 @@
             <nav class="main-navbar">
                 <section class="navbar-left">
                     <img src="/public/images/shooping_cart.svg" class="navbar-icon" onclick="window.location.href='/cart'">
-                    <img src="/public/images/logout.svg" class="navbar-icon" onclick="window.location.href='/logout'">
+                    <a href="/logout"><img src="/public/images/logout.svg" class="navbar-icon"></a>
                 </section>
                 <section class="navbar-center">
                     <img src="/public/images/logo.svg" class="logo" onclick="window.location.href='/products'">
@@ -33,18 +33,22 @@
                                 <!-- Form for Search -->
                                 <form id="searchForm" action="/search" method="GET">
                                     <input type="text" name="q" placeholder="Search for candies..." required>
-                                    <button type="submit">Search</button>
+                                    <button type="submit" class="search-icon-button">
+                                        <i class="fas fa-search"></i>
+                                    </button>
                                 </form>
                             </div>
+                            <hr class="side-menu-divider">
                             <div class="advanced-search-toggle">
-                                <a href="#" id="toggleAdvancedSearch" onclick="showFilter()">Filter</a>
+                                <a href="#" id="toggleAdvancedSearch" onclick="showFilter()" class="filter-link">
+                                    <i class="fas fa-filter"></i> <span>Filter</span>
+                                </a>                                
                             </div>
                             <div class="advanced-search" id="advancedSearch" style="display: none;">
-                                <h3>Filters</h3>
                                 <div class="filter-category">
                                     <label for="flavor">Flavor:</label>
-                                    <select name="flavor" id="flavor">
-                                        <option value="All">All Flavors</option>
+                                    <select class="select-category" name="flavor" id="flavor">
+                                        <option value="All">Flavors</option>
                                         <option value="Sweet">Sweet</option>
                                         <option value="Sour">Sour</option>
                                         <option value="Salty">Salty</option>
@@ -54,8 +58,8 @@
                                 </div>
                                 <div class="filter-category">
                                     <label for="allergans">Allergans:</label>
-                                    <select name="allergans" id="allergans">
-                                        <option value="All">All Allergans</option>
+                                    <select class="select-category" name="allergans" id="allergans">
+                                        <option value="All">Allergans</option>
                                         <option value="Gluten">Gluten</option>
                                         <option value="Dairy">Dairy</option>
                                         <option value="Nuts">Nuts</option>
@@ -65,8 +69,8 @@
                                 </div>
                                 <div class="filter-category">
                                     <label for="sweetType">Sweet Type:</label>
-                                    <select name="sweetType" id="sweetType">
-                                        <option value="All">All Sweet Types</option>
+                                    <select class="select-category" name="sweetType" id="sweetType">
+                                        <option value="All">Sweet Types</option>
                                         <option value="Chocolate">Chocolate</option>
                                         <option value="Gummy">Gummy</option>
                                         <option value="Licorice">Licorice</option>
@@ -76,20 +80,21 @@
                                 </div>
                                 <div class="filter-category">
                                     <label for="kosher">Kosher:</label>
-                                    <select name="kosher" id="kosher">
-                                        <option value="All">All Options</option>
+                                    <select class="select-category" name="kosher" id="kosher">
+                                        <option value="All">Kosher</option>
                                         <option value="Yes">Yes</option>
                                         <option value="No">No</option>
                                     </select>
                                 </div>
-                                <button type="submit" id="applyFilterButton" onclick="searchFilter()">Apply Filters</button>
+                                <button type="submit" id="applyFilterButton" class="filter-apply-btn" onclick="searchFilter()">Apply Filters</button>
                             </div>
+                            <hr class="side-menu-divider">
                             <ul class="sideMenu-categories">
-                                <li><a href="/search/sweetType/Chocolate">Chocolate</a></li>
-                                <li><a href="/search/sweetType/Gummy">Gummy</a></li>
-                                <li><a href="/search/sweetType/Licorice">Licorice</a></li>
-                                <li><a href="/search/sweetType/Drinks">Drinks</a></li>
-                                <li><a href="/search/sweetType/Snacks">Snacks</a></li>
+                                <li><a class="side-menu-category" href="/search/sweetType/Chocolate">Chocolate</a></li>
+                                <li><a class="side-menu-category" href="/search/sweetType/Gummy">Gummy</a></li>
+                                <li><a class="side-menu-category" href="/search/sweetType/Licorice">Licorice</a></li>
+                                <li><a class="side-menu-category" href="/search/sweetType/Drinks">Drinks</a></li>
+                                <li><a class="side-menu-category" href="/search/sweetType/Snacks">Snacks</a></li>
                             </ul>
                             <div class="sideMenu-personal">
                                 <% if (user.name) { %> 

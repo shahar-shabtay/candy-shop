@@ -10,79 +10,43 @@
     <body>
         <!-- Topbar -->
         <header>
-            <nav class="main-navbar">
-                <section class="navbar-left">
-                    <img src="/public/images/shooping_cart.svg" class="navbar-icon" onclick="window.location.href='/cart'">
-                    <img src="/public/images/logout.svg" class="navbar-icon" onclick="window.location.href='/logout'">
-                </section>
-                <section class="navbar-center">
-                    <img src="/public/images/logo.svg" class="logo" onclick="window.location.href='/products'">
-                </section>
-                <section class="navbar-right">
-                    <img src="/public/images/nearMe.svg" class="navbar-icon" onclick="window.location.href='/nearMe'">
-                    <div class="side-menu">
-                        <div class="sideMenu-sign" id="sideMenu-sign">
-                            <span class="bar"></span>
-                            <span class="bar"></span>
-                            <span class="bar"></span>
-                        </div>
-                        <div class="sideMenu-content" id="sideMenu-content">
-                            <div class="sideMenu-search">
-                                <input type="text" placeholder="Search for candies...">
-                            </div>
-                            <ul class="sideMenu-categories">
-                                <li>Chocolate</li>
-                                <li>Gummy Bears</li>
-                                <li>Licorice</li>
-                                <li>Lollipops</li>
-                                <li>Hard Candies</li>
-                                <li>Sour Candies</li>
-                                <li>Caramel</li>
-                            </ul>
-                            <div class="sideMenu-personal">
-                                <% if (user.name) { %> 
-                                    <div class="sideMenu-iconContainer">
-                                        <a href="/personal/myAccount">
-                                            <img src="/public/images/user.svg" class="sideMenu-icon">
-                                            <div class="sideMenu-iconLabel"><%= user.name %></div>
-                                        </a>
-                                    </div>
-                                <% } %> 
-                                <% if (user.role === 'admin') { %> 
-                                    <div class="sideMenu-iconContainer">
-                                        <a href="/personal/admin">
-                                            <img src="/public/images/adminIcon.svg" class="sideMenu-icon">
-                                            <div class="sideMenu-iconLabel">Manage Shop</div>
-                                        </a>
-                                    </div>
-                                <% } %> 
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            </nav>
+            <%- include('sideMenu.ejs') %>
         </header>
         <section class="page-content">
-            <div class="product-card">
-                <div class="product-image">
+            <div class="product-page-card">
+                <div class="product-page-image">
                   <img src="<%= product.imageUrl %>" alt="<%= product.name %>">
                   <button id="addFav" class="favorite-button" onclick="addToFavorites('<%= product.productId %>')">
                     <i class="fas fa-heart favorite" data-product-id="<%= product.productId %>"></i>
                 </button>
                 </div>
                 <div class="vertical-divider"></div>
-                <div class="product-info">
-                    <h4 class="category"><%= product.sweetType %></h4>
-                    <h2 class="product-name"><%= product.name %> | <%= product.description %></h2>
-                    <p class="product-price"><%= product.price %> ILS</p>
-                    <hr class="product-divider">
+                <div class="product-page-info">
+                    <h4 class="product-page-category"><%= product.sweetType %></h4>
+                    <h2 class="product-page-name"><%= product.name %> | <%= product.description %></h2>
+                    <p class="product-page-price">
+                        <% let price = product.price; %>
+                        <% if (currency === 'USD' && rates['USD']) { %>
+                        <%= (price * rates['USD']).toFixed(2) %> $
+                        <% } else if (currency === 'EUR' && rates['EUR']) { %>
+                        <%= (price * rates['EUR']).toFixed(2) %> €
+                        <% } else { %>
+                        <%= price %> ₪
+                        <% } %>
+                    </p>
+                    <% if (product.inventory === 0) { %>
+                        <span class="stock-banner">Sold Out</span>
+                    <% } else if (product.inventory <= 5) { %>
+                        <span class="stock-banner"><%= product.inventory %> left</span>
+                    <% } %>
+                    <hr class="product-page-divider">
+
                     <div class="details">
                         <p><strong>Kosher:</strong> <%= product.kosher %></p>
                         <p><strong>Allergans:</strong> <%= product.allergans %></p>
                         <p><strong>Flavors:</strong> <%= product.flavors %></p>
                     </div>
-                    <div class="product-actions">
-                    <hr class="product-divider">
+                    <hr class="product-page-divider">
 
                     <div class="quantity-selector">
                         <button class="decrease" onclick="updateQuantity('<%= product.productId %>', -1, event)">-</button>
@@ -145,6 +109,6 @@
         <script src="/public/js/products.js"></script>
         <script src="/public/js/cart.js"></script>
         <script src="/public/js/main.js"></script>
-        <script src="/public/js/personal.js"></script>
+        <script src="/public/js/currency.js"></script>
     </body>
 </html>

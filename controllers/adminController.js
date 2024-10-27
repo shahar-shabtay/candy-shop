@@ -15,6 +15,7 @@ function formatAddress(address) {
 // Render personal area - myAccount / admin
 async function renderAdminPage(req, res) {
     try {
+        const currency = req.session.currency;
         const customerId = req.session.user.customerId;  // Assume customerId is available in the session
         const user = await customerService.getCustomerById(customerId);  // Search by customerId
         const customers = await customerService.getAllCustomers();  // Search by customerId
@@ -25,7 +26,7 @@ async function renderAdminPage(req, res) {
         user.formattedAddress = formatAddress(user.address);
         if(role === 'admin')
         {
-            res.render('allCustomers', {customers, user});
+            res.render('allCustomers', {customers, user, currency});
         } else if(role == 'user') {
             res.render('accessDenied', {user});
         }
@@ -37,13 +38,14 @@ async function renderAdminPage(req, res) {
 
 async function getFacebookPageInfo(req, res) {
     try {
+        const currency = req.session.currency;
         const user = req.session.user;  // Get the user from the session
         const facebookData = await facebookInfoService.getFacebookPageInfo(); // Fetch Facebook stats
         const role = user.role;
         // Render the facebookInfo.ejs view and pass the facebookData and user
         if(role === 'admin')
         {
-            res.render('facebookInfo', { facebookData, user });
+            res.render('facebookInfo', { facebookData, user , currency});
         } else if(role == 'user') {
             res.render('accessDenied', {user});
         }
@@ -57,8 +59,10 @@ async function getFacebookPageInfo(req, res) {
 async function renderAccountPage(req, res) {
     try {
         const user = req.session.user;
+        const currency = req.session.currency;
         if(user){
-            res.render('customerDetails', {user});
+            const currency = req.session.currency;
+            res.render('customerDetails', {user, currency});
         } else {
             res.render('notLogin');
         }
@@ -73,6 +77,7 @@ async function renderAccountPage(req, res) {
 async function updateCustomerDetails(req, res) {
     try {
         const customerId = req.session.user.customerId;
+        const currency = req.session.currency;
         const { 
             name, 
             email, 
@@ -106,13 +111,14 @@ async function updateCustomerDetails(req, res) {
 // Get all about - orders / favorite / customers / products
 async function getAllCustomers(req, res) {
     try {
-        const user = req.session.user; 
+        const user = req.session.user;
+        const currency = req.session.currency;
         if(user) {
              // Assume customerId is available in the session
             const customers = await customerService.getAllCustomers(); // Fetch all customers from service
             const customer = await customerService.getCustomerById(user.customerId);  // Search by customerId
             if(user.role == 'admin') {
-                res.render('allCustomers', { customers, customer, user}); // Render the view and pass customers
+                res.render('allCustomers', { customers, customer, user, currency}); // Render the view and pass customers
             } else if(user.role == 'user') {
             res.render('accessDenied', {user});
         } else {
@@ -168,10 +174,10 @@ async function getFavoriteProducts (req, res) {
 // Controller to render the add product part
 async function addProductsPage(req, res) {
     try {
-        const user = req.session.user;  // Assume customerId is available in the session
-         // Render the view and pass customers
+        const user = req.session.user;
+        const currency = req.session.currency;
         if(user.role == 'admin') {
-            res.render('addProducts', {user});
+            res.render('addProducts', {user, currency});
         } else if(user.role == 'user') {
             res.render('accessDenied', {user});
         }
@@ -229,10 +235,6 @@ async function adminUpdateCustomerDetails(req, res) {
         res.status(500).json({ success: false, message: 'Server error' });
     }
 }
-
-
-
-
 
 module.exports = {
     renderAccountPage,

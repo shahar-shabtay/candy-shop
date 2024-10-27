@@ -9,7 +9,9 @@
     </head>
     <body> 
         <!-- Topbar -->
-        <%- include('sideMenu.ejs') %>
+        <header>
+            <%- include('sideMenu.ejs') %>
+        </header>
         <!-- Product Section -->
         <section class="page-content">
             <header class="personal-header">
@@ -32,7 +34,7 @@
                                 <h1>Order Details for Order #<%= orderDetails.orderId %></h1>
                                 <img src="/public/images/back.svg" onclick="window.location.href='/personal/admin/orders'" class="back-button">
                             </header>
-
+                            <hr class="order-divider">
                             <!-- Info Container: Contact, Delivery Address, and Order Status -->
                             <div class="info-container">
                                 <!-- Contact Details -->
@@ -68,7 +70,7 @@
                                     <p id="statusText">Current status: <span id="status"><%= orderDetails.status %></span></p>
                                 </section>
                             </div>
-
+                            <hr class="order-divider">
                             <!-- Product List in Grid -->
                             <section>
                                 <h2><i class="fas fa-candy-cane order-icon"></i> Products in Order</h2>
@@ -78,7 +80,8 @@
 
                                         <div class="product-item">
                                             <img src="<%= product.image %>" alt="<%= product.name %>">
-                                            <h4><%= product.name %></h4>
+                                            <hr class="product-item-divider">
+                                            <h4 class="product-item-name"><%= product.name %></h4>
                                             <p>Quantity: <%= product.quantity %></p>
                                             <p>Total
                                                 <% let total = (product.price * product.quantity).toFixed(2); %>

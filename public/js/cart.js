@@ -50,7 +50,7 @@ function updateTotalPrice() {
 
     cartItems.forEach(item => {
         const quantity = parseInt(item.querySelector("input[name='quantity']").value);
-        const priceElement = item.querySelector(".product-price");
+        const priceElement = item.querySelector(".cart-product-price");
         const price = parseFloat(priceElement ? priceElement.textContent : 0);
         
         if (!isNaN(price) && !isNaN(quantity)) {
@@ -138,7 +138,7 @@ function recalculateTotal() {
     const cartItems = document.querySelectorAll('.cart-item:not(.sold-out)');
 
     cartItems.forEach(item => {
-        const priceElement = item.querySelector('.product-price');
+        const priceElement = item.querySelector('.cart-product-price');
         const price = parseFloat(priceElement ? priceElement.textContent : 0);
         const quantityElement = item.querySelector('input[name="quantity"]');
         const quantity = parseInt(quantityElement ? quantityElement.value : 0, 10);

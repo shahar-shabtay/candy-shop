@@ -5,7 +5,7 @@ async function searchProduct(req, res) {
     const user = req.session.user; // Get user from session
     const searchQuery = req.query.q;  // 'q' will be the query parameter from the search form
     const searchResults = await searchService.searchProductsByName(searchQuery);
-
+    const currency = req.session.currency;
     try {
         const query = req.query.q;
         if (!query) {
@@ -15,7 +15,8 @@ async function searchProduct(req, res) {
         res.render('searchPage', { 
             user: user,
             searchQuery: searchQuery,
-            products: searchResults
+            products: searchResults,
+            currency: currency,
         });  
     } catch (error) {
         console.error('Error searching for products:', error);
@@ -26,13 +27,14 @@ async function searchProduct(req, res) {
 async function searchBySweetType(req, res) {
     const user = req.session.user;
     const sweetType = req.params.sweetType;
-
+    const currency = req.session.currency;
     try {
         const products = await searchService.searchProductsBySweetType(sweetType);
         res.render('searchPage', {
             user: user,
             searchQuery: sweetType,
-            products: products[0] ? products[0].products : []
+            products: products[0] ? products[0].products : [],
+            currency: currency,
         });
     } catch (error) {
         console.error('Error searching for products by sweetType:', error);
@@ -43,6 +45,7 @@ async function searchBySweetType(req, res) {
 async function searchByFilter(req, res) {
     const user = req.session.user;
     const searchQuery = req.query.q || '';
+    const currency = req.session.currency;
     const filters = {
         flavor: req.query.flavor || '', 
         allergans: req.query.allergans || '',
@@ -73,14 +76,14 @@ async function searchByFilter(req, res) {
             user: user,
             searchQuery: combinedQuery,
             products: products,
-            filters: filters
+            filters: filters,
+            currency: currency,
         });
     } catch (error) {
         console.error('Error searching for products:', error);
         res.status(500).send('Error searching for products');
     }
 }
-
 
 module.exports = { 
     searchProduct,

@@ -27,7 +27,6 @@ function addToCart (req, res) {
 async function showCart (req, res) {
     const currency = req.session.currency || 'ILS';
     const rates = req.session.rates || {};
-    console.log(currency);
     let user = req.session.user;
     let cart = req.session.cart;
     let cartDetails = [];
@@ -119,9 +118,7 @@ async function checkout (req, res) {
         status: "Pending",
         products: orderProducts
     };
-    console.log(orderData);
     try {
-        console.log(user);
         const order = await ordersService.createOrder(orderData);
         req.session.cart = [];
         res.status(201).json({ success: true, message: 'Order placed successfully.' });
@@ -155,8 +152,6 @@ async function updateCartQuantity(req, res) {
         res.status(500).json({ success: false, message: `Error updating cart: ${error.message}` });
     }
 };
-
-
 
 module.exports = {
     addToCart,

@@ -102,7 +102,6 @@ async function getCustomerOrderDetailsById (req, res) {
   }
 }
 
-
 async function getOrderDetailsById (req, res) {
     try {
         const user = req.session.user;

@@ -10,7 +10,9 @@
     </head>
     <body>
         <!-- Topbar -->
-        <%- include('sideMenu.ejs') %>
+        <header>
+            <%- include('sideMenu.ejs') %>
+        </header>
         <!-- Product Section -->
         <section class="page-content">
             <header class="personal-header">
@@ -31,47 +33,50 @@
                         <div class="container">
                             <div class="products-grid">
                                 <% products.forEach(function(product) { %>
-                                    <a href="/products/<%= product.productId %>" class="product-link">
+                                    
 
                                     <div class="product-card" data-product-id="<%= product.productId %>">
-                                        <div class="product-image-container <%= product.inventory === 0 ? 'out-of-stock' : '' %>">
-                                            <% if (product.inventory <= 5) { %>
-                                                <span class="stock-banner"><%= product.inventory %> left</span>
-                                            <% } %>
-                                            <img src="<%= product.imageUrl %>" alt="<%= product.name %>" class="product-image">
-                                        </div>
+                                        <a href="/products/<%= product.productId %>" class="product-link">
+                                            <div class="product-image-container <%= product.inventory === 0 ? 'out-of-stock' : '' %>">
+                                                    <% if (product.inventory <= 5) { %>
+                                                        <span class="stock-banner"><%= product.inventory %> left</span>
+                                                    <% } %>
+                                                    <img src="<%= product.imageUrl %>" alt="<%= product.name %>" class="product-image">
+                                            </div>
+                                        </a>
                                         <!-- Name, Description, and Price (2/6 of the card) -->
-                                        <div class="product-info">
-                                            <div class="product-text">
-                                                <input class="product-name left" name="name" value="<%= product.name %>" readonly><br>
-                                                <input class="product-description left" name="description" value="<%= product.description %>" readonly><br>
+                                        
+                                            <div class="product-info">
+                                                    <div class="product-text">
+                                                        <input class="product-name left" name="name" value="<%= product.name %>" readonly><br>
+                                                        <input class="product-description left" name="description" value="<%= product.description %>" readonly><br>
+                                                    </div>
+                                                    <div class="product-text">
+                                                        <input class="product-price right" name="price" value="<%= currency === 'USD' && rates['USD'] ? (product.price * rates['USD']).toFixed(2) + ' $' : currency === 'EUR' && rates['EUR'] ? (product.price * rates['EUR']).toFixed(2) + ' €' : product.price + ' ₪' %>"  data-original-price="<%= product.price %>" readonly><br>
+                                                        <input class="product-inventory right" name="inventory" value="<%= product.inventory %>" readonly>
+                                                        <div class="dropdown-container">
+                                                            <select class="flavor-dropdown" multiple>
+                                                                <% ['Sweet', 'Salty', 'Sour', 'Spicy', 'Bitter'].forEach(flavor => { %>
+                                                                    <option value="<%= flavor %>" <%= product.flavors.includes(flavor) ? 'selected' : '' %>><%= flavor %></option>
+                                                                <% }) %>
+                                                            </select>
+                                                            <select class="allergan-dropdown" multiple>
+                                                                <% ['Gluten', 'Dairy', 'Nuts', 'Soy', 'Eggs'].forEach(allergan => { %>
+                                                                    <option value="<%= allergan %>" <%= product.allergans.includes(allergan) ? 'selected' : '' %>><%= allergan %></option>
+                                                                <% }) %>
+                                                            </select>
+                                                            <select class="sweet-type-dropdown">
+                                                                <% ['Chocolate', 'Gummy', 'Licorice', 'Drinks', 'Snacks'].forEach(type => { %>
+                                                                    <option value="<%= type %>" <%= product.sweetType === type ? 'selected' : '' %>><%= type %></option>
+                                                                <% }) %>
+                                                            </select>
+                                                            <select class="kosher-dropdown">
+                                                                <option value="Yes" <%= product.kosher === 'Yes' ? 'selected' : '' %>>Yes</option>
+                                                                <option value="No" <%= product.kosher === 'No' ? 'selected' : '' %>>No</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
                                             </div>
-                                            <div class="product-text">
-                                                <input class="product-price right" name="price" value="<%= currency === 'USD' && rates['USD'] ? (product.price * rates['USD']).toFixed(2) + ' $' : currency === 'EUR' && rates['EUR'] ? (product.price * rates['EUR']).toFixed(2) + ' €' : product.price + ' ₪' %>" readonly><br>
-                                                <input class="product-inventory right" name="inventory" value="<%= product.inventory %>" readonly>
-                                                <div class="dropdown-container">
-                                                    <select class="flavor-dropdown" multiple>
-                                                        <% ['Sweet', 'Salty', 'Sour', 'Spicy', 'Bitter'].forEach(flavor => { %>
-                                                            <option value="<%= flavor %>" <%= product.flavors.includes(flavor) ? 'selected' : '' %>><%= flavor %></option>
-                                                        <% }) %>
-                                                    </select>
-                                                    <select class="allergan-dropdown" multiple>
-                                                        <% ['Gluten', 'Dairy', 'Nuts', 'Soy', 'Eggs'].forEach(allergan => { %>
-                                                            <option value="<%= allergan %>" <%= product.allergans.includes(allergan) ? 'selected' : '' %>><%= allergan %></option>
-                                                        <% }) %>
-                                                    </select>
-                                                    <select class="sweet-type-dropdown">
-                                                        <% ['Chocolate', 'Gummy', 'Licorice', 'Drinks', 'Snacks'].forEach(type => { %>
-                                                            <option value="<%= type %>" <%= product.sweetType === type ? 'selected' : '' %>><%= type %></option>
-                                                        <% }) %>
-                                                    </select>
-                                                    <select class="kosher-dropdown">
-                                                        <option value="Yes" <%= product.kosher === 'Yes' ? 'selected' : '' %>>Yes</option>
-                                                        <option value="No" <%= product.kosher === 'No' ? 'selected' : '' %>>No</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
                                         <!-- Divider -->
                                         <hr class="product-divider">
                                         <div class="product-actions">
@@ -79,7 +84,7 @@
                                             <img class="edit-btn" src="/public/images/edit.svg" data-product-id="<%= product.productId %>" onClick="editProduct('<%= product.productId %>')">
                                         </div>
                                     </div>
-                                    </a>
+                                    
                                 <% }) %>
                                 <div id="delete-alert" class="custom-alert hidden">
                                     Product Deleted

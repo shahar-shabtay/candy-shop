@@ -61,8 +61,8 @@ function addToFavorites(productId) {
         if(response.ok) {
             if(document.querySelector(`#favorite-icon-${productId}`)){
                 document.querySelector(`#favorite-icon-${productId}`).classList.add('favorited');
+                showSuccessAlert('favorite-alert');
             }
-            showSuccessAlert('favorite-alert');
         }
     })
 }
@@ -374,7 +374,17 @@ function editProduct(productId) {
         inputs.forEach(input => {
             input.removeAttribute('readonly');
             input.classList.add('editable');  // Add a class to indicate that the input is now editable
+            if (input.classList.contains('product-price-input')) {
+                // שליפת המחיר המקורי מתוך data-original-price על שדה הקלט עצמו
+                const originalPrice = input.getAttribute('data-original-price');
+            
+                // עדכון הערך של input למחיר המקורי מה-DB
+                input.value = originalPrice;
+            }
+            
         });
+
+        
     }
 
     // Show dropdowns
@@ -447,6 +457,8 @@ function saveProduct(productId) {
                     input.setAttribute('readonly', 'readonly');
                     input.classList.remove('editable');
                 });
+                window.location.reload();
+
 
                 // Hide dropdowns
                 const dropdownContainer = productCard.querySelector('.dropdown-container');

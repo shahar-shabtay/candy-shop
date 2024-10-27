@@ -4,6 +4,7 @@ const dropdownContent = document.getElementById('sideMenu-content');
 const sideMenuVideos = document.getElementById('sideMenu-videos');
 const videos = document.querySelectorAll('.sideMenu-video');
 const closeButton = document.getElementById('close-button');
+const pageContent = document.getElementById('page-content');
 let currentVideoIndex = 0;
 
 // Function to play videos
@@ -49,22 +50,26 @@ closeButton.addEventListener('click', () => {
         video.pause();
         video.style.display = 'none';
     });
-});
-
-hamburgerMenu.addEventListener('click', () => {
-    // Toggle the active class on the hamburger menu
-    hamburgerMenu.classList.toggle('active');
-    
-    // Toggle the visibility of the dropdown content
-    dropdownContent.classList.toggle('active');
-
-    if (dropdownContent.classList.contains('active')) {
-        sideMenuVideos.style.display = 'none'; // Hide videos when menu is active
-    } else {
-        sideMenuVideos.style.display = 'flex'; // Show videos when menu is inactive
-        playNextVideo();
+    if (pageContent) {
+        pageContent.classList.add('full-width');
     }
 });
+if (hamburgerMenu) {
+    hamburgerMenu.addEventListener('click', () => {
+        // Toggle the active class on the hamburger menu
+        hamburgerMenu.classList.toggle('active');
+        
+        // Toggle the visibility of the dropdown content
+        dropdownContent.classList.toggle('active');
+
+        if (dropdownContent.classList.contains('active')) {
+            sideMenuVideos.style.display = 'none'; // Hide videos when menu is active
+        } else {
+            sideMenuVideos.style.display = 'flex'; // Show videos when menu is inactive
+            playNextVideo();
+        }
+    });
+}
 
 // Initialize everything when the page loads
 document.addEventListener('DOMContentLoaded', () => {
@@ -104,11 +109,22 @@ if(openstatisticsModel){
     }
 }
 
-closeButtons.forEach(function(button) {
-    button.onclick = function() {
-        button.closest('.modal').style.display = "none";
-    };
-});
+if(closeButtons)
+{
+    closeButtons.forEach(function(button) {
+        button.onclick = function() {
+            document.getElementById('close-button').onclick = function() {
+                const modal = document.querySelector('.modal'); // מוצא את המודל
+                if (modal) {
+                    modal.style.display = "none"; // מסתיר את המודל
+                } else {
+                    console.error("Modal element not found");
+                }
+            };
+            
+        };
+    });
+}
 
 window.onclick = function(event) {
     if (event.target == aboutModal) {

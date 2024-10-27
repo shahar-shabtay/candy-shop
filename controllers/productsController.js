@@ -6,8 +6,6 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
-
-
 async function getAllProducts (req, res) {
 	const user = req.session.user;
 	if (!user){
@@ -18,8 +16,6 @@ async function getAllProducts (req, res) {
         const currency = req.session.currency || 'ILS';
         const rates = req.session.rates || {};
 		const products = await productsService.getAllProducts();
-        console.log(products);
-        console.log(currency);
 		res.render('productsList', { products,user,currency,rates}); 
 	} catch (err) {
 		console.error('Error getting products:', err);
@@ -99,7 +95,7 @@ async function addProduct(req, res) {
 
             // Check if postToFacebook is checked and post to Facebook
             if (postToFacebook === 'on') { // Checkbox value is 'on' when checked
-                const productUrl = `www.${name}`; // Use the product name as part of the URL
+                const productUrl = `localhost:3000/products/${productId}`; // Use the product name as part of the URL
                 try {
                     await facebookPostService.postMessageToFacebook(`Check out our new product: ${name} for just $${price}!`, productUrl);
                 } catch (error) {
@@ -115,7 +111,6 @@ async function addProduct(req, res) {
         return res.status(500).json({ success: false, message: 'Error creating product' });
     }
 }
-
 
 async function showDeleteProductForm (req, res) {
     res.render('deleteProduct', { error: null, productId: '' });
@@ -159,8 +154,6 @@ async function deleteProduct(req, res) {
         res.status(500).json({ message: 'Failed to delete product.', error: error.message });
     }
 }
-
-
 
 async function addNewFavorite(req, res) {
     try {
@@ -215,9 +208,10 @@ async function editProducts (req,res) {
 async function getProductDetail (req, res) {
     try {
         const user = req.session.user;
+        const currency = req.session.currency;
+        const rates = req.session.rates || {};
         const product = await productsService.getProductById(req.params.productId);
-        console.log(product);
-        res.render('productDetail', { product: product, user:user });
+        res.render('productDetail', { product: product, user:user, currency:currency, rates:rates});
     } catch (error) {
         console.log(error);
         res.redirect('/products');

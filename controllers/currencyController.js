@@ -1,6 +1,7 @@
 const axios = require('axios');
 
-exports.setCurrency = async (req, res) => {
+async function setCurrency(req, res) 
+{
   const { currency } = req.body;
   req.session.currency = currency;
 
@@ -14,3 +15,7 @@ exports.setCurrency = async (req, res) => {
 
   res.sendStatus(200);
 };
+
+module.exports = {
+  setCurrency
+}

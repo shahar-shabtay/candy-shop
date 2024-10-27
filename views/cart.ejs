@@ -9,7 +9,9 @@
     </head>
     <body>
         <!-- Topbar -->
-        <%- include('sideMenu.ejs') %>
+        <header>
+            <%- include('sideMenu.ejs') %>
+        </header>
         <!-- Product Section -->
         <section class="page-content" style="display: flex; padding: 20px; box-sizing: border-box;">
             <!-- Cart Items -->
@@ -18,7 +20,7 @@
                 <% cart.forEach(function(item) { %>
                 <div class="cart-item <%= item.inventory === 0 ? 'sold-out' : '' %>" data-inventory="<%= item.inventory %>" id="cart-item-<%= item.productId %>"  data-product-id="<%= item.productId %>">
                     <!-- Product Image -->
-                    <div class="product-image-container">
+                    <div class="product-image">
                         <% if (item.inventory === 0) { %>
                             <span class="stock-banner out-of-stock">Sold Out</span>
                         <% } else if (item.inventory <= 5) { %>
@@ -29,25 +31,26 @@
                     </div>
         
                     <!-- Product Details -->
-                    <div class="product-details" style="flex-grow: 2; margin-right: 20px;">
-                        <div class="product-name" style="font-weight: bold; margin-bottom: 5px;">
-                            <a href="/products/<%= item.productId %>"><%= item.name %></a> | <%= item.description || 'No description available.' %>
-                        </div>
-                        <div class="product-price">
-                            <% let price = item.price; %>
-                            <% if (currency === 'USD' && rates['USD']) { %>
-                            <%= (price * rates['USD']).toFixed(2) %> $
-                            <% } else if (currency === 'EUR' && rates['EUR']) { %>
-                            <%= (price * rates['EUR']).toFixed(2) %> €
-                            <% } else { %>
-                            <%= price %> ₪
-                            <% } %>
-                        </div><br>
-                        
+                    <div class="cart-product-details" style="flex-grow: 2; margin-right: 20px;">
+                        <a href="/products/<%= item.productId %>" class="product-link">
+                            <div class="cart-product-name" style="font-weight: bold; margin-bottom: 5px;">
+                            <%= item.name %> | <%= item.description || 'No description available.' %>
+                            </div>
+                            <div class="cart-product-price">
+                                <% let price = item.price; %>
+                                <% if (currency === 'USD' && rates['USD']) { %>
+                                <%= (price * rates['USD']).toFixed(2) %> $
+                                <% } else if (currency === 'EUR' && rates['EUR']) { %>
+                                <%= (price * rates['EUR']).toFixed(2) %> €
+                                <% } else { %>
+                                <%= price %> ₪
+                                <% } %>
+                            </div><br>
+                        </a>
                         <!-- Quantity Selector and Update -->
                         <form action="/cart/update" method="POST">
                             <input type="hidden" name="productId" value="<%= item.productId %>">
-                            <input type="number" name="quantity" min="1" max="<%= item.inventory %>" value="<%= item.quantity %>" <%= item.inventory === 0 ? 'disabled' : '' %>>
+                            <input class="quantity" type="number" name="quantity" min="1" max="<%= item.inventory %>" value="<%= item.quantity %>" <%= item.inventory === 0 ? 'disabled' : '' %>>
                             <button class="update-button" type="submit" <%= item.inventory === 0 ? 'disabled' : '' %>>Update</button>
                         </form>
                     </div>

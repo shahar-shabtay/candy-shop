@@ -24,9 +24,9 @@ async function loginUser(req, res) {
 }
 
 async function logout(req,res) {
+  console.log("in login controller - logout");
   req.session.destroy(() => {
-    req.session.user = null;
-    res.render("login", { error: false });
+    res.render("login", {error: false});
   });
 }
 

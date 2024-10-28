@@ -12,6 +12,23 @@ body {
                 repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.1) 0, rgba(255, 255, 255, 0.1) 10px, transparent 10px, transparent 20px),
                 #ffc0cb !important;
 }
+input[type="email"],
+input[type="password"],
+input[type="text"],
+input[type="tel"],
+input[type="date"],
+input[type="number"] {
+    background-color: rgba(255,255,255,0.5);
+}
+
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="text"]:focus,
+input[type="tel"]:focus,
+input[type="date"]:focus,
+input[type="number"]:focus {
+    background-color: rgba(255,255,255,0.5);
+}
 
 .logo {
     width: 60%;

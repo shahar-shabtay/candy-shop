@@ -27,6 +27,7 @@
                                 <% } else if (product.inventory <= 5) { %>
                                     <span class="stock-banner"><%= product.inventory %> left</span>
                                 <% } %>
+                                                                                     
                                 <img src="<%= product.imageUrl %>" alt="<%= product.name %>" class="product-image">
                                 <button id="addFav" class="favorite-button" onclick="addToFavorites('<%= product.productId %>')">
                                     <i class="fas fa-heart favorite" data-product-id="<%= product.productId %>"></i>
@@ -34,15 +35,27 @@
                             </div>
                             <!-- Name, Description, and Price (2/6 of the card) -->
                             <div class="product-info">
-                                <div class="product-text">
-                                    <input type="hidden" name="productId" id="productId" value="<%= product.productId %>">
-                                    <h2><a href="/products/<%= product.productId %>"><%= product.name %></a></h2>
-                                    <p class="product-description"><%= product.description %></p>
-                                </div>
-                                <div class="product-price">₪<%= product.price %></div>
+                                    <div class="product-text">
+                                        <input type="hidden" name="productId" id="productId" value="<%= product.productId %>">
+                                        <h2><a href="/products/<%= product.productId %>" class="product-link"><%= product.name %></a></h2>
+                                        <a href="/products/<%= product.productId %>" class="product-link">
+                                            <p class="product"><b><%= product.name %></b> - <%= product.description %></p>
+                                            <p class="product-kosher"><u>Kosher:</u> <%= product.kosher %></p>
+                                        </a>
+                                    </div>
+                                    <div class="product-price">
+                                        <% let price = product.price; %>
+                                        <% if (currency === 'USD' && rates['USD']) { %>
+                                        <%= (price * rates['USD']).toFixed(2) %> $
+                                        <% } else if (currency === 'EUR' && rates['EUR']) { %>
+                                        <%= (price * rates['EUR']).toFixed(2) %> €
+                                        <% } else { %>
+                                        <%= price %> ₪
+                                        <% } %>
+                                    </div>
                             </div>    
                             <!-- Divider -->
-                            <hr class="product-divider">
+                        
                             <!-- Add to Cart and Quantity (1/6 of the card) -->
                             <div class="product-actions">
                                 <div class="quantity-selector">

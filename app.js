@@ -23,10 +23,7 @@ app.use(
   session({
     secret: "wusha",
     saveUninitialized: false,
-    resave: false,
-    cookie: {
-      maxAge: 24 * 60 * 60 * 1000 // 1 day
-    }
+    resave: false
   })
 );
 

@@ -9,9 +9,7 @@
     </head>
     <body>
         <!-- Topbar -->
-        <header>
-            <%- include('sideMenu.ejs') %>
-        </header>
+        <%- include('sideMenu.ejs') %>
         <!-- Product Section -->
         <section class="page-content" style="display: flex; padding: 20px; box-sizing: border-box;">
             <!-- Cart Items -->
@@ -87,8 +85,8 @@
                 <!-- Shipping Information -->
                 <div class="shipping-info" style="margin-bottom: 20px;">
                     <input type="text" id="shipping-city" name="city" placeholder="city" required style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc;">
-                    <input type="text" id="shipping-address" name="address" placeholder="address" required style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc;">
-                    <input type="text" id="shipping-number" name="number" placeholder="number" required style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc;">
+                    <input type="text" id="shipping-street" name="street" placeholder="street" required style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc;">
+                    <input type="number" id="shipping-number" name="number" placeholder="number" required style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc;">
                 </div>
         
                 <!-- Total Price -->

@@ -88,8 +88,10 @@ async function checkoutCart() {
 
         // Gather address information from the form (if required)
         const city = document.getElementById('shipping-city').value;
-        const street = document.getElementById('shipping-address').value;
+        const street = document.getElementById('shipping-street').value;
         const number = document.getElementById('shipping-number').value;
+
+        console.log(number);
 
         // Create the checkout data object
         const checkoutData = {

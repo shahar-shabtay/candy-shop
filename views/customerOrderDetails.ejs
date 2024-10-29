@@ -9,9 +9,7 @@
     </head>
     <body>
         <!-- Topbar -->
-        <header>
-            <%- include('sideMenu.ejs') %>
-        </header>
+        <%- include('sideMenu.ejs') %>
         <!-- Product Section -->
         <section class="page-content">
             <header class="personal-header">
@@ -39,15 +37,27 @@
                                 <!-- Contact Details -->
                                 <section>
                                     <h2><i class="fas fa-info-circle order-icon"></i> Contact Information</h2>
-                                    <p><strong>Name:</strong> <%= customerDetails.name %></p>
-                                    <p><strong>Email:</strong> <%= customerDetails.email %></p>
-                                    <p><strong>Phone:</strong> <%= customerDetails.phone %></p>
+                                    <p><strong>Name:</strong> <%= user.name %></p>
+                                    <p><strong>Email:</strong> <%= user.email %></p>
+                                    <p><strong>Phone:</strong> <%= user.phone %></p>
                                 </section>
 
                                 <!-- Delivery Address -->
                                 <section>
                                     <h2><i class="fas fa-map-marker-alt order-icon"></i> Delivery Address</h2>
+                                    <p><strong>City:</strong> <%= orderDetails.address.city %></p>
+                                    <p><strong>Street:</strong> <%= orderDetails.address.street %></p>
+                                    <p><strong>Number:</strong> <%= orderDetails.address.number %></p>
+                                </section>
+
+                                <!-- Order Status -->
+                                <section>
                                     
+                                    <h2><i class="fas fa-truck order-icon"></i> Order Status</h2>
+                                    <div class="status-bar">
+                                        <div class="status-progress" id="statusBar"></div>
+                                    </div>
+                                    <p id="statusText">Current status: <span id="status"><%= orderDetails.status %></span></p><br>
                                     <h3>Total Price:
                                         <% let totalPrice = orderDetails.totalPrice.toFixed(2); %>
                                         <% if (currency === 'USD' && rates['USD']) { %>
@@ -58,15 +68,6 @@
                                         <%= totalPrice %> ₪
                                         <% } %>
                                     </h3>
-                                </section>
-
-                                <!-- Order Status -->
-                                <section>
-                                    <h2><i class="fas fa-truck order-icon"></i> Order Status</h2>
-                                    <div class="status-bar">
-                                        <div class="status-progress" id="statusBar"></div>
-                                    </div>
-                                    <p id="statusText">Current status: <span id="status"><%= orderDetails.status %></span></p>
                                 </section>
                             </div>
                             <hr class="order-divider">

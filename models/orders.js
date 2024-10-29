@@ -8,9 +8,9 @@ const productSchema = new mongoose.Schema({
 const addressSchema = new mongoose.Schema({
   city: { type: String, required: true },
   street: { type: String, required: true },
-  number: { type: String, required: true },
-  phone: { type: String, required: true }
+  number: { type: Number, required: true },
 });
+
 
 const orderSchema = new mongoose.Schema({
   orderId: { type: String, required: true },

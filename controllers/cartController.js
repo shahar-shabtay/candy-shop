@@ -109,14 +109,15 @@ async function checkout (req, res) {
     }
 
     totalPrice = totalPrice.toFixed(2);
-    
+    const address = req.body.address;
     let orderData = {
         orderId: Math.floor(Math.random() * 10000000),
         customerId: req.session.user.customerId,
         orderDate: new Date(),
         totalPrice: totalPrice,
         status: "Pending",
-        products: orderProducts
+        products: orderProducts,
+        address: address,
     };
     try {
         const order = await ordersService.createOrder(orderData);

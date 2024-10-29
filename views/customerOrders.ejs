@@ -9,9 +9,7 @@
     </head>
     <body>
         <!-- Topbar -->
-        <header>
-            <%- include('sideMenu.ejs') %>
-        </header>
+        <%- include('sideMenu.ejs') %>
         <!-- Product Section -->
         <section class="page-content">
             <header class="personal-header">
@@ -42,7 +40,7 @@
                                     <% orders.forEach(order => { %>
                                         <tr>
                                             <td><%= order.orderId %></td>
-                                            <td><%= new Date(order.createdAt).toLocaleDateString() %></td>
+                                            <td><%= new Date(order.orderDate).toLocaleDateString() %></td>
                                             <td>
                                                 <% let totalPrice = order.totalPrice.toFixed(2); %>
                                                 <% if (currency === 'USD' && rates['USD']) { %>

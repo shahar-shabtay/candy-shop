@@ -297,10 +297,10 @@ input[type="number"]:focus {
     font-size: 14px;
     text-align: center;
     width: 150px;
-    text-align: left;
     align-items: center;
     justify-items: center;
     justify-content: center;
+    text-align: center;
 }
 
 .orders-th {

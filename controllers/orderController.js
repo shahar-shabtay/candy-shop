@@ -10,6 +10,17 @@ async function getAllOrders(req, res) {
         const orders = await orderService.getAllOrders();
         const currency = req.session.currency || 'ILS';
         const rates = req.session.rates || {};
+        orders.forEach(order => {
+            if (order.createdAt) {
+                const date = new Date(order.createdAt);
+                const day = String(date.getDate()).padStart(2, '0');
+                const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+                const year = date.getFullYear();
+                order.createdAtFormatted = `${day}/${month}/${year}`;
+            } else {
+                order.createdAtFormatted = 'N/A';
+            }
+        });
         res.render('allOrders', { orders, user, currency, rates}); // Render the view and pass customers
     } catch (err) {
         console.error('Error fetching customers:', err);
@@ -24,6 +35,17 @@ async function getCustomerOrders (req, res) {
         const currency = req.session.currency || 'ILS';
         const rates = req.session.rates || {};
         if(user){
+            orders.forEach(order => {
+                if (order.createdAt) {
+                    const date = new Date(order.createdAt);
+                    const day = String(date.getDate()).padStart(2, '0');
+                    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+                    const year = date.getFullYear();
+                    order.createdAtFormatted = `${day}/${month}/${year}`;
+                } else {
+                    order.createdAtFormatted = 'N/A';
+                }
+            });
             res.render('customerOrders', {orders, user, currency, rates});
         } else {
             res.render('notLogin');
@@ -86,12 +108,6 @@ async function getCustomerOrderDetailsById (req, res) {
                 address: order.address,
                 products: fullProductDetails,
             },
-            customerDetails: {
-                name: customer.name,
-                email: customer.email,
-                phone: customer.phone,
-                address: customer.address,
-            },
           user: user, 
           currency: currency,
           rates: rates,
@@ -152,12 +168,6 @@ async function getOrderDetailsById (req, res) {
             address: order.address,
             products: fullProductDetails,
           },
-          customerDetails: {
-            name: customer.name,
-            email: customer.email,
-            phone: customer.phone,
-            address: customer.address,
-        },  
           user: user,
           currency: currency,
           rates: rates, // Pass the user from the session

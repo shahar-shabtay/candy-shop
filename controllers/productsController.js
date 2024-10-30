@@ -160,6 +160,23 @@ async function editProducts (req,res) {
         return res.json({ success: false, message: 'Error updating product' });
     }
 }
+// Async function to read kosher data from the products collection
+async function getKosherData(req, res) {
+    try {
+        // Count the number of kosher and non-kosher products
+        const kosherCount = await Product.countDocuments({ kosher: "Yes" });
+        const nonKosherCount = await Product.countDocuments({ kosher: "No" });
+
+        // Return the counts in the response
+        res.status(200).json({
+            kosher: kosherCount,
+            nonKosher: nonKosherCount
+        });
+    } catch (error) {
+        console.error("Error fetching kosher data:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+}
 
 
 module.exports = {
@@ -169,5 +186,6 @@ module.exports = {
 	deleteProduct,
 	addNewFavorite,
 	removeFavoriteProduct,
+    getKosherData,
 	addProduct
 };

@@ -5,8 +5,8 @@ const productsController = require('../controllers/productsController.js');
 // Get products list
 router.get('/', productsController.getAllProducts);
 
-// Get new product form
-
+// Get kosher products
+router.get('/kosherData', productsController.getKosherData);
 
 // Get delete product form
 router.get('/delete', productsController.showDeleteProductForm);

@@ -84,17 +84,39 @@
                     <div id="stores" class="content-item">
                         <div class="container">
                             <% if(stores && stores.length > 0) { %> 
-                                <ul class="stores-list">
-                                    <% stores.forEach(store => { %>
-                                    <li class="store-item">
-                                        <h3 class="store-name"><%= store.name %></h3>
-                                        <p class="store-address"><%= store.address %></p>
-                                        <p class="store-coordinates">Coordinates: <%= store.coordinates.join(', ') %></p>
-                                    </li>
-                                    <% }) %>
-                                </ul>
+                                <form action="" method="POST" id="storeUpdateForm">
+                                    <table class="stores-list">
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Address</th>
+                                                <th>Coordinates</th>
+                                                <th class="actions-th">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% stores.forEach(store => { %>
+                                            <tr data-id="<%= store.storeId %>" class="store-item">
+                                                <td class="store-name">
+                                                    <input name="name" class="store-name-input store-input" type="text" value="<%= store.name %>" readonly>
+                                                </td>
+                                                <td class="store-address">
+                                                    <input name="address" class="store-address-input store-input" type="text" value="<%= store.address %>" readonly>
+                                                </td>
+                                                <td class="store-coordinates">
+                                                    <input name="coordinates" class="store-coordinates-input store-input" type="text" value="<%= store.coordinates.join(', ') %>" readonly>
+                                                </td>
+                                                <td class="action-td">
+                                                    <img class="edit-btn-store edit-btn" src="/public/images/edit.svg" onclick="toggleEditModeStore('<%= store.storeId %>')" style="display:inline-block;">
+                                                    <img class="save-btn-store edit-btn" src="/public/images/save.svg" onclick="saveStore('<%= store.storeId %>')" style="display:none;">
+                                                </td>
+                                            </tr>
+                                            <% }) %>
+                                        </tbody>
+                                    </table>
+                                </form>
                             <% } else { %>
-                                <p>No stores are available</p>
+                                <p>No stores are available.</p>
                             <% } %> 
                         </div>
                     </div>

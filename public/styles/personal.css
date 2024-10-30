@@ -116,24 +116,19 @@
 
 .customers-table {
     width: 100%;
-    border-collapse: collapse; 
-    position: relative;
-    margin: 20px 0; 
+    border-collapse: collapse;
+    margin: 20px 0;
     font-size: 16px;
-    text-align: center; 
     background-color: white;
     table-layout: fixed; 
 }
 
-.customers-tr , .customer-th, .customer-td {
-    border-bottom : 1px solid #ddd;
+.customers-tr, .customer-th, .customer-td {
+    border-bottom: 1px solid #ddd;
     font-size: 14px;
     text-align: center;
-    width: 150px;
-    text-align: left;
-    align-items: center;
-    justify-items: center;
-    justify-content: center;
+    vertical-align: middle;
+    padding: 10px;
 }
 
 th {
@@ -142,29 +137,20 @@ th {
     color: #333;
     font-size: 16px;
     padding: 15px;
-    text-align: center;
 }
 
 tr:hover {
-    background-color: #f8f8f8; 
+    background-color: #f8f8f8;
 }
 
-.edit-btn {
-    width: 80px;
+/* Center input fields and maintain table layout */
+.customer-td {
+    display: table-cell; /* Keeps table cell layout */
+    text-align: center;
+    vertical-align: middle;
 }
 
-.customer-input {
-    align-items: center;
-    display: flex;
-    justify-items: center;
-    width: 80px; 
-    padding: 5px;
-    font-size: 14px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-
+/* Remove border and shadow on input fields by default */
 input[type="text"],
 input[type="email"],
 input[type="tel"],
@@ -173,105 +159,59 @@ input[type="date"],
 input[type="number"],
 input[type="file"] {
     width: 100%;
-    padding: 10px;
+    padding: 8px;
     border: none;
-    border-bottom: 2px solid #ccc;
+    box-shadow: none; /* No shadow by default */
     box-sizing: border-box;
-    transition: border-bottom-color 0.3s ease;
+    transition: border-bottom-color 0.3s ease, box-shadow 0.3s ease;
+    text-align: center;
 }
 
+/* Show border and shadow only on focus */
 input[type="text"]:focus,
 input[type="email"]:focus,
 input[type="tel"]:focus,
 input[type="password"]:focus,
 input[type="date"]:focus,
 input[type="number"]:focus,
-input[type="number"]:focus {
+input[type="file"]:focus {
     outline: none;
-    border-bottom-color: #FF418A;
+    border-bottom-color: #FF418A; /* Show bottom border on focus */
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.2); /* Optional shadow on focus */
 }
 
-.password-container {
-    display: flex;
-    align-items: center;
-    position: relative;
-    width: fit-content; /* Adjust the width to fit content */
-}
-
-.password-container input {
-    padding-right: 30px; /* Add padding to make room for the icon */
-    width: 700px; /* Adjust width as needed */
-}
-
-.password-container i {
-    position: absolute;
-    right: 10px;
-    cursor: pointer;
-}
-
-.address-container, .birthday-container {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-}
-
-.address-container input, .birthday-container select {
+/* Remove arrows from select elements and center align text */
+select {
+    appearance: none; /* Remove default arrow */
+    background: none;
+    border: none;
+    text-align: center;
     padding: 8px;
-    font-size: 16px;
+    width: 100%; /* Ensures dropdown fits cell width */
 }
 
-#street, #city, #year {
-    flex: 1; 
-}
-
-.customer-actions {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 40px;  /* Adjust to fit the icon size */
-    height: 40px;
-}
-
-.customer-actions img {
-    width: 50px; /* Adjust the size of your icons */
-    height: 50px;
-    cursor: pointer;
-}
-
-.customer-row.edit-mode {
-    background-color: #FFE7E9;
-}
-
+/* Birthday container styling */
 .birthday-select-container {
     display: flex;
-    flex-direction: column; /* Stack elements vertically */
-    justify-content: center; /* Center vertically */
-    align-items: center; /* Center horizontally */
+    flex-direction: column;
+    align-items: center;
 }
 
-.customer-address-input {
-    width: 150px !important;
-    text-align: center;
-}
-
-.customer-phone-input {
-    width: 150PX !important;
-    text-align: center;
-}
-
-.customer-email-input {
-    width: 200px !important;
-    text-align: center;
-}
-
-.customer-name-input {
-    width: 200px !important;
-    text-align: center;
-}
-
+/* Specific adjustments for input widths */
+.customer-address-input,
+.customer-phone-input,
+.customer-email-input,
+.customer-name-input,
 .customer-role-select {
-    width: 100px !important ;
     text-align: center;
+    width: 100%;
+}
+
+/* Styles for action buttons */
+.edit-btn-cust {
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
 }
 
 
@@ -466,6 +406,7 @@ input[type="date"] {
     width: 100%;
     padding: 10px;
     border: none;
+    text-align: left;
     border-bottom: 2px solid #ccc;
     box-sizing: border-box;
     transition: border-bottom-color 0.3s ease;

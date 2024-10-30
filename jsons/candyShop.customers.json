@@ -1,0 +1,120 @@
+[{
+  "_id": {
+    "$oid": "66d9ca61e30f7747e7ad1d77"
+  },
+  "customerId": "111111111",
+  "name": "Ziv Klein",
+  "email": "zivklein21@gmail.com",
+  "password": "Aa123456",
+  "birthdate": {
+    "$date": "1999-08-15T21:00:00.000Z"
+  },
+  "phone": "052-8221823",
+  "address": {
+    "city": "Haetrog",
+    "street": "Shoham",
+    "number": 16,
+    "_id": {
+      "$oid": "6721d46f04d8f916e783f2b5"
+    }
+  },
+  "createdAt": "2024-09-05T00:00:00Z",
+  "role": "admin",
+  "cart": []
+},
+{
+  "_id": {
+    "$oid": "66d9ca61e30f7747e7ad1d78"
+  },
+  "customerId": "222222222",
+  "name": "Shahar shabtay",
+  "email": "shaharshabtay28@gmail.com",
+  "password": "shahar1",
+  "birthdate": {
+    "$date": "1996-04-27T21:00:00.000Z"
+  },
+  "phone": "054-6644691",
+  "address": {
+    "city": "shohamq",
+    "street": "haetrog",
+    "number": 123,
+    "_id": {
+      "$oid": "6721d3de04d8f916e783f299"
+    }
+  },
+  "createdAt": "2024-09-05T00:00:00Z",
+  "role": "admin",
+  "cart": []
+},
+{
+  "_id": {
+    "$oid": "66dc3f5be30f7747e7ad1db9"
+  },
+  "customerId": "333333333",
+  "name": "Gal Ternovsy",
+  "email": "galterking@gmail.com",
+  "password": "Aa123456",
+  "birthdate": {
+    "$date": "2001-06-26T21:00:00.000Z"
+  },
+  "phone": "054-333333",
+  "address": {
+    "city": "Baal hatenia",
+    "street": "Rehovot",
+    "number": 80,
+    "_id": {
+      "$oid": "66f3bdecbc11764f2c874db2"
+    }
+  },
+  "createdAt": "2024-09-05T00:00:00Z",
+  "role": "user",
+  "cart": []
+},
+{
+  "_id": {
+    "$oid": "6701091d76a6f0048d3fc7d6"
+  },
+  "customerId": "111112111",
+  "name": "sarit",
+  "email": "sarit@gmail.com",
+  "password": "sarit",
+  "phone": "0540000000",
+  "birthdate": {
+    "$date": {
+      "$numberLong": "639095868000000"
+    }
+  },
+  "address": {
+    "street": "haetrog",
+    "_id": {
+      "$oid": "6701091d76a6f0048d3fc7d7"
+    }
+  },
+  "role": "user",
+  "createdAt": {
+    "$date": "2024-10-05T09:38:37.837Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67010ae3bab4b810762329e5"
+  },
+  "customerId": "323232332",
+  "name": "ronen",
+  "email": "ronen@gmail.com",
+  "password": "ronen",
+  "phone": "0528221833",
+  "birthdate": {
+    "$date": "1974-09-28T00:00:00.000Z"
+  },
+  "address": {
+    "street": "haetrog",
+    "_id": {
+      "$oid": "67010ae3bab4b810762329e6"
+    }
+  },
+  "role": "user",
+  "createdAt": {
+    "$date": "2024-10-05T09:46:11.936Z"
+  }
+}]

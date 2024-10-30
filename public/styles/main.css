@@ -467,10 +467,10 @@ footer {
 }
 
 .currency-dropdown {
-    background-color: none;
-    color: white;
+    background-color: FF6C8E;
     width: 90px;
     border: none;
     font-weight: bold;
+    color: white;
     font-size: 16px;
 }

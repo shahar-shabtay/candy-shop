@@ -783,4 +783,54 @@ function saveStore(storeId) {
     });
 }
 
+async function submitStore() {
+    // Get form data
+    let name = document.getElementById('name').value;
+    let address = document.getElementById('address').value;
+    let coordinates = document.getElementById('coordinates').value
+                        .split(',')
+                        .map(coord => parseFloat(coord.trim()));
+    console.log(coordinates)
+    let storeId = new Date().getTime().toString();
+
+    // Construct the store object
+    let store = {
+        name: name,
+        address: address,
+        coordinates: coordinates,
+        storeId: storeId
+    };
+
+    // Disable submit button to prevent duplicate submissions
+    const submitButton = document.getElementById('submitButton');
+    submitButton.disabled = true;
+
+    // Prepare fetch options
+    const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(store),
+        credentials: 'same-origin'
+    };
+
+    try {
+        // Make fetch request
+        const response = await fetch('/personal/admin/addStores', requestOptions);
+
+        if (response.ok) {
+            // If store creation succeeded, redirect to stores page
+            window.location.href = '/personal/admin/stores';
+        } else {
+            // Log error
+            console.error(`Error ${response.status}: ${response.statusText}`);
+        }
+    } catch (error) {
+        console.log('Error:', error);
+        alert('Error: ' + error);
+        submitButton.disabled = false;  // Enable the button again
+    }
+}
+
+
+
 

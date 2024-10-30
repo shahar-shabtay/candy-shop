@@ -75,8 +75,8 @@
                         <button class="menu-option" onclick="window.location.href='/personal/admin/orders'">All Orders</button>
                         <button class="menu-option" onclick="window.location.href='/personal/admin/products'">All Products</button>
                         <button class="menu-option" onclick="window.location.href='/personal/admin/addProducts'">Add Product</button>
-                        <button class="menu-option active" onclick="window.location.href='/personal/admin/addStores'">Add Store</button>
                         <button class="menu-option" onclick="window.location.href='/personal/admin/stores'">All Stores</button>
+                        <button class="menu-option active" onclick="window.location.href='/personal/admin/addStores'">Add Store</button>
                         <button class="menu-option" onclick="window.location.href='/personal/admin/facebookInfo'">Facebook Info</button>
                     </div>
                     <!-- Account Details -->
@@ -87,16 +87,10 @@
                                     <!-- Form Card -->
                                     <div class="admin-card">
                                         <form id="storeForm">
-                                            <div class="input-group">
-                                                <input type="text" id="name" name="name" placeholder="Store Name" required>
-                                            </div>
-                                            <div class="input-group">
-                                                <input type="text" id="address" name="address" placeholder="Store Address" required>
-                                            </div>
-                                            <div class="input-group">
-                                                <input type="text" id="coordinates" name="coordinates" placeholder="Store Coordinates (Format: Latitude,Longitude)" required>
-                                            </div>
-                                            <button id="submitButton" type="submit" onClick="submitStore()">Create Store</button>
+                                            <input type="text" id="name" name="name" placeholder="Store Name" required/>
+                                            <input type="text" id="address" name="address" placeholder="Store Address" required/>
+                                            <input type="text" id="coordinates" name="coordinates" placeholder="Coordinates (Format: lat,long)" required/>
+                                            <button type="button" id="submitButton" onclick="submitStore()">Submit</button>
                                         </form>
                                     </div>
                                     <div id="success-alert" class="custom-alert hidden">
@@ -141,6 +135,8 @@
             </div>
         </footer>       
         <script src="/public/js/personal.js"></script>
-        <script src="/public/js/addStore.js"></script>
+        <script>
+            console.log('Script is running');  // Add this line
+            </script>
     </body>
 </html>

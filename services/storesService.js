@@ -25,9 +25,21 @@ async function updateStoreDetails(storeId, updateStore) {
     }
 }
 
+async function createStore(storeData) {
+    try {
+        // Create a new store using the Stores model and the provided store data
+        const store = new Stores(storeData);
+        return await store.save(); // Save the store to the database
+    } catch (err) {
+        console.error('Error creating store:', err);
+        throw err; // Rethrow the error to be handled in the controller
+    }
+}
+
 
 module.exports = {
     getAllStores,
-    updateStoreDetails
+    updateStoreDetails, 
+    createStore
   };
   

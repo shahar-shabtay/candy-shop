@@ -50,11 +50,15 @@ function addToCart(button) {
             quantity: quantity
         })
     })
-    .then(response => {
-        if (response.ok) {
-            showSuccessAlert('cart-alert');
-
+    .then(response => response.json())
+    .then(data => {
+        if (data.message === 'Product added to cart') {
+            showSuccessAlert('add-cart-alert');
+        } else if (data.message === 'Product is already in the cart') {
+            showSuccessAlert('exe-cart-alert');
         }
-    });
+    })
+    .catch(error => console.error('Error:', error));
 }
+
 

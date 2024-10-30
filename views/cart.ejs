@@ -15,67 +15,75 @@
             <!-- Cart Items -->
             <div class="cart-container" style="flex: 2; padding: 20px; background-color: white;">
                 <!-- List of cart items -->
-                <% cart.forEach(function(item) { %>
-                <div class="cart-item <%= item.inventory === 0 ? 'sold-out' : '' %>" data-inventory="<%= item.inventory %>" id="cart-item-<%= item.productId %>"  data-product-id="<%= item.productId %>">
-                    <!-- Product Image -->
-                    <div class="product-image">
-                        <% if (item.inventory === 0) { %>
-                            <span class="stock-banner out-of-stock">Sold Out</span>
-                        <% } else if (item.inventory <= 5) { %>
-                            <span class="stock-banner"><%= item.inventory %> left</span>
-                        <% } %>
-                        
-                        <img src="<%= item.imageUrl %>" alt="<%= item.name %>">
+                <% if (cart.length === 0) { %>
+                    <div class="empty-cart-message" style="text-align: center; font-size: 24px; margin: 20px 0;">
+                        Your cart is empty, come on, go shopping!
+                        <a href="/products" class="shop-now-button" style="display: inline-block; margin-top: 10px; color: blue; text-decoration: none;">Shop Now</a>
                     </div>
-        
-                    <!-- Product Details -->
-                    <div class="cart-product-details" style="flex-grow: 2; margin-right: 20px;">
-                        <a href="/products/<%= item.productId %>" class="product-link">
-                            <div class="cart-product-name" style="font-weight: bold; margin-bottom: 5px;">
-                            <%= item.name %> | <%= item.description || 'No description available.' %>
-                            </div>
-                            <div class="cart-product-price">
-                                <% let price = item.price; %>
+                <% } else { %>
+                    <% cart.forEach(function(item) { %>
+                    <div class="cart-item <%= item.inventory === 0 ? 'sold-out' : '' %>" data-inventory="<%= item.inventory %>" id="cart-item-<%= item.productId %>"  data-product-id="<%= item.productId %>">
+                        <!-- Product Image -->
+                        <div class="product-image">
+                            <% if (item.inventory === 0) { %>
+                                <span class="stock-banner out-of-stock">Sold Out</span>
+                            <% } else if (item.inventory <= 5) { %>
+                                <span class="stock-banner"><%= item.inventory %> left</span>
+                            <% } %>
+                            
+                            <img src="<%= item.imageUrl %>" alt="<%= item.name %>">
+                        </div>
+            
+                        <!-- Product Details -->
+                        <div class="cart-product-details" style="flex-grow: 2; margin-right: 20px;">
+                            <a href="/products/<%= item.productId %>" class="product-link">
+                                <div class="cart-product-name" style="font-weight: bold; margin-bottom: 5px;">
+                                <%= item.name %> | <%= item.description || 'No description available.' %>
+                                </div>
+                                <div class="cart-product-price">
+                                    <% let price = item.price; %>
+                                    <% if (currency === 'USD' && rates['USD']) { %>
+                                    <%= (price * rates['USD']).toFixed(2) %> $
+                                    <% } else if (currency === 'EUR' && rates['EUR']) { %>
+                                    <%= (price * rates['EUR']).toFixed(2) %> €
+                                    <% } else { %>
+                                    <%= price %> ₪
+                                    <% } %>
+                                </div><br>
+                            </a>
+                            <!-- Quantity Selector and Update -->
+                            <form action="/cart/update" method="POST">
+                                <input type="hidden" name="productId" value="<%= item.productId %>">
+                                <input class="quantity" type="number" name="quantity" min="1" max="<%= item.inventory %>" value="<%= item.quantity %>" <%= item.inventory === 0 ? 'disabled' : '' %>>
+                                <button class="update-button" type="submit" <%= item.inventory === 0 ? 'disabled' : '' %>>Update</button>
+                            </form>
+                        </div>
+            
+                        <!-- Price -->
+                        <div class="price" style="font-size: 18px; text-align: right;">
+                            <% let subTotalPrice = (item.price * item.quantity).toFixed(2); %>
+                            <span class="price">
                                 <% if (currency === 'USD' && rates['USD']) { %>
-                                <%= (price * rates['USD']).toFixed(2) %> $
+                                <%= (subTotalPrice * rates['USD']).toFixed(2) %> $
                                 <% } else if (currency === 'EUR' && rates['EUR']) { %>
-                                <%= (price * rates['EUR']).toFixed(2) %> €
+                                <%= (subTotalPrice * rates['EUR']).toFixed(2) %> €
                                 <% } else { %>
-                                <%= price %> ₪
-                                <% } %>
-                            </div><br>
-                        </a>
-                        <!-- Quantity Selector and Update -->
-                        <form action="/cart/update" method="POST">
+                                <%= subTotalPrice %> ₪
+                                <% } %>   
+                            </span>
+                        </div>
+            
+                        <!-- Remove Product Button -->
+                        <form action="/cart/remove" method="POST" style="align-self: center;">
                             <input type="hidden" name="productId" value="<%= item.productId %>">
-                            <input class="quantity" type="number" name="quantity" min="1" max="<%= item.inventory %>" value="<%= item.quantity %>" <%= item.inventory === 0 ? 'disabled' : '' %>>
-                            <button class="update-button" type="submit" <%= item.inventory === 0 ? 'disabled' : '' %>>Update</button>
+                            <button class="remove-button" style="background: none; border: none; cursor: pointer;">
+                                <i class="fas fa-times" style="color: red; font-size: 24px;"></i>
+                            </button>
                         </form>
                     </div>
-        
-                    <!-- Price -->
-                    <div class="price" style="font-size: 18px; text-align: right;">
-                        <% let subTotalPrice = (item.price * item.quantity).toFixed(2); %>
-                        <span class="price">
-                            <% if (currency === 'USD' && rates['USD']) { %>
-                            <%= (subTotalPrice * rates['USD']).toFixed(2) %> $
-                            <% } else if (currency === 'EUR' && rates['EUR']) { %>
-                            <%= (subTotalPrice * rates['EUR']).toFixed(2) %> €
-                            <% } else { %>
-                            <%= subTotalPrice %> ₪
-                            <% } %>   
-                        </span>
-                    </div>
-        
-                    <!-- Remove Product Button -->
-                    <form action="/cart/remove" method="POST" style="align-self: center;">
-                        <input type="hidden" name="productId" value="<%= item.productId %>">
-                        <button class="remove-button" style="background: none; border: none; cursor: pointer;">
-                            <i class="fas fa-times" style="color: red; font-size: 24px;"></i>
-                        </button>
-                    </form>
-                </div>
-                <% }); %>
+                    <% }); %>
+                <% } %>
+
             </div>
         
             <!-- Order Summary Section -->

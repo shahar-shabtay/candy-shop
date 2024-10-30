@@ -54,11 +54,38 @@ async function updateCustomerDetails(customerId, updateUser) {
     }
 }
 
+async function getCustomerCart(customerId) {
+    try {
+        const customer = await Customer.findOne({ customerId: customerId }).select('cart');
+        return customer ? customer.cart : [];
+    } catch(err) {
+        console.error(err);
+        return [];
+    }
+}
+
+async function updateCustomerCart(customerId, updateCart) {
+    try {
+        const updatedCustomer = await Customer.findOneAndUpdate(
+            { customerId: customerId },
+            { $set: { cart: updateCart } },
+            { new: true }
+        ).select('cart'); // מחזיר רק את שדה 'cart'
+        
+        return updatedCustomer;
+    } catch(err) {
+        console.error(err);
+    }
+}
+
+
 module.exports = {
     getAllCustomers,
     getUserRoleByCustomerId,
     getCustomerByEmail,
     getCustomerById,
-    updateCustomerDetails
+    updateCustomerDetails,
+    getCustomerCart,
+    updateCustomerCart
   };
   

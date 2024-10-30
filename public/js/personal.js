@@ -729,4 +729,120 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
+//---------------
+// All Stores    |
+//---------------
+
+function toggleEditModeStore(storeId) {
+    const storeRow = document.querySelector(`tr[data-id="${storeId}"]`);
+    const editButton = storeRow.querySelector('.edit-btn-store');
+    const saveButton = storeRow.querySelector('.save-btn-store');
+
+    // Toggle visibility: Hide edit button, show save button
+    editButton.style.display = 'none';
+    saveButton.style.display = 'inline-block';
+
+    // Enable inputs
+    const inputs = storeRow.querySelectorAll('.store-input');
+    inputs.forEach(input => {
+        input.removeAttribute('readonly');
+        input.classList.add('editable');
+    });
+
+    // Add background color to row in edit mode
+    storeRow.classList.add('edit-mode');
+}
+
+function saveStore(storeId) {
+    const storeRow = document.querySelector(`tr[data-id="${storeId}"]`);
+    const editButton = storeRow.querySelector('.edit-btn-store');
+    const saveButton = storeRow.querySelector('.save-btn-store');
+
+    // Toggle visibility: Show edit button, hide save button
+    editButton.style.display = 'inline-block';
+    saveButton.style.display = 'none';
+
+    const inputs = storeRow.querySelectorAll('.store-input');
+    const storeData = {};
+
+    inputs.forEach(input => {
+        if (input.name === 'coordinates') {
+            storeData[input.name] = input.value.split(',').map(Number);
+        } else {
+            storeData[input.name] = input.value;
+        }
+        input.setAttribute('readonly', 'true');
+        input.classList.remove('editable');
+    });
+
+    fetch(`/personal/admin/stores/update/${storeId}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(storeData),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            storeRow.classList.remove('edit-mode');
+        } else {
+            console.error('Error updating store:', data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error with the server request:', error);
+    });
+}
+
+async function submitStore() {
+    // Get form data
+    let name = document.getElementById('name').value;
+    let address = document.getElementById('address').value;
+    let coordinates = document.getElementById('coordinates').value
+                        .split(',')
+                        .map(coord => parseFloat(coord.trim()));
+    console.log(coordinates)
+    let storeId = new Date().getTime().toString();
+
+    // Construct the store object
+    let store = {
+        name: name,
+        address: address,
+        coordinates: coordinates,
+        storeId: storeId
+    };
+
+    // Disable submit button to prevent duplicate submissions
+    const submitButton = document.getElementById('submitButton');
+    submitButton.disabled = true;
+
+    // Prepare fetch options
+    const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(store),
+        credentials: 'same-origin'
+    };
+
+    try {
+        // Make fetch request
+        const response = await fetch('/personal/admin/addStores', requestOptions);
+
+        if (response.ok) {
+            // If store creation succeeded, redirect to stores page
+            window.location.href = '/personal/admin/stores';
+        } else {
+            // Log error
+            console.error(`Error ${response.status}: ${response.statusText}`);
+        }
+    } catch (error) {
+        console.log('Error:', error);
+        alert('Error: ' + error);
+        submitButton.disabled = false;  // Enable the button again
+    }
+}
+
+
+
 

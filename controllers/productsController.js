@@ -4,7 +4,7 @@ const favoriteService = require('../services/favoriteService');
 const facebookPostService = require('../services/facebookPostService.js');
 const multer = require('multer');
 const path = require('path');
-
+const fs = require('fs');
 
 async function getAllProducts (req, res) {
 	const user = req.session.user;
@@ -13,9 +13,10 @@ async function getAllProducts (req, res) {
 	}
 	try {
 		const email = user.email;
-		const customer = await customerService.getCustomerByEmail(email);
+        const currency = req.session.currency || 'ILS';
+        const rates = req.session.rates || {};
 		const products = await productsService.getAllProducts();
-		res.render('productsList', { products,user, customer}); 
+		res.render('productsList', { products,user,currency,rates}); 
 	} catch (err) {
 		console.error('Error getting products:', err);
 		res.status(500).send('Server Error (productsController - getAllProducts)');
@@ -25,7 +26,6 @@ async function getAllProducts (req, res) {
 
 async function addProduct(req, res) {
     const productId = Math.floor(Math.random() * 10000000);
-    console.log('Controller: addProduct called');
 
     try {
         // Get the next product ID
@@ -38,7 +38,6 @@ async function addProduct(req, res) {
             },
             filename: function (req, file, cb) {
                 const fileName = `product_${productId}.svg`;
-                console.log('Filename generated:', fileName); // Debug: Check filename
                 cb(null, fileName); // Save the file with the generated productId filename
             }
         });
@@ -54,12 +53,31 @@ async function addProduct(req, res) {
 
             
             // Proceed with product creation after file is uploaded
-            const { name, price, inventory, description, category, postToFacebook} = req.body;
-            console.log('Received form data:', { name, price, inventory });
+            const { name, price, inventory, description, category, postToFacebook, sweetType, kosher} = req.body;
+            const flavorsData = req.body.flavors || '[]'; // Default to an empty array if flavors are missing
+            let flavors = [];
+
+            const allergansData = req.body.allergans || '[]'; // Default to an empty array if allergans are missing
+            let allergans = [];
+
+            //flavors array
+            try {
+                flavors = JSON.parse(flavorsData); // Convert the JSON string back to an array
+            } catch (error) {
+                console.error('Failed to parse flavors:', error);
+                return res.status(400).json({ error: 'Invalid flavors data' });
+            }
+
+            //allergans array
+            try {
+                allergans = JSON.parse(allergansData); // Convert the JSON string back to an array
+            } catch (error) {
+                console.error('Failed to parse allergans:', error);
+                return res.status(400).json({ error: 'Invalid allergans data' });
+            }
 
             // Use 'imageUrl' instead of 'image' to match the Mongoose schema
             const imageUrl = `/public/images/product_${productId}.svg`;
-            console.log('Uploaded file path:', imageUrl);
 
             // Create product data object
             const productData = {
@@ -68,23 +86,24 @@ async function addProduct(req, res) {
                 price,                   // Product price from form data
                 inventory,             // Product inventory from form data
                 description,
-                category,
+                flavors,
+                allergans,
+                sweetType,
+                kosher,
                 imageUrl                 // Save the file path to the imageUrl field
             };
 
             // Check if postToFacebook is checked and post to Facebook
             if (postToFacebook === 'on') { // Checkbox value is 'on' when checked
-                const productUrl = `www.${name}`; // Use the product name as part of the URL
+                const productUrl = `localhost:3000/products/${productId}`; // Use the product name as part of the URL
                 try {
                     await facebookPostService.postMessageToFacebook(`Check out our new product: ${name} for just $${price}!`, productUrl);
-                    console.log('Posted to Facebook successfully.');
                 } catch (error) {
                     console.error('Error posting to Facebook:', error);
                 }
             }
             // Pass the data to the service to insert into the database
             const newProduct = await productsService.createProduct(productData);
-            console.log('Product created successfully:', newProduct);
             return res.json({ success: true, product: newProduct });
         });
     } catch (error) {
@@ -93,7 +112,6 @@ async function addProduct(req, res) {
     }
 }
 
-
 async function showDeleteProductForm (req, res) {
     res.render('deleteProduct', { error: null, productId: '' });
 };
@@ -101,7 +119,35 @@ async function showDeleteProductForm (req, res) {
 async function deleteProduct(req, res) {
     try {
         const { productId } = req.params;
+
+        // Fetch the product details to get the image name/path
+        const product = await productsService.getProductById(productId);
+        if (!product) {
+            return res.status(404).json({ message: 'Product not found.' });
+        }
+
+        // Construct the path to the product image
+        const imagePath = path.join(__dirname, '../public/images', `product_${productId}.svg`);
+
+        // Log the image path for debugging
+
+        // Check if the image file exists
+        if (fs.existsSync(imagePath)) {
+            // Delete the product image
+            fs.unlink(imagePath, (err) => {
+                if (err) {
+                    console.error('Error deleting product image:', err);
+                } else {
+                    console.log('Product image deleted successfully.');
+                }
+            });
+        } else {
+            console.warn('Product image not found at path:', imagePath);
+        }
+
+        // Delete the product from the database
         await productsService.deleteProduct(productId);
+
         res.status(200).json({ message: 'Product deleted successfully.' });
     } catch (error) {
         console.error('Error deleting product:', error);
@@ -142,13 +188,11 @@ async function removeFavoriteProduct (req,res) {
 }
 
 async function editProducts (req,res) {
-	console.log('edit button called');
 	const { productId } = req.params; // Get product ID from URL
     const { name, price, description, inventory } = req.body; // Get updated data from the request body
 
     try {
         // Call the service to update the product
-		console.log(name, price, description, inventory);
 		
         const updateData = { productId, name, price, description, inventory };
 		const updatedProduct = await productsService.saveProduct(productId, updateData);
@@ -158,23 +202,6 @@ async function editProducts (req,res) {
     } catch (error) {
         console.error('Error updating product:', error);
         return res.json({ success: false, message: 'Error updating product' });
-    }
-}
-// Async function to read kosher data from the products collection
-async function getKosherData(req, res) {
-    try {
-        // Count the number of kosher and non-kosher products
-        const kosherCount = await Product.countDocuments({ kosher: "Yes" });
-        const nonKosherCount = await Product.countDocuments({ kosher: "No" });
-
-        // Return the counts in the response
-        res.status(200).json({
-            kosher: kosherCount,
-            nonKosher: nonKosherCount
-        });
-    } catch (error) {
-        console.error("Error fetching kosher data:", error);
-        res.status(500).json({ error: "Internal server error" });
     }
 }
 

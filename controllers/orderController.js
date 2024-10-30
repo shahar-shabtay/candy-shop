@@ -8,7 +8,20 @@ async function getAllOrders(req, res) {
     try {
         const user = req.session.user;  // Assume customerId is available in the session
         const orders = await orderService.getAllOrders();
-        res.render('allOrders', { orders, user}); // Render the view and pass customers
+        const currency = req.session.currency || 'ILS';
+        const rates = req.session.rates || {};
+        orders.forEach(order => {
+            if (order.createdAt) {
+                const date = new Date(order.createdAt);
+                const day = String(date.getDate()).padStart(2, '0');
+                const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+                const year = date.getFullYear();
+                order.createdAtFormatted = `${day}/${month}/${year}`;
+            } else {
+                order.createdAtFormatted = 'N/A';
+            }
+        });
+        res.render('allOrders', { orders, user, currency, rates}); // Render the view and pass customers
     } catch (err) {
         console.error('Error fetching customers:', err);
         res.status(500).send('Server Error (adminController - getAllOrders)');
@@ -19,7 +32,24 @@ async function getCustomerOrders (req, res) {
     try {
         const user = req.session.user;
         const orders = await orderService.getCustomerOrders(user.customerId);
-        res.render('customerOrders', {orders, user});
+        const currency = req.session.currency || 'ILS';
+        const rates = req.session.rates || {};
+        if(user){
+            orders.forEach(order => {
+                if (order.createdAt) {
+                    const date = new Date(order.createdAt);
+                    const day = String(date.getDate()).padStart(2, '0');
+                    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+                    const year = date.getFullYear();
+                    order.createdAtFormatted = `${day}/${month}/${year}`;
+                } else {
+                    order.createdAtFormatted = 'N/A';
+                }
+            });
+            res.render('customerOrders', {orders, user, currency, rates});
+        } else {
+            res.render('notLogin');
+        }
     } catch (err) {
         res.status(500).send('Error fetching orders');
     }
@@ -29,10 +59,11 @@ async function getCustomerOrderDetailsById (req, res) {
   try {
         const user = req.session.user;
         const orderId = req.params.orderId; // Get orderId from the request
-    
+        const currency = req.session.currency || 'ILS';
+        const rates = req.session.rates || {};
+
         // Fetch the order from the service
         const order = await orderService.getOrderById(orderId);
-        console.log(order);
         if (!order) {
             return res.status(404).json({ message: 'Order not found' });
         }
@@ -77,13 +108,9 @@ async function getCustomerOrderDetailsById (req, res) {
                 address: order.address,
                 products: fullProductDetails,
             },
-            customerDetails: {
-                name: customer.name,
-                email: customer.email,
-                phone: customer.phone,
-                address: customer.address,
-            },
-          user: user, // Pass the user from the session
+          user: user, 
+          currency: currency,
+          rates: rates,
       });
   } catch (error) {
       console.error(error);
@@ -91,15 +118,15 @@ async function getCustomerOrderDetailsById (req, res) {
   }
 }
 
-
 async function getOrderDetailsById (req, res) {
     try {
         const user = req.session.user;
         const orderId = req.params.orderId; // Get orderId from the request
-    
+        const currency = req.session.currency || 'ILS';
+        const rates = req.session.rates || {};
+
         // Fetch the order from the service
         const order = await orderService.getOrderById(orderId);
-        console.log(order);
         if (!order) {
           return res.status(404).json({ message: 'Order not found' });
         }
@@ -130,7 +157,6 @@ async function getOrderDetailsById (req, res) {
     
         // Retrieve user from the session
         
-        console.log(order.status);
         // Pass the data to the view
         res.render('orderDetails', {
           orderDetails: {
@@ -142,13 +168,9 @@ async function getOrderDetailsById (req, res) {
             address: order.address,
             products: fullProductDetails,
           },
-          customerDetails: {
-            name: customer.name,
-            email: customer.email,
-            phone: customer.phone,
-            address: customer.address,
-        },  
-          user: user, // Pass the user from the session
+          user: user,
+          currency: currency,
+          rates: rates, // Pass the user from the session
         });
       } catch (error) {
         console.error(error);
@@ -158,12 +180,8 @@ async function getOrderDetailsById (req, res) {
 
 async function updateOrderStatus(req,res) {
     try {
-        console.log('UpdateOrderStatus called');
-        console.log('Request Params:', req.params);
-        console.log('Request Body:', req.body);
         const orderId = req.params.orderId;
         const { newStatus } = req.body;
-        console.log(orderId, newStatus);
         // Validate status (you may want to have valid statuses)
         const validStatuses = ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'];
         if (!validStatuses.includes(newStatus)) {
@@ -172,7 +190,6 @@ async function updateOrderStatus(req,res) {
 
         // Call the service to update the status
         const updatedOrder = await orderService.updateOrderStatus(orderId, newStatus);
-        console.log(updatedOrder);
         if (updatedOrder) {
             return res.status(200).json({ success: true, order: updatedOrder });
         } else {
@@ -186,9 +203,8 @@ async function updateOrderStatus(req,res) {
 
 async function deleteOrder (req, res) {
     try {
-        const orderId = req.body.orderId;
+        const orderId = req.params;
         const wasRemoved = await orderService.deleteOrder(orderId);
-        console.log(orderId);
 		if (wasRemoved) {
 			res.status(200).json({ message: 'order removed' }); // Respond with success
 		} else {

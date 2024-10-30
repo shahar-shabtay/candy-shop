@@ -5,7 +5,8 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const path = require('path');
 const app = express();
-const session = require("express-session");
+const session = require('express-session');
+
 
 // Routes
 const productsRoutes = require('./routes/productsRoutes.js');
@@ -14,8 +15,17 @@ const registerRoutes = require('./routes/registerRoutes.js');
 const adminRoute = require('./routes/adminRoute.js');
 const nearMeRoutes = require('./routes/nearMeRoutes');
 const cartRoutes = require('./routes/cartRoutes');
+const searchRoutes = require('./routes/searchRoute.js');
 
 
+// Create session
+app.use(
+  session({
+    secret: "wusha",
+    saveUninitialized: false,
+    resave: false
+  })
+);
 
 // Connect to MongoDB
 mongoose.connect('mongodb://localhost:27017/candyShop', {
@@ -25,14 +35,7 @@ mongoose.connect('mongodb://localhost:27017/candyShop', {
 .then(() => console.log('MongoDB connected successfully'))
 .catch(err => console.error('MongoDB connection error:', err));
 
-// Create session
-app.use(
-  session({
-    secret: "wusha",
-    saveUninitialized: false,
-    resave: false,
-  })
-);
+
 
 // Middleware
 app.use(express.json());
@@ -56,6 +59,7 @@ app.use('/personal',adminRoute);
 app.use('/nearMe', nearMeRoutes)
 app.use('/', loginRoutes);
 app.use('/cart', cartRoutes);
+app.use('/', searchRoutes);
 
 
 // Start the server

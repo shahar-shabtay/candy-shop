@@ -61,14 +61,12 @@ async function getOrderById(orderId) {
 
 async function updateOrderStatus (orderId, newStatus) {
   try {
-    console.log('in the service', orderId, newStatus);
     // Find the order by ID and update the status
     const updatedOrder = await Orders.findOneAndUpdate(
         {orderId :orderId}, 
         { status: newStatus }, 
         { new: true } // Returns the updated order
     );
-    console.log(updatedOrder);
     return updatedOrder;
 } catch (error) {
     console.error(error);
@@ -78,7 +76,6 @@ async function updateOrderStatus (orderId, newStatus) {
 
 async function deleteOrder(orderId) {
   try {
-    console.log('service', orderId);
     const result = await Orders.deleteOne({ 
       orderId: orderId  ,
     }); 
@@ -91,7 +88,6 @@ async function deleteOrder(orderId) {
 
 async function createOrder(orderDetails) {
   // Debugging: Check if products are correctly passed
-  console.log(orderDetails);
   const order = new Orders(orderDetails);
   return await order.save();
 }

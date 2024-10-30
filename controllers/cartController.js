@@ -1,12 +1,12 @@
 const productsService = require("../services/productsService.js");
 const ordersService = require('../services/ordersService');
 const cartService = require('../services/cartService');
+const customerService = require('../services/customerService');
 
 
 // Adds an item to the cart
-function addToCart (req, res, next) {
+function addToCart (req, res) {
     const productId = req.body.productId;
-    console.log(productId);
     const quantity = parseInt(req.body.quantity) || 1;
 
     if(req.session.cart){
@@ -25,6 +25,8 @@ function addToCart (req, res, next) {
 
 // Display the cart
 async function showCart (req, res) {
+    const currency = req.session.currency || 'ILS';
+    const rates = req.session.rates || {};
     let user = req.session.user;
     let cart = req.session.cart;
     let cartDetails = [];
@@ -42,12 +44,11 @@ async function showCart (req, res) {
     }
 
     totalPrice = totalPrice.toFixed(2);
-    res.render("cart", { cart: cartDetails, total: totalPrice, user });
+    res.render("cart", { cart: cartDetails, total: totalPrice, user, currency, rates });
 };
 
 // Remvoves item from cart
 function removeFromCart (req, res) {
-    console.log('in cart controller')
     const productId = req.body.productId;
     const cart = req.session.cart;
 
@@ -88,7 +89,7 @@ function updateCart(req, res) {
 
 // Checkout
 async function checkout (req, res) {
-    const customerId = req.session.user.customerId;
+    const user = req.session.user;
     const cart = req.session.cart;
     let orderProducts = [];
     let totalPrice = 0;
@@ -106,35 +107,29 @@ async function checkout (req, res) {
             }
         }
     }
+
     totalPrice = totalPrice.toFixed(2);
-    
+    const address = req.body.address;
     let orderData = {
         orderId: Math.floor(Math.random() * 10000000),
-        customerId: customerId,
+        customerId: req.session.user.customerId,
         orderDate: new Date(),
         totalPrice: totalPrice,
         status: "Pending",
-        products: orderProducts
+        products: orderProducts,
+        address: address,
     };
-
     try {
         const order = await ordersService.createOrder(orderData);
-        const cart = [];
-        res.render('cart', cart);
+        req.session.cart = [];
+        res.status(201).json({ success: true, message: 'Order placed successfully.' });
     } catch (error) {
         console.log(error);
-        res.redirect('/cart');
+        res.status(500).json({ success: false, message: 'Failed to place order.' });
     }
 }
 
-
-
-function completePurchase (req, res) {
-    res.redirect('/products');
-}
-
-
-const updateCartQuantity = async (req, res) => {
+async function updateCartQuantity(req, res) {
     try {
         const { productId, quantity } = req.body;
 
@@ -159,14 +154,11 @@ const updateCartQuantity = async (req, res) => {
     }
 };
 
-
-
 module.exports = {
     addToCart,
     showCart,
     removeFromCart,
     checkout,
-    completePurchase,
     updateCart,
     updateCartQuantity
 }

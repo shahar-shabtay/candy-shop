@@ -1,0 +1,44 @@
+[{
+  "_id": {
+    "$oid": "66f18dfbec79e4a4f4ce9f6d"
+  },
+  "name": "Sweet Tooth",
+  "coordinates": [
+    32.0853,
+    34.7818
+  ],
+  "address": "123 Candy St, Tel Aviv, Israel"
+},
+{
+  "_id": {
+    "$oid": "66f18dfbec79e4a4f4ce9f6e"
+  },
+  "name": "Candy Land",
+  "coordinates": [
+    32.0902,
+    34.785
+  ],
+  "address": "456 Sugar Ave, Tel Aviv, Israel"
+},
+{
+  "_id": {
+    "$oid": "66f18dfbec79e4a4f4ce9f6f"
+  },
+  "name": "Chocolate Heaven",
+  "coordinates": [
+    32.0701,
+    34.79
+  ],
+  "address": "789 Chocolate Blvd, Tel Aviv, Israel"
+},
+{
+  "_id": {
+    "$oid": "66f18dfbec79e4a4f4ce9f70"
+  },
+  "name": "Lollipop Palace",
+  "coordinates": [
+    32.0605,
+    34.7803
+  ],
+  "address": "321 Sweet Rd, Tel Aviv, Israel"
+}]

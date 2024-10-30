@@ -10,7 +10,19 @@ const productsSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    category: {
+    flavors: {
+        type: [String],
+        required: true,
+    },
+    allergans: {
+        type: [String],
+        required: true,
+    },
+    sweetType: {
+        type: String,
+        required: true,
+    },
+    kosher: {
         type: String,
         required: true,
     },

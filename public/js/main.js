@@ -1,17 +1,83 @@
 // Side menu
 const hamburgerMenu = document.getElementById('sideMenu-sign');
 const dropdownContent = document.getElementById('sideMenu-content');
+const sideMenuVideos = document.getElementById('sideMenu-videos');
+const videos = document.querySelectorAll('.sideMenu-video');
+const closeButton = document.getElementById('close-button');
+const pageContent = document.getElementById('page-content');
+let currentVideoIndex = 0;
 
-hamburgerMenu.addEventListener('click', () => {
-    // Toggle the active class on the hamburger menu
-    hamburgerMenu.classList.toggle('active');
-    
-    // Toggle the visibility of the dropdown content
-    dropdownContent.classList.toggle('active');
+// Function to play videos
+function playNextVideo() {
+    // Hide all videos first
+    videos.forEach(video => {
+        video.style.display = 'none';
+        video.pause();
+    });
+
+    // Show and play current video
+    if (currentVideoIndex < videos.length) {
+        const currentVideo = videos[currentVideoIndex];
+        currentVideo.style.display = 'block';
+        
+        // Try to play the video
+        const playPromise = currentVideo.play();
+        if (playPromise !== undefined) {
+            playPromise.catch(error => {
+                console.log("Video play error:", error);
+            });
+        }
+
+        // Set up the ended event for the current video
+        currentVideo.onended = () => {
+            currentVideo.style.display = 'none';
+            currentVideoIndex = (currentVideoIndex + 1) % videos.length;
+            playNextVideo();
+        };
+    }
+}
+
+// Initialize the video display
+function initializeVideos() {
+    sideMenuVideos.style.display = 'flex'; // Show the video section
+    playNextVideo(); // Start playing the videos
+}
+
+// Close button event
+closeButton.addEventListener('click', () => {
+    sideMenuVideos.style.display = 'none';
+    videos.forEach(video => {
+        video.pause();
+        video.style.display = 'none';
+    });
+    if (pageContent) {
+        pageContent.classList.add('full-width');
+    }
+});
+if (hamburgerMenu) {
+    hamburgerMenu.addEventListener('click', () => {
+        // Toggle the active class on the hamburger menu
+        hamburgerMenu.classList.toggle('active');
+        
+        // Toggle the visibility of the dropdown content
+        dropdownContent.classList.toggle('active');
+
+        if (dropdownContent.classList.contains('active')) {
+            sideMenuVideos.style.display = 'none'; // Hide videos when menu is active
+        } else {
+            sideMenuVideos.style.display = 'flex'; // Show videos when menu is inactive
+            playNextVideo();
+        }
+    });
+}
+
+// Initialize everything when the page loads
+document.addEventListener('DOMContentLoaded', () => {
+    initializeVideos();
 });
 
 
-// Footer - About Us and Talk to Us
+// Footer -About Us and Talk to Us
 var aboutModal = document.getElementById("aboutModal");
 var talkModal = document.getElementById("talkModal");
 var statisticsModel = document.getElementById("statisticsModel");
@@ -22,26 +88,43 @@ var openstatisticsModel = document.getElementById("openstatisticsModel");
 
 var closeButtons = document.querySelectorAll(".close-button");
 
-openAboutModal.onclick = function(event) {
-    event.preventDefault();
-    aboutModal.style.display = "block";
+if(openAboutModal){
+    openAboutModal.onclick = function(event) {
+        event.preventDefault();
+        aboutModal.style.display = "block";
+    }
 }
 
-openTalkModal.onclick = function(event) {
-    event.preventDefault();
-    talkModal.style.display = "block";
+if(openTalkModal){
+    openTalkModal.onclick = function(event) {
+        event.preventDefault();
+        talkModal.style.display = "block";
+    }
 }
 
-openstatisticsModel.onclick = function(event) {
-    event.preventDefault();
-    statisticsModel.style.display = "block";
+if(openstatisticsModel){
+    openstatisticsModel.onclick = function(event) {
+        event.preventDefault();
+        statisticsModel.style.display = "block";
+    }
 }
 
-closeButtons.forEach(function(button) {
-    button.onclick = function() {
-        button.closest('.modal').style.display = "none";
-    };
-});
+if(closeButtons)
+{
+    closeButtons.forEach(function(button) {
+        button.onclick = function() {
+            document.getElementById('close-button').onclick = function() {
+                const modal = document.querySelector('.modal'); // מוצא את המודל
+                if (modal) {
+                    modal.style.display = "none"; // מסתיר את המודל
+                } else {
+                    console.error("Modal element not found");
+                }
+            };
+            
+        };
+    });
+}
 
 window.onclick = function(event) {
     if (event.target == aboutModal) {
@@ -53,15 +136,4 @@ window.onclick = function(event) {
     }
 }
 
-function showSuccessAlert() {
-    const alertBox = document.getElementById('success-alert');
-    alertBox.classList.remove('hidden');
-    alertBox.classList.add('visible');
-
-    // Hide after 3 seconds
-    setTimeout(() => {
-        alertBox.classList.remove('visible');
-        alertBox.classList.add('hidden');
-    }, 3000);
-}
 

@@ -1,12 +1,9 @@
 const customerService = require('../services/customerService');
 const productService = require('../services/productsService');
 const favoriteService = require('../services/favoriteService');
-const orderService = require('../services/ordersService');
 const facebookInfoService = require('../services/facebookInfoService');
 const facebookPostService = require('../services/facebookPostService');
-const multer = require('multer');
-const path = require('path');
-const mongoose = require("mongoose");
+
 
 
 // Helper function to convert address object to a string
@@ -18,6 +15,7 @@ function formatAddress(address) {
 // Render personal area - myAccount / admin
 async function renderAdminPage(req, res) {
     try {
+        const currency = req.session.currency;
         const customerId = req.session.user.customerId;  // Assume customerId is available in the session
         const user = await customerService.getCustomerById(customerId);  // Search by customerId
         const customers = await customerService.getAllCustomers();  // Search by customerId
@@ -28,9 +26,9 @@ async function renderAdminPage(req, res) {
         user.formattedAddress = formatAddress(user.address);
         if(role === 'admin')
         {
-            res.render('allCustomers', {customers, user});
-        } else {
-            res.render('accessDenied', {customers, user});
+            res.render('allCustomers', {customers, user, currency});
+        } else if(role == 'user') {
+            res.render('accessDenied', {user});
         }
     } catch (err) {
         res.render('notLogin');
@@ -40,11 +38,18 @@ async function renderAdminPage(req, res) {
 
 async function getFacebookPageInfo(req, res) {
     try {
+        const currency = req.session.currency;
         const user = req.session.user;  // Get the user from the session
         const facebookData = await facebookInfoService.getFacebookPageInfo(); // Fetch Facebook stats
-
+        const role = user.role;
         // Render the facebookInfo.ejs view and pass the facebookData and user
-        res.render('facebookInfo', { facebookData, user });
+        if(role === 'admin')
+        {
+            res.render('facebookInfo', { facebookData, user , currency});
+        } else if(role == 'user') {
+            res.render('accessDenied', {user});
+        }
+        
     } catch (err) {
         console.error('Error fetching Facebook page info:', err);
         res.status(500).send('Server Error - fetching Facebook page info');
@@ -54,7 +59,14 @@ async function getFacebookPageInfo(req, res) {
 async function renderAccountPage(req, res) {
     try {
         const user = req.session.user;
-        res.render('customerDetails', {user});
+        const currency = req.session.currency;
+        if(user){
+            const currency = req.session.currency;
+            res.render('customerDetails', {user, currency});
+        } else {
+            res.render('notLogin');
+        }
+        
     } catch (err) {
         console.error('Error rendering admin page:', err);
         res.status(500).send('Server Error');
@@ -65,6 +77,7 @@ async function renderAccountPage(req, res) {
 async function updateCustomerDetails(req, res) {
     try {
         const customerId = req.session.user.customerId;
+        const currency = req.session.currency;
         const { 
             name, 
             email, 
@@ -98,36 +111,41 @@ async function updateCustomerDetails(req, res) {
 // Get all about - orders / favorite / customers / products
 async function getAllCustomers(req, res) {
     try {
-        const user = req.session.user;  // Assume customerId is available in the session
-        const customers = await customerService.getAllCustomers(); // Fetch all customers from service
-        const customer = await customerService.getCustomerById(user.customerId);  // Search by customerId
-        res.render('allCustomers', { customers, customer, user}); // Render the view and pass customers
+        const user = req.session.user;
+        const currency = req.session.currency;
+        if(user) {
+             // Assume customerId is available in the session
+            const customers = await customerService.getAllCustomers(); // Fetch all customers from service
+            const customer = await customerService.getCustomerById(user.customerId);  // Search by customerId
+            if(user.role == 'admin') {
+                res.render('allCustomers', { customers, customer, user, currency}); // Render the view and pass customers
+            } else if(user.role == 'user') {
+            res.render('accessDenied', {user});
+        } else {
+            res.render('notLogin');
+        }
+    }
+        
     } catch (err) {
         console.error('Error fetching customers:', err);
         res.status(500).send('Server Error (adminController - getAllCustomers)');
     }
 }
 
-// For specific customer - orders / details / favorite
-async function getFavoriteProducts(req, res) {
-    try {
-        const customerId = req.session.user.customerId; // Fetching customerId from session
-        const favoriteProducts = await favoriteService.getFavoritesByUser(customerId);
-
-        // Render the EJS file and pass favorite products data to it
-        res.render('favorites', { favorites: favoriteProducts });
-    } catch (error) {
-        console.error('Error rendering favorites page:', error);
-        res.status(500).render('error', { message: 'Failed to load favorite products' });
-    }
-}
+// For specific customer - orders / details / favorit
 
 async function getAllProducts(req, res) {
     try {
         const user = req.session.user;
         const customers = await customerService.getAllCustomers();
         const products = await productService.getAllProducts();
-        res.render('allProducts', {customers, products, user});
+        const currency = req.session.currency;
+        const rates = req.session.rates;
+        if(user.role == 'admin') {
+            res.render('allProducts', {customers, products, user, currency, rates});
+        } else if(user.role == 'user') {
+            res.render('accessDenied', {user});
+        }
     } catch (err) {
         console.error('Error fetching products: ', err);
         res.status(500).send('Server Error (adminController - getAllProducts');
@@ -136,12 +154,18 @@ async function getAllProducts(req, res) {
 
 // For specific customer - orders / details / favorite
 async function getFavoriteProducts (req, res) {
-    const customerId = req.session.user.customerId;
     const user = req.session.user;
+    const currency = req.session.currency;
+    const rates = req.session.rates;
 
     try {
-        const favoriteProducts = await favoriteService.getFavoriteProductsByCustomerId(customerId);
-        res.render('favoriteProducts', {favoriteProducts, user});
+        if(user){
+            const favoriteProducts = await favoriteService.getFavoriteProductsByCustomerId(user.customerId);
+            res.render('favoriteProducts', {favoriteProducts, user, currency, rates});
+        } else {
+            res.render('notLogin');
+        }
+        
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -150,8 +174,13 @@ async function getFavoriteProducts (req, res) {
 // Controller to render the add product part
 async function addProductsPage(req, res) {
     try {
-        const user = req.session.user;  // Assume customerId is available in the session
-        res.render('addProducts', {user}); // Render the view and pass customers
+        const user = req.session.user;
+        const currency = req.session.currency;
+        if(user.role == 'admin') {
+            res.render('addProducts', {user, currency});
+        } else if(user.role == 'user') {
+            res.render('accessDenied', {user});
+        }
     } catch (err) {
         console.error('Error fetching customers:', err);
         res.status(500).send('Server Error (adminController - addProducts)');
@@ -206,10 +235,6 @@ async function adminUpdateCustomerDetails(req, res) {
         res.status(500).json({ success: false, message: 'Server error' });
     }
 }
-
-
-
-
 
 module.exports = {
     renderAccountPage,

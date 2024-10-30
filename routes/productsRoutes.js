@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const productsController = require('../controllers/productsController.js');
+const currencyController = require('../controllers/currencyController.js');
+
 
 // Get products list
 router.get('/', productsController.getAllProducts);
@@ -16,6 +18,10 @@ router.post('/delete', productsController.deleteProduct);
 
 // Add new favorite
 router.post('/addFav', productsController.addNewFavorite);
+
+// Set new currency
+router.post('/setCurrency', currencyController.setCurrency);
+
 
 
 module.exports = router;

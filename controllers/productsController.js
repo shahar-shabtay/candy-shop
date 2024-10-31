@@ -25,7 +25,7 @@ async function getAllProducts (req, res) {
 
 
 async function addProduct(req, res) {
-    const productId = Math.floor(Math.random() * 10000000);
+    const productId = new Date().getTime().toString();
 
     try {
         // Get the next product ID

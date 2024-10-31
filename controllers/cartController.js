@@ -164,7 +164,7 @@ async function checkout(req, res) {
         totalPrice = totalPrice.toFixed(2);
         const address = req.body.address;
         let orderData = {
-            orderId: Math.floor(Math.random() * 10000000),
+            orderId: new Date().getTime().toString(),
             customerId: user.customerId,
             orderDate: new Date(),
             totalPrice: totalPrice,

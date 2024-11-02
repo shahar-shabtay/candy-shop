@@ -110,6 +110,7 @@
                                                 <td class="action-td">
                                                     <img class="edit-btn-store edit-btn" src="/public/images/edit.svg" onclick="toggleEditModeStore('<%= store.storeId %>')" style="display:inline-block;">
                                                     <img class="save-btn-store edit-btn" src="/public/images/save.svg" onclick="saveStore('<%= store.storeId %>')" style="display:none;">
+                                                    <img class="remove-product" src="/public/images/trash.svg" data-product-id="<%= store.storeId %>" onclick="deleteStore('<%= store.storeId %>')">
                                                 </td>
                                             </tr>
                                             <% }) %>
@@ -119,6 +120,9 @@
                             <% } else { %>
                                 <p>No stores are available.</p>
                             <% } %> 
+                            <div id="delete-alert" class="custom-alert hidden">
+                                Product Deleted
+                            </div>
                         </div>
                     </div>
                 </div>

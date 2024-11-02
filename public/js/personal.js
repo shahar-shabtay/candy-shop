@@ -831,6 +831,7 @@ async function submitStore() {
 
         if (response.ok) {
             // If store creation succeeded, redirect to stores page
+            showSuccessAlert('success-alert'); // Show success alert
             window.location.href = '/personal/admin/stores';
         } else {
             // Log error
@@ -843,6 +844,30 @@ async function submitStore() {
     }
 }
 
+// Delete store
+async function deleteStore(storeId) {
+    fetch(`/personal/admin/stores/${storeId}/delete`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ storeId: storeId })
+    })
+    .then(response => {
+        return response.json()
+    })
+    .then(data => {
+        if (data.success) {
+            document.querySelector(`[data-id="${storeId}"]`).remove();
+            showSuccessAlert('delete-alert'); 
+        } else {
+            throw new Error(data.error || 'Unexpected error');
+        }
+    })
+    .catch(error => {
+        alert('Error deleting store: ' + error.message);
+    });
+}
 
 
 

@@ -50,8 +50,22 @@ async function addStore (req, res) {
         .catch(err => res.status(500).send({ error: 'Something went wrong' }));
 }
 
+async function deleteStore (req, res) {
+    const storeId = req.params.storeId;
+  
+    storesService.deleteStoreById(storeId)
+      .then(() => {
+        res.json({ success: true });
+      })
+      .catch(err => {
+        res.status(500).json({ error: err.message });
+      });
+  }
+  
+
 module.exports = {
     getStores,
     updateStoreDetails,
-    addStore
+    addStore,
+    deleteStore
 };

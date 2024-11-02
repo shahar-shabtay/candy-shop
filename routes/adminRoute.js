@@ -34,6 +34,7 @@ router.post('/admin/products/:productId/edit', productsController.editProducts);
 router.post('/admin/products/:productId/delete', productsController.deleteProduct);
 router.post('/admin/addProducts', productsController.addProduct);
 router.post('/admin/addStores', storesController.addStore);
+router.post('/admin/stores/:storeId/delete', storesController.deleteStore);
 
 
 

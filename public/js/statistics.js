@@ -5,10 +5,24 @@ document.addEventListener('DOMContentLoaded', function() {
     const closeButton = modal.querySelector('.close-button');
     let myChart = null;
 
+    // Function to fetch kosher data from the server
+    async function fetchKosherData() {
+        try {
+            const response = await fetch('/kosherData');  // Adjust the route if necessary
+            if (!response.ok) throw new Error('Failed to fetch kosher data');
+            
+            const data = await response.json();
+            return [data.kosher, data.nonKosher];  // Array format for chart
+        } catch (error) {
+            console.error('Error:', error);
+            return [0, 0];  // Fallback if error occurs
+        }
+    }
+
     // Function to create the chart
-    function createChart() {
+    async function createChart() {
+        const counts = await fetchKosherData();  // Get dynamic data from fetch
         const labels = ['Kosher', 'Non-Kosher'];
-        const counts = [50, 50];
         const ctx = document.getElementById('candiesChart').getContext('2d');
 
         // Destroy previous chart instance if exists to prevent duplicates
@@ -22,7 +36,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 labels: labels,
                 datasets: [{
                     label: 'Candies by Category',
-                    data: counts,
+                    data: counts,  // Dynamic data from fetchKosherData
                     backgroundColor: [
                         'rgba(75, 192, 192, 0.6)',  // Kosher
                         'rgba(255, 99, 132, 0.6)'   // Non-Kosher

@@ -24,12 +24,17 @@ document.addEventListener('DOMContentLoaded', function() {
         const counts = await fetchKosherData();  // Get dynamic data from fetch
         const labels = ['Kosher', 'Non-Kosher'];
         const ctx = document.getElementById('candiesChart').getContext('2d');
-
-        // Destroy previous chart instance if exists to prevent duplicates
+    
+        // Destroy previous chart instance if it exists to prevent duplicates
         if (myChart) {
-            myChart.destroy();
+            try {
+                myChart.destroy();
+            } catch (error) {
+                console.error('Error destroying previous chart:', error);
+            }
         }
-
+    
+        // Create a new chart instance
         myChart = new Chart(ctx, {
             type: 'pie',
             data: {
@@ -61,7 +66,7 @@ document.addEventListener('DOMContentLoaded', function() {
         modal.style.display = 'block';
 
         // Give the modal some time to be fully rendered, then create the chart
-        setTimeout(createChart, 300);  // Increased timeout to 300ms
+        setTimeout(createChart, 500);  // Increased timeout to 300ms
     });
 
     // Close modal when clicking the close button

@@ -108,6 +108,7 @@ async function updateCustomerDetails(req, res) {
     }
 }
 
+
 // Get all about - orders / favorite / customers / products
 async function getAllCustomers(req, res) {
     try {

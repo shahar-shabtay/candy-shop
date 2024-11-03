@@ -34,17 +34,90 @@ if (togglePassword){
     });
 }
 
-// update user details
-if(document.getElementById('submitButton')){
-    document.getElementById('submitButton').addEventListener('click', function() {
-        showSuccessAlert('myAccount-save-alert');
-        setTimeout(() => {
-            if(document.getElementById('updateForm')){
-                document.getElementById('updateForm').submit();
-            }
-        },3000);
-    })
-};
+document.addEventListener('DOMContentLoaded', () => {
+    const submitButton = document.getElementById('submitButton');
+
+    submitButton.addEventListener('click', function(event) {
+        event.preventDefault(); // Prevent default form submission
+
+        // Get form values
+        const email = document.getElementById('email').value;
+        const phone = document.getElementById('phone').value;
+        const birthDay = document.getElementById('day').value;
+        const birthMonth = document.getElementById('month').value;
+        const birthYear = parseInt(document.getElementById('year').value, 10);
+        const password = document.getElementById('password').value;
+
+        // Validation flags and error message
+        let isValid = true;
+        let errorMessage = '';
+
+        // Email validation
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailPattern.test(email)) {
+            isValid = false;
+            errorMessage += 'Invalid email format.\n';
+        }
+
+        // Phone number validation (assuming format: 050/055/054/058/053/052 + 7 digits)
+        const phonePattern = /^(050|055|054|058|053|052)\d{7}$/;
+        if (!phonePattern.test(phone)) {
+            isValid = false;
+            errorMessage += 'Phone number must start with 050, 055, 054, 058, 053, or 052, followed by 7 digits.\n';
+        }
+
+        // Birth year validation (must be 2014 or earlier)
+        if (birthYear > 2014 || isNaN(birthYear)) {
+            isValid = false;
+            errorMessage += 'Birth year must be 2014 or earlier.\n';
+        }
+
+        // Password validation (minimum 6 characters, English letters and numbers only)
+        const passwordPattern = /^[A-Za-z0-9]{6,}$/;
+        if (!passwordPattern.test(password)) {
+            isValid = false;
+            errorMessage += 'Password must be at least 6 characters and contain only English letters or numbers.\n';
+        }
+
+        if (isValid) {
+            setTimeout(() => {
+                if(document.getElementById('updateForm')){
+                    showSuccessAlert('myAccount-save-alert');
+                    document.getElementById('updateForm').submit();
+                }
+            },3000);
+        } else {
+            // Show error alert if validation fails
+            showAlert(errorMessage);
+        }
+    });
+});
+
+// Function to show custom alert
+function showAlert(message) {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = 'jump-alert';
+    alertDiv.innerHTML = `
+        <span class="close-alert">&times;</span>
+        ${message.replace(/\n/g, '<br>')}
+    `;
+
+    // Append the alert div to the body
+    document.body.appendChild(alertDiv);
+
+    // Close button functionality
+    const closeButton = alertDiv.querySelector('.close-alert');
+    closeButton.addEventListener('click', () => {
+        alertDiv.classList.add('fade-out');
+    });
+
+    // Remove the alert after fade-out transition
+    alertDiv.addEventListener('transitionend', () => {
+        if (alertDiv.classList.contains('fade-out')) {
+            alertDiv.remove();
+        }
+    });
+}
 
 //--------------
 // My Favorite  |
@@ -230,8 +303,6 @@ function saveCustomer(customerId) {
         console.error('Error with the server request:', error);
     });
 }
-
-
 //---------------
 // All Orders    |
 //---------------
@@ -450,7 +521,7 @@ function saveProduct(productId) {
         .then(data => {
             if (data.success) {
                 // Make inputs readonly again after saving
-                showSuccessAlert('save-alert');
+                showSuccessAlert('product-save-alert');
                 // Remove edit-mode class from the product card
                 productCard.classList.remove('edit-mode');
                 const inputs = productCard.querySelectorAll('input');
@@ -458,7 +529,10 @@ function saveProduct(productId) {
                     input.setAttribute('readonly', 'readonly');
                     input.classList.remove('editable');
                 });
-                window.location.reload();
+                setTimeout (() =>{
+                    window.location.reload();
+                }, 2000);
+                
 
 
                 // Hide dropdowns
@@ -786,8 +860,11 @@ function saveStore(storeId) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            showSuccessAlert('save-alert');
-            storeRow.classList.remove('edit-mode');
+            showSuccessAlert('save-store-alert');
+            setTimeout(() =>{
+                storeRow.classList.remove('edit-mode');
+            },2000);
+            
         } else {
             console.error('Error updating store:', data.message);
         }
@@ -833,8 +910,11 @@ async function submitStore() {
 
         if (response.ok) {
             // If store creation succeeded, redirect to stores page
-            showSuccessAlert('save-alert'); // Show success alert
-            window.location.href = '/personal/admin/stores';
+            showSuccessAlert('save-store-alert'); // Show success alert
+            setTimeout(() => {
+                window.location.href = '/personal/admin/stores';
+            },2000);
+            
         } else {
             // Log error
             console.error(`Error ${response.status}: ${response.statusText}`);
@@ -860,7 +940,7 @@ async function deleteStore(storeId) {
     })
     .then(data => {
         if (data.success) {
-            showSuccessAlert('delete-alert'); 
+            showSuccessAlert('delete-store-alert'); 
             document.querySelector(`[data-id="${storeId}"]`).remove();
         } else {
             throw new Error(data.error || 'Unexpected error');

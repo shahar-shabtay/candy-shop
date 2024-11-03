@@ -18,6 +18,8 @@ const cartRoutes = require('./routes/cartRoutes');
 const searchRoutes = require('./routes/searchRoute.js');
 
 
+
+
 // Create session
 app.use(
   session({

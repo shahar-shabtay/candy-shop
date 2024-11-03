@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Function to fetch kosher data from the server
     async function fetchKosherData() {
         try {
-            const response = await fetch('/kosherData');  // Adjust the route if necessary
+            const response = await fetch('/products/kosherData');  // Adjusted route for kosher data
             if (!response.ok) throw new Error('Failed to fetch kosher data');
             
             const data = await response.json();

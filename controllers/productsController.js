@@ -1,6 +1,7 @@
 const productsService = require("../services/productsService.js");
 const customerService = require("../services/customerService.js");
 const favoriteService = require('../services/favoriteService');
+const Products = require("../models/products.js");
 const facebookPostService = require('../services/facebookPostService.js');
 const multer = require('multer');
 const path = require('path');
@@ -208,11 +209,9 @@ async function editProducts (req,res) {
 // Async function to read kosher data from the products collection
 async function getKosherData(req, res) {
     try {
-        // Count the number of kosher and non-kosher products
-        const kosherCount = await Product.countDocuments({ kosher: "Yes" });
-        const nonKosherCount = await Product.countDocuments({ kosher: "No" });
+        const kosherCount = await Products.countDocuments({ kosher: "Yes" });
+        const nonKosherCount = await Products.countDocuments({ kosher: "No" });
 
-        // Return the counts in the response
         res.status(200).json({
             kosher: kosherCount,
             nonKosher: nonKosherCount

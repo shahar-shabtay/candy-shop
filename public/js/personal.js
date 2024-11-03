@@ -7,7 +7,7 @@ function showSuccessAlert(id) {
         setTimeout(() => {
             successAlert.classList.remove('visible');
             successAlert.classList.add('hidden');
-        }, 1000);
+        }, 3000);
     }
 }
 
@@ -37,10 +37,12 @@ if (togglePassword){
 // update user details
 if(document.getElementById('submitButton')){
     document.getElementById('submitButton').addEventListener('click', function() {
-        showSuccessAlert('save-cust-alert');
-        if(document.getElementById('updateForm')){
-            document.getElementById('updateForm').submit();
-        }  // Submit the form
+        showSuccessAlert('myAccount-save-alert');
+        setTimeout(() => {
+            if(document.getElementById('updateForm')){
+                document.getElementById('updateForm').submit();
+            }
+        },3000);
     })
 };
 
@@ -59,9 +61,9 @@ function addToFavorites(productId) {
     })
     .then(response =>{
         if(response.ok) {
+            showSuccessAlert('add-favorite-alert');
             if(document.querySelector(`#favorite-icon-${productId}`)){
                 document.querySelector(`#favorite-icon-${productId}`).classList.add('favorited');
-                showSuccessAlert('favorite-alert');
             }
         }
     })
@@ -262,7 +264,7 @@ function updateOrderStatus(orderId) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            
+            showSuccessAlert('order-status-alert');
             // Disable the <select> dropdown after saving
             const statusSelect = document.getElementById(`orderStatus-${orderId}`);
             statusSelect.disabled = true;
@@ -270,7 +272,6 @@ function updateOrderStatus(orderId) {
             // Reset the buttons: Hide Save, show Edit
             document.getElementById(`saveStatusButton-${orderId}`).style.display = 'none';
             document.getElementById(`editStatusButton-${orderId}`).style.display = 'inline-block';
-            showSuccessAlert('order-status-alert');
         } else {
             alert('Failed to update status');
         }
@@ -333,8 +334,8 @@ function deleteProduct(productId) {
     })
     .then(response => {
         if (response.ok) {
-            document.querySelector(`[data-product-id="${productId}"]`).remove(); // Remove product card from view
             showSuccessAlert('delete-alert');
+            document.querySelector(`[data-product-id="${productId}"]`).remove(); // Remove product card from view
         } else {
             return response.text().then(text => {
                 try {

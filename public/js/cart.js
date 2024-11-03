@@ -42,8 +42,10 @@ function updateCart(itemId, newQuantity) {
     })
     .then(response => {
         if (response.ok) {
-            // Successfully updated cart on server, now update the total price and refresh
-            window.location.reload();
+            showSuccessAlert('update-cart-alert');
+            setTimeout(() => {
+                window.location.reload();
+            }, 3000);
         } else {
             alert('Failed to update cart. Please try again.');
         }
@@ -130,7 +132,7 @@ async function checkoutCart() {
         const data = await response.json();
 
         if (data.success) {
-            showSuccessAlert('order-alert');
+            showSuccessAlert('checkout-alert');
             // Update cart UI to indicate the cart is now empty
             document.querySelector('.cart-container').innerHTML = '<p>Your cart is empty.</p>';
             document.getElementById('total-price').textContent = '0.00';

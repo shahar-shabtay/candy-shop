@@ -28,74 +28,64 @@ async function addProduct(req, res) {
     const productId = new Date().getTime().toString();
 
     try {
-        // Get the next product ID
-        const lastProduct = await productsService.getLastProduct();
-
-        // Multer setup inside the handler
         const storage = multer.diskStorage({
             destination: function (req, file, cb) {
-                cb(null, path.join(__dirname, '../public/images')); // Adjust the path
+                cb(null, path.join(__dirname, '../public/images'));
             },
             filename: function (req, file, cb) {
                 const fileName = `product_${productId}.svg`;
-                cb(null, fileName); // Save the file with the generated productId filename
+                cb(null, fileName);
             }
         });
 
         const upload = multer({ storage: storage }).single('image');
-
-        // Call multer to handle file upload
         upload(req, res, async function (err) {
             if (err) {
                 console.error('Error uploading image:', err);
                 return res.status(500).json({ success: false, message: 'Error uploading image' });
             }
 
-            
-            // Proceed with product creation after file is uploaded
             const { name, price, inventory, description, category, postToFacebook, sweetType, kosher} = req.body;
-            const flavorsData = req.body.flavors || '[]'; // Default to an empty array if flavors are missing
+            const flavorsData = req.body.flavors || '[]';
             let flavors = [];
 
-            const allergansData = req.body.allergans || '[]'; // Default to an empty array if allergans are missing
+            const allergansData = req.body.allergans || '[]';
             let allergans = [];
 
-            //flavors array
+            // Flavores
             try {
-                flavors = JSON.parse(flavorsData); // Convert the JSON string back to an array
+                flavors = JSON.parse(flavorsData);
             } catch (error) {
                 console.error('Failed to parse flavors:', error);
                 return res.status(400).json({ error: 'Invalid flavors data' });
             }
 
-            //allergans array
+            // Allergans
             try {
-                allergans = JSON.parse(allergansData); // Convert the JSON string back to an array
+                allergans = JSON.parse(allergansData);
             } catch (error) {
                 console.error('Failed to parse allergans:', error);
                 return res.status(400).json({ error: 'Invalid allergans data' });
             }
 
-            // Use 'imageUrl' instead of 'image' to match the Mongoose schema
             const imageUrl = `/public/images/product_${productId}.svg`;
 
-            // Create product data object
             const productData = {
-                productId:productId,  // Set the new product ID
-                name,                    // Product name from form data
-                price,                   // Product price from form data
-                inventory,             // Product inventory from form data
+                productId:productId,
+                name,
+                price,
+                inventory,
                 description,
                 flavors,
                 allergans,
                 sweetType,
                 kosher,
-                imageUrl                 // Save the file path to the imageUrl field
+                imageUrl
             };
 
-            // Check if postToFacebook is checked and post to Facebook
-            if (postToFacebook === 'on') { // Checkbox value is 'on' when checked
-                const productUrl = `localhost:3000/products/${productId}`; // Use the product name as part of the URL
+            // PostToFacebook
+            if (postToFacebook === 'on') {
+                const productUrl = `localhost:3000/products/${productId}`;
                 try {
                     await facebookPostService.postMessageToFacebook(`Check out our new product: ${name} for just $${price}!`, productUrl);
                 } catch (error) {

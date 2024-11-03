@@ -785,6 +785,7 @@ function saveStore(storeId) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
+            showSuccessAlert('save-alert');
             storeRow.classList.remove('edit-mode');
         } else {
             console.error('Error updating store:', data.message);
@@ -831,7 +832,7 @@ async function submitStore() {
 
         if (response.ok) {
             // If store creation succeeded, redirect to stores page
-            showSuccessAlert('success-alert'); // Show success alert
+            showSuccessAlert('save-alert'); // Show success alert
             window.location.href = '/personal/admin/stores';
         } else {
             // Log error
@@ -858,8 +859,8 @@ async function deleteStore(storeId) {
     })
     .then(data => {
         if (data.success) {
-            document.querySelector(`[data-id="${storeId}"]`).remove();
             showSuccessAlert('delete-alert'); 
+            document.querySelector(`[data-id="${storeId}"]`).remove();
         } else {
             throw new Error(data.error || 'Unexpected error');
         }

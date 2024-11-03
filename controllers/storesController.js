@@ -2,9 +2,11 @@ const storesService = require('../services/storesService');
 
 async function getStores(req, res) {
     try {
-        const user = req.session.user;  // Assume customerId is available in the session
+        const user = req.session.user;
         const stores = await storesService.getAllStores();
-        res.render('allStores', { stores: stores , user});
+        const currency = req.session.currency;
+        const rates = req.session.rates;
+        res.render('allStores', { stores: stores , user, rates, currency});
     } catch (error) {
         console.log(error);
         res.redirect('/');

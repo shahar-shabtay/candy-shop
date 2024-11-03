@@ -237,10 +237,11 @@ async function adminUpdateCustomerDetails(req, res) {
 }
 async function addStoresPage(req, res) {
     try {
-        const user = req.session.user;  // Assume customerId is available in the session
-         // Render the view and pass customers
+        const user = req.session.user;
+        const currency = req.session.currency;
+        const rates = req.session.currency;
         if(user.role == 'admin') {
-            res.render('addStores', {user});
+            res.render('addStores', {user, currency, rates});
         } else if(user.role == 'user') {
             res.render('accessDenied', {user});
         }

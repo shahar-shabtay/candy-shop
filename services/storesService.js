@@ -36,10 +36,22 @@ async function createStore(storeData) {
     }
 }
 
+async function deleteStoreById(storeId) {
+    try {
+        // Logic to delete the store from the database
+        // Assuming you're using a MongoDB-like database
+        await Stores.findOneAndDelete({storeId:storeId});
+
+    } catch (error) {
+        throw new Error('Failed to delete store from database: ' + error.message);
+    }
+}
+
 
 module.exports = {
     getAllStores,
     updateStoreDetails, 
-    createStore
+    createStore,
+    deleteStoreById
   };
   

@@ -6,6 +6,7 @@ async function searchProduct(req, res) {
     const searchQuery = req.query.q;  // 'q' will be the query parameter from the search form
     const searchResults = await searchService.searchProductsByName(searchQuery);
     const currency = req.session.currency;
+    const rates = req.session.rates;
     try {
         const query = req.query.q;
         if (!query) {
@@ -17,6 +18,7 @@ async function searchProduct(req, res) {
             searchQuery: searchQuery,
             products: searchResults,
             currency: currency,
+            rates: rates,
         });  
     } catch (error) {
         console.error('Error searching for products:', error);
@@ -28,6 +30,7 @@ async function searchBySweetType(req, res) {
     const user = req.session.user;
     const sweetType = req.params.sweetType;
     const currency = req.session.currency;
+    const rates = req.session.rates;
     try {
         const products = await searchService.searchProductsBySweetType(sweetType);
         res.render('searchPage', {
@@ -35,6 +38,7 @@ async function searchBySweetType(req, res) {
             searchQuery: sweetType,
             products: products[0] ? products[0].products : [],
             currency: currency,
+            rates: rates,
         });
     } catch (error) {
         console.error('Error searching for products by sweetType:', error);
@@ -46,6 +50,7 @@ async function searchByFilter(req, res) {
     const user = req.session.user;
     const searchQuery = req.query.q || '';
     const currency = req.session.currency;
+    const rates = req.session.rates;
     const filters = {
         flavor: req.query.flavor || '', 
         allergans: req.query.allergans || '',
@@ -78,6 +83,7 @@ async function searchByFilter(req, res) {
             products: products,
             filters: filters,
             currency: currency,
+            rates: rates,
         });
     } catch (error) {
         console.error('Error searching for products:', error);

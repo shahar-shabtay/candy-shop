@@ -10,6 +10,7 @@
 html, body {
     height: 100%;
     margin: 0;
+    
 }
 
 body {
@@ -313,6 +314,9 @@ body {
 .page-content {
     flex: 1;
     margin-top: 90px;
+    min-height: calc(100vh - 70px); 
+    padding-bottom: 70px; /* Same as footer height */
+
 }
 
 
@@ -330,7 +334,7 @@ footer {
     position: fixed;
     bottom: 0; /* Position it at the bottom */
     left: 0; /* Ensure it spans the entire width */
-    z-index: 1000;}
+    z-index: 9999;}
 
 .footer-left {
     text-align: left;
@@ -467,7 +471,7 @@ footer {
 }
 
 .currency-dropdown {
-    background-color: FF6C8E;
+    background-color: #FF6C8E;
     width: 90px;
     border: none;
     font-weight: bold;

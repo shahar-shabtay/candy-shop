@@ -5,160 +5,217 @@ const customerService = require('../services/customerService');
 
 
 // Adds an item to the cart
-function addToCart (req, res) {
-    const productId = req.body.productId;
+async function addToCart(req, res) {
+    const productId = req.body.productId.toString();
     const quantity = parseInt(req.body.quantity) || 1;
+    const user = req.session.user;
 
-    if(req.session.cart){
-        const cartItemIndex = req.session.cart.findIndex(item => item.productId === productId);
-        
+    try {
+        let cart = await customerService.getCustomerCart(user.customerId);
+        cart = cart || [];
+
+        const cartItemIndex = cart.findIndex(item => item.productId.toString() === productId);
+
         if (cartItemIndex > -1) {
-            req.session.cart[cartItemIndex].quantity += quantity;
+            // אם המוצר כבר קיים בעגלה, שולחים תגובה מתאימה
+            return res.status(200).json({ message: 'Product is already in the cart' });
         } else {
-            req.session.cart.push({ productId, quantity });
+            // מוסיפים את המוצר לעגלה
+            cart.push({ productId, quantity });
+            await customerService.updateCustomerCart(user.customerId, cart);
+            return res.status(200).json({ message: 'Product added to cart' });
         }
-    } else {
-        req.session.cart = [{ productId, quantity }];
+    } catch (err) {
+        console.error("Failed to update cart:", err);
+        res.status(500).json({ message: "An error occurred while updating the cart." });
     }
-    res.redirect('/products');
-};
+}
 
 // Display the cart
 async function showCart (req, res) {
-    const currency = req.session.currency || 'ILS';
-    const rates = req.session.rates || {};
-    let user = req.session.user;
-    let cart = req.session.cart;
-    let cartDetails = [];
-    let totalPrice = 0;
+    try {
+        const currency = req.session.currency || 'ILS';
+        const rates = req.session.rates || {};
+        const user = req.session.user;
+        let cartDetails = [];
+        let totalPrice = 0;
 
-    if (cart) {
-        for (let item of cart) {
-            const product = await productsService.getProductById(item.productId);
-            if (product) {
-                product.quantity = item.quantity;
-                cartDetails.push(product);
-                totalPrice += product.price * item.quantity;
+        // Adding await here
+        const cart = await customerService.getCustomerCart(user.customerId);
+
+        if (cart) {
+            for (let item of cart) {
+                const product = await productsService.getProductById(item.productId);
+                if (product) {
+                    product.quantity = item.quantity;
+                    cartDetails.push(product);
+                    totalPrice += product.price * item.quantity;
+                }
             }
         }
+    
+        totalPrice = totalPrice.toFixed(2);
+        res.render("cart", { cart: cartDetails, total: totalPrice, user, currency, rates });
+    } catch(err) {
+        console.error(err);
     }
-
-    totalPrice = totalPrice.toFixed(2);
-    res.render("cart", { cart: cartDetails, total: totalPrice, user, currency, rates });
 };
 
 // Remvoves item from cart
-function removeFromCart (req, res) {
+async function removeFromCart(req, res) {
     const productId = req.body.productId;
-    const cart = req.session.cart;
+    const user = req.session.user;
 
-    // Find product's index in the cart
-    const cartItemIndex = cart.findIndex(item => item.productId === productId);
+    try {
+        // שליפת העגלה מהדאטהבייס
+        let cart = await customerService.getCustomerCart(user.customerId);
+        cart = cart || [];
 
-    // If product is found in the cart, remove it
-    if (cartItemIndex > -1) {
-        cart.splice(cartItemIndex, 1);
+        // מציאת המוצר בעגלה לפי ה־productId
+        const cartItemIndex = cart.findIndex(item => item.productId.toString() === productId);
+
+        // אם המוצר נמצא בעגלה, מסירים אותו
+        if (cartItemIndex > -1) {
+            cart.splice(cartItemIndex, 1);
+
+            // עדכון העגלה בדאטהבייס לאחר ההסרה
+            await customerService.updateCustomerCart(user.customerId, cart);
+        }
+
+        // הפניה לדף העגלה לאחר העדכון
+        res.redirect('/cart');
+    } catch (err) {
+        console.error("Failed to update cart:", err);
+        res.status(500).send("An error occurred while updating the cart.");
     }
-
-    // Save the updated cart in the session
-    req.session.cart = cart;
-
-    // Redirect to the cart page
-    res.redirect('/cart');
 }
 
 // Updates item quantity in the cart
-function updateCart(req, res) {
-    const productId = req.body.productId;
-    let newQuantity = parseInt(req.body.newQuantity) || 1;
+async function updateCart(req, res) {
+    try {
+        const productId = req.body.productId;
+        let newQuantity = parseInt(req.body.newQuantity);
 
-    if (newQuantity < 1) newQuantity = 1; // Server-side validation
-    if (newQuantity > 50) newQuantity = 50;
+        // ולידציה בסיסית על הקלט
+        if (!productId || isNaN(newQuantity)) {
+            return res.status(400).json({ success: false, message: 'Product ID and valid quantity are required.' });
+        }
 
-    if (req.session.cart) {
-        const cartItemIndex = req.session.cart.findIndex(item => item.productId === productId);
+        // הגבלת הכמות בין 1 ל-50
+        newQuantity = Math.max(1, Math.min(newQuantity, 50));
+
+        // שליפת העגלה מהדאטהבייס
+        const user = req.session.user;
+        let cart = await customerService.getCustomerCart(user.customerId);
+        cart = cart || [];
+
+        // בדיקה אם המוצר קיים בעגלה
+        const cartItemIndex = cart.findIndex(item => item.productId.toString() === productId);
 
         if (cartItemIndex > -1) {
-            // Update quantity of existing product in the cart
-            req.session.cart[cartItemIndex].quantity = newQuantity;
+            // עדכון הכמות של המוצר בעגלה
+            cart[cartItemIndex].quantity = newQuantity;
+        } else {
+            return res.status(404).json({ success: false, message: 'Product not found in the cart.' });
         }
-    }
 
-    res.redirect('/cart');
+        // שמירת העגלה המעודכנת בדאטהבייס
+        await customerService.updateCustomerCart(user.customerId, cart);
+
+        // שליפת המחיר מהמוצר
+        const product = await productsService.getProductById(productId);
+        if (!product) {
+            return res.status(404).json({ success: false, message: 'Product not found in database.' });
+        }
+
+        // תגובת JSON מוצלחת עם המחיר
+        res.json({ success: true, price: product.price });
+    } catch (error) {
+        console.error("Error updating cart:", error);
+        res.status(500).json({ success: false, message: `Error updating cart: ${error.message}` });
+    }
 }
 
+
 // Checkout
-async function checkout (req, res) {
+async function checkout(req, res) {
     const user = req.session.user;
-    const cart = req.session.cart;
     let orderProducts = [];
     let totalPrice = 0;
 
-    if (cart) {
-        for (let item of cart) {
-            const product = await productsService.getProductById(item.productId);
-            if (product) {
-                orderProducts.push({ productId: item.productId, quantity: item.quantity });
-                totalPrice += product.price * item.quantity;
+    try {
+        // שליפת העגלה מהדאטהבייס באמצעות ה-service
+        const cart = await customerService.getCustomerCart(user.customerId);
 
-                // Reduce product inventory by purchased quantity
-                product.inventory -= item.quantity;
-                await productsService.updateProductInventory(product.productId, product.inventory);
+        if (cart && cart.length > 0) {
+            for (let item of cart) {
+                const product = await productsService.getProductById(item.productId);
+                if (product) {
+                    orderProducts.push({ productId: item.productId, quantity: item.quantity });
+                    totalPrice += product.price * item.quantity;
+
+                    // הפחתת המלאי של המוצר בהתאם לכמות שנרכשה
+                    product.inventory -= item.quantity;
+                    await productsService.updateProductInventory(product.productId, product.inventory);
+                }
             }
         }
-    }
 
-    totalPrice = totalPrice.toFixed(2);
-    const address = req.body.address;
-    let orderData = {
-        orderId: Math.floor(Math.random() * 10000000),
-        customerId: req.session.user.customerId,
-        orderDate: new Date(),
-        totalPrice: totalPrice,
-        status: "Pending",
-        products: orderProducts,
-        address: address,
-    };
-    try {
+        totalPrice = totalPrice.toFixed(2);
+        const address = req.body.address;
+        let orderData = {
+            orderId: new Date().getTime().toString(),
+            customerId: user.customerId,
+            orderDate: new Date(),
+            totalPrice: totalPrice,
+            status: "Pending",
+            products: orderProducts,
+            address: address,
+        };
+
+        // יצירת ההזמנה
         const order = await ordersService.createOrder(orderData);
-        req.session.cart = [];
+
+        // איפוס העגלה בדאטהבייס
+        await customerService.updateCustomerCart(user.customerId, []);
+
         res.status(201).json({ success: true, message: 'Order placed successfully.' });
     } catch (error) {
-        console.log(error);
+        console.error("Failed to place order:", error);
         res.status(500).json({ success: false, message: 'Failed to place order.' });
     }
 }
 
-async function updateCartQuantity(req, res) {
-    try {
-        const { productId, quantity } = req.body;
 
-        // Validate input
-        if (!productId || !quantity) {
-            return res.status(400).json({ success: false, message: 'Product ID and quantity are required.' });
-        }
+// async function updateCartQuantity(req, res) {
+//     try {
+//         const { productId, quantity } = req.body;
 
-        // Fetch the product price from productService (assuming you have this service)
-        const product = await productsService.getProductById(productId);
-        if (!product) {
-            return res.status(404).json({ success: false, message: 'Product not found.' });
-        }
+//         // Validate input
+//         if (!productId || !quantity) {
+//             return res.status(400).json({ success: false, message: 'Product ID and quantity are required.' });
+//         }
 
-        // Update the quantity in the session cart
-        cartService.updateProductQuantity(req, productId, quantity);
+//         // Fetch the product price from productService (assuming you have this service)
+//         const product = await productsService.getProductById(productId);
+//         if (!product) {
+//             return res.status(404).json({ success: false, message: 'Product not found.' });
+//         }
 
-        // Respond with success and the product price to update the frontend
-        res.json({ success: true, price: product.price });
-    } catch (error) {
-        res.status(500).json({ success: false, message: `Error updating cart: ${error.message}` });
-    }
-};
+//         // Update the quantity in the session cart
+//         cartService.updateProductQuantity(req, productId, quantity);
+
+//         // Respond with success and the product price to update the frontend
+//         res.json({ success: true, price: product.price });
+//     } catch (error) {
+//         res.status(500).json({ success: false, message: `Error updating cart: ${error.message}` });
+//     }
+// };
 
 module.exports = {
     addToCart,
     showCart,
     removeFromCart,
     checkout,
-    updateCart,
-    updateCartQuantity
+    updateCart
 }

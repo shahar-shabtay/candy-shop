@@ -43,7 +43,15 @@ const customerSchema = new mongoose.Schema({
         type: String,
         required: true,
         default: "user"
-    }
+    },
+    cart: {
+        type: [
+            {
+                productId: {type: Number, required: true},
+                quantity: {type: Number, required: true}
+            }
+        ]
+    },
 }, { versionKey: false });
 
 const Customer = mongoose.model('Customer', customerSchema);

@@ -1,3 +1,15 @@
+function showSuccessAlert(id) {
+    const successAlert = document.getElementById(id);
+    if (successAlert) {
+        successAlert.classList.remove('hidden');
+        successAlert.classList.add('visible');
+    
+        setTimeout(() => {
+            successAlert.classList.remove('visible');
+            successAlert.classList.add('hidden');
+        }, 3000);
+    }
+}
 document.addEventListener('DOMContentLoaded', () => {
     recalculateTotal();
 
@@ -32,7 +44,6 @@ function updateCart(itemId, newQuantity) {
         if (response.ok) {
             // Successfully updated cart on server, now update the total price and refresh
             window.location.reload();
-            showSuccessAlert('update-alert');
         } else {
             alert('Failed to update cart. Please try again.');
         }

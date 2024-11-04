@@ -235,6 +235,20 @@ async function adminUpdateCustomerDetails(req, res) {
         res.status(500).json({ success: false, message: 'Server error' });
     }
 }
+async function addStoresPage(req, res) {
+    try {
+        const user = req.session.user;  // Assume customerId is available in the session
+         // Render the view and pass customers
+        if(user.role == 'admin') {
+            res.render('addStores', {user});
+        } else if(user.role == 'user') {
+            res.render('accessDenied', {user});
+        }
+    } catch (err) {
+        console.error('Error fetching customers:', err);
+        res.status(500).send('Server Error (adminController - addStores)');
+    }
+}
 
 module.exports = {
     renderAccountPage,
@@ -247,4 +261,5 @@ module.exports = {
     addProductsPage,
     postToFacebook,
     adminUpdateCustomerDetails,
+    addStoresPage
 };

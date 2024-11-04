@@ -22,8 +22,8 @@ const searchRoutes = require('./routes/searchRoute.js');
 app.use(
   session({
     secret: "wusha",
+    resave: false,
     saveUninitialized: false,
-    resave: false
   })
 );
 
@@ -59,8 +59,12 @@ app.use('/personal',adminRoute);
 app.use('/nearMe', nearMeRoutes)
 app.use('/', loginRoutes);
 app.use('/cart', cartRoutes);
-app.use('/', searchRoutes);
+// app.use('/', searchRoutes); // need to change to /search
 
+// Render 404
+app.use((req, res) => {
+  res.status(404).render('404'); // Renders the 404 view
+});
 
 // Start the server
 const PORT = process.env.PORT || 3000;

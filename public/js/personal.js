@@ -366,14 +366,16 @@ document.querySelectorAll('.remove').forEach(icon => {
 
             const result = await response.json();
             if (response.ok) {
-                showSuccessAlert('delete-alert');
-                window.location.href = `/personal/admin/orders`;
+                showSuccessAlert('delete-order-alert');
+                setTimeout(() => {
+                    window.location.href = `/personal/admin/orders`;
+                }, 1000 );
             } else {
                 alert(result.error); // Show error message
             }
         } catch (error) {
-            console.error('Error removing favorite:', error);
-            alert('Failed to remove favorite product.');
+            console.error('Error removing order:', error);
+            alert('Failed to remove order');
         }
     });
 });
@@ -447,16 +449,13 @@ function editProduct(productId) {
             input.removeAttribute('readonly');
             input.classList.add('editable');  // Add a class to indicate that the input is now editable
             if (input.classList.contains('product-price-input')) {
-                // שליפת המחיר המקורי מתוך data-original-price על שדה הקלט עצמו
+                // Retrieve the original price from data-original-price on the input itself
                 const originalPrice = input.getAttribute('data-original-price');
             
-                // עדכון הערך של input למחיר המקורי מה-DB
+                // Set the input value to the original price from the DB without currency sign
                 input.value = originalPrice;
             }
-            
         });
-
-        
     }
 
     // Show dropdowns

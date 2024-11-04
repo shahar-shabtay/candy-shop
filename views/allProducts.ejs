@@ -52,7 +52,7 @@
                                                         <input class="product-description left" name="description" value="<%= product.description %>" readonly><br>
                                                     </div>
                                                     <div class="product-text">
-                                                        <input class="product-price right" name="price" value="<%= currency === 'USD' && rates['USD'] ? (product.price * rates['USD']).toFixed(2) + ' $' : currency === 'EUR' && rates['EUR'] ? (product.price * rates['EUR']).toFixed(2) + ' €' : product.price + ' ₪' %>"  data-original-price="<%= product.price %>" readonly><br>
+                                                        <input class="product-price product-price-input right" name="price" value="<%= currency === 'USD' && rates['USD'] ? (product.price * rates['USD']).toFixed(2) + ' $' : currency === 'EUR' && rates['EUR'] ? (product.price * rates['EUR']).toFixed(2) + ' €' : product.price + ' ₪' %>"  data-original-price="<%= product.price %>"  readonly><br>
                                                         <input class="product-inventory right" name="inventory" value="<%= product.inventory %>" readonly>
                                                         <div class="dropdown-container">
                                                             <select class="flavor-dropdown" multiple>

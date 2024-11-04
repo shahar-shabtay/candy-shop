@@ -186,32 +186,6 @@ async function checkout(req, res) {
     }
 }
 
-
-// async function updateCartQuantity(req, res) {
-//     try {
-//         const { productId, quantity } = req.body;
-
-//         // Validate input
-//         if (!productId || !quantity) {
-//             return res.status(400).json({ success: false, message: 'Product ID and quantity are required.' });
-//         }
-
-//         // Fetch the product price from productService (assuming you have this service)
-//         const product = await productsService.getProductById(productId);
-//         if (!product) {
-//             return res.status(404).json({ success: false, message: 'Product not found.' });
-//         }
-
-//         // Update the quantity in the session cart
-//         cartService.updateProductQuantity(req, productId, quantity);
-
-//         // Respond with success and the product price to update the frontend
-//         res.json({ success: true, price: product.price });
-//     } catch (error) {
-//         res.status(500).json({ success: false, message: `Error updating cart: ${error.message}` });
-//     }
-// };
-
 module.exports = {
     addToCart,
     showCart,

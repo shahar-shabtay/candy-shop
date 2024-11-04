@@ -34,22 +34,17 @@ async function getCustomerOrders (req, res) {
         const orders = await orderService.getCustomerOrders(user.customerId);
         const currency = req.session.currency || 'ILS';
         const rates = req.session.rates || {};
-        if(user){
-            orders.forEach(order => {
-                if (order.createdAt) {
-                    const date = new Date(order.createdAt);
-                    const day = String(date.getDate()).padStart(2, '0');
-                    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
-                    const year = date.getFullYear();
-                    order.createdAtFormatted = `${day}/${month}/${year}`;
-                } else {
-                    order.createdAtFormatted = 'N/A';
-                }
-            });
-            res.render('customerOrders', {orders, user, currency, rates});
-        } else {
-            res.render('notLogin');
-        }
+        orders.forEach(order => {
+            if (order.createdAt) {
+                const date = new Date(order.createdAt);
+                const day = String(date.getDate()).padStart(2, '0');
+                const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+                const year = date.getFullYear();
+                order.createdAtFormatted = `${day}/${month}/${year}`;
+            } else {
+                order.createdAtFormatted = 'N/A';
+            }
+        });
     } catch (err) {
         res.status(500).send('Error fetching orders');
     }
@@ -203,7 +198,7 @@ async function updateOrderStatus(req,res) {
 
 async function deleteOrder (req, res) {
     try {
-        const orderId = req.params;
+        const orderId = req.params.orderId;
         const wasRemoved = await orderService.deleteOrder(orderId);
 		if (wasRemoved) {
 			res.status(200).json({ message: 'order removed' }); // Respond with success

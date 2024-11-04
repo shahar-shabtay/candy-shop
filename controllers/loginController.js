@@ -9,7 +9,11 @@ async function loginUser(req, res) {
     const connect = await loginService.loginAttempt(email, password);
     const customer = await customerService.getCustomerByEmail(email)
     if (connect){
-      req.session.user = customer;
+      req.session.user = {
+        id: customer.customerId,
+        user: customer,
+        role: customer.role,
+      };
       return res.redirect('/products');
     }
     else{
@@ -23,14 +27,33 @@ async function loginUser(req, res) {
   }
 }
 
-async function logout(req,res) {
-  console.log("in login controller - logout");
+async function logout(req, res) {
   req.session.destroy(() => {
-    res.render("login", {error: false});
+    res.render('login', {error: false});
   });
+}
+
+
+// Middleware Functions
+function isAuthenticated(req, res, next) {
+  console.log("Checking authentication for:", req.session.user);
+  if (req.session.user) { // Check if the session contains user data
+      return next();
+  }
+  res.render('401'); // Redirect to unauthorized page if not authenticated
+}
+
+function isAdmin(req, res, next) {
+  // Assuming `req.session.user` holds the logged-in user info and `role` defines the user's role
+  if (req.session.user && req.session.user.role === 'admin') {
+      return next(); // User is admin, proceed to the route
+  }
+  res.render('403');
 }
 
 module.exports = {
   loginUser,
-  logout
+  logout,
+  isAuthenticated,
+  isAdmin
 };

@@ -97,7 +97,11 @@ async function addProduct(req, res) {
             if (postToFacebook === 'on') { // Checkbox value is 'on' when checked
                 const productUrl = `localhost:3000/products/${productId}`; // Use the product name as part of the URL
                 try {
-                    await facebookPostService.postMessageToFacebook(`Check out our new product: ${name} for just $${price}!`, productUrl);
+                    await facebookPostService.postMessageToFacebook(`Wow! New Product! ✨ \n\n` + 
+                    `🍭 ${name.toUpperCase()} 🍭\n` +
+                    `💸 Only ${price}\n\n` +
+                    `🔥Copy the link below to get yours!\n\n`+
+                    `${productUrl}`);
                 } catch (error) {
                     console.error('Error posting to Facebook:', error);
                 }

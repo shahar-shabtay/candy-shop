@@ -1,20 +1,17 @@
 const express = require('express');
 const router = express.Router();
 const cartController = require('../controllers/cartController');
-
-// Display cart
-router.get('/', cartController.showCart);
+const { isAuthenticated } = require('../controllers/loginController.js');
 
 
-// Add to cart
+// Get
+router.get('/', isAuthenticated,cartController.showCart);
+
+
+// Post
 router.post('/add', cartController.addToCart);
-
-// Remove from cart
 router.post('/remove', cartController.removeFromCart);
-
-// Checkout
 router.post('/checkout', cartController.checkout);
-
 router.post('/update', cartController.updateCart);
 
 

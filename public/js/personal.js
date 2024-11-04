@@ -7,7 +7,7 @@ function showSuccessAlert(id) {
         setTimeout(() => {
             successAlert.classList.remove('visible');
             successAlert.classList.add('hidden');
-        }, 1000);
+        }, 3000);
     }
 }
 
@@ -34,15 +34,90 @@ if (togglePassword){
     });
 }
 
-// update user details
-if(document.getElementById('submitButton')){
-    document.getElementById('submitButton').addEventListener('click', function() {
-        showSuccessAlert('save-cust-alert');
-        if(document.getElementById('updateForm')){
-            document.getElementById('updateForm').submit();
-        }  // Submit the form
-    })
-};
+document.addEventListener('DOMContentLoaded', () => {
+    const submitButton = document.getElementById('submitButton');
+
+    submitButton.addEventListener('click', function(event) {
+        event.preventDefault(); // Prevent default form submission
+
+        // Get form values
+        const email = document.getElementById('email').value;
+        const phone = document.getElementById('phone').value;
+        const birthDay = document.getElementById('day').value;
+        const birthMonth = document.getElementById('month').value;
+        const birthYear = parseInt(document.getElementById('year').value, 10);
+        const password = document.getElementById('password').value;
+
+        // Validation flags and error message
+        let isValid = true;
+        let errorMessage = '';
+
+        // Email validation
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailPattern.test(email)) {
+            isValid = false;
+            errorMessage += 'Invalid email format.\n';
+        }
+
+        // Phone number validation (assuming format: 050/055/054/058/053/052 + 7 digits)
+        const phonePattern = /^(050|055|054|058|053|052)\d{7}$/;
+        if (!phonePattern.test(phone)) {
+            isValid = false;
+            errorMessage += 'Phone number must start with 050, 055, 054, 058, 053, or 052, followed by 7 digits.\n';
+        }
+
+        // Birth year validation (must be 2014 or earlier)
+        if (birthYear > 2014 || isNaN(birthYear)) {
+            isValid = false;
+            errorMessage += 'Birth year must be 2014 or earlier.\n';
+        }
+
+        // Password validation (minimum 6 characters, English letters and numbers only)
+        const passwordPattern = /^[A-Za-z0-9]{6,}$/;
+        if (!passwordPattern.test(password)) {
+            isValid = false;
+            errorMessage += 'Password must be at least 6 characters and contain only English letters or numbers.\n';
+        }
+
+        if (isValid) {
+            setTimeout(() => {
+                if(document.getElementById('updateForm')){
+                    showSuccessAlert('myAccount-save-alert');
+                    document.getElementById('updateForm').submit();
+                }
+            },3000);
+        } else {
+            // Show error alert if validation fails
+            showAlert(errorMessage);
+        }
+    });
+});
+
+// Function to show custom alert
+function showAlert(message) {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = 'jump-alert';
+    alertDiv.innerHTML = `
+        <span class="close-alert">&times;</span>
+        ${message.replace(/\n/g, '<br>')}
+    `;
+
+    // Append the alert div to the body
+    document.body.appendChild(alertDiv);
+
+    // Close button functionality
+    const closeButton = alertDiv.querySelector('.close-alert');
+    closeButton.addEventListener('click', () => {
+        alertDiv.classList.add('fade-out');
+    });
+
+    // Remove the alert after fade-out transition
+    alertDiv.addEventListener('transitionend', () => {
+        if (alertDiv.classList.contains('fade-out')) {
+            alertDiv.remove();
+        }
+    });
+}
 
 //--------------
 // My Favorite  |
@@ -59,9 +134,9 @@ function addToFavorites(productId) {
     })
     .then(response =>{
         if(response.ok) {
+            showSuccessAlert('add-favorite-alert');
             if(document.querySelector(`#favorite-icon-${productId}`)){
                 document.querySelector(`#favorite-icon-${productId}`).classList.add('favorited');
-                showSuccessAlert('favorite-alert');
             }
         }
     })
@@ -228,8 +303,6 @@ function saveCustomer(customerId) {
         console.error('Error with the server request:', error);
     });
 }
-
-
 //---------------
 // All Orders    |
 //---------------
@@ -262,7 +335,7 @@ function updateOrderStatus(orderId) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            
+            showSuccessAlert('order-status-alert');
             // Disable the <select> dropdown after saving
             const statusSelect = document.getElementById(`orderStatus-${orderId}`);
             statusSelect.disabled = true;
@@ -270,7 +343,6 @@ function updateOrderStatus(orderId) {
             // Reset the buttons: Hide Save, show Edit
             document.getElementById(`saveStatusButton-${orderId}`).style.display = 'none';
             document.getElementById(`editStatusButton-${orderId}`).style.display = 'inline-block';
-            showSuccessAlert('order-status-alert');
         } else {
             alert('Failed to update status');
         }
@@ -294,14 +366,16 @@ document.querySelectorAll('.remove').forEach(icon => {
 
             const result = await response.json();
             if (response.ok) {
-                showSuccessAlert('delete-alert');
-                window.location.href = `/personal/admin/orders`;
+                showSuccessAlert('delete-order-alert');
+                setTimeout(() => {
+                    window.location.href = `/personal/admin/orders`;
+                }, 1000 );
             } else {
                 alert(result.error); // Show error message
             }
         } catch (error) {
-            console.error('Error removing favorite:', error);
-            alert('Failed to remove favorite product.');
+            console.error('Error removing order:', error);
+            alert('Failed to remove order');
         }
     });
 });
@@ -333,8 +407,8 @@ function deleteProduct(productId) {
     })
     .then(response => {
         if (response.ok) {
-            document.querySelector(`[data-product-id="${productId}"]`).remove(); // Remove product card from view
             showSuccessAlert('delete-alert');
+            document.querySelector(`[data-product-id="${productId}"]`).remove(); // Remove product card from view
         } else {
             return response.text().then(text => {
                 try {
@@ -375,16 +449,13 @@ function editProduct(productId) {
             input.removeAttribute('readonly');
             input.classList.add('editable');  // Add a class to indicate that the input is now editable
             if (input.classList.contains('product-price-input')) {
-                // שליפת המחיר המקורי מתוך data-original-price על שדה הקלט עצמו
+                // Retrieve the original price from data-original-price on the input itself
                 const originalPrice = input.getAttribute('data-original-price');
             
-                // עדכון הערך של input למחיר המקורי מה-DB
+                // Set the input value to the original price from the DB without currency sign
                 input.value = originalPrice;
             }
-            
         });
-
-        
     }
 
     // Show dropdowns
@@ -449,7 +520,7 @@ function saveProduct(productId) {
         .then(data => {
             if (data.success) {
                 // Make inputs readonly again after saving
-                showSuccessAlert('save-alert');
+                showSuccessAlert('product-save-alert');
                 // Remove edit-mode class from the product card
                 productCard.classList.remove('edit-mode');
                 const inputs = productCard.querySelectorAll('input');
@@ -457,7 +528,10 @@ function saveProduct(productId) {
                     input.setAttribute('readonly', 'readonly');
                     input.classList.remove('editable');
                 });
-                window.location.reload();
+                setTimeout (() =>{
+                    window.location.reload();
+                }, 2000);
+                
 
 
                 // Hide dropdowns
@@ -785,7 +859,11 @@ function saveStore(storeId) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            storeRow.classList.remove('edit-mode');
+            showSuccessAlert('save-store-alert');
+            setTimeout(() =>{
+                storeRow.classList.remove('edit-mode');
+            },2000);
+            
         } else {
             console.error('Error updating store:', data.message);
         }
@@ -831,7 +909,11 @@ async function submitStore() {
 
         if (response.ok) {
             // If store creation succeeded, redirect to stores page
-            window.location.href = '/personal/admin/stores';
+            showSuccessAlert('save-store-alert'); // Show success alert
+            setTimeout(() => {
+                window.location.href = '/personal/admin/stores';
+            },2000);
+            
         } else {
             // Log error
             console.error(`Error ${response.status}: ${response.statusText}`);
@@ -843,6 +925,30 @@ async function submitStore() {
     }
 }
 
+// Delete store
+async function deleteStore(storeId) {
+    fetch(`/personal/admin/stores/${storeId}/delete`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ storeId: storeId })
+    })
+    .then(response => {
+        return response.json()
+    })
+    .then(data => {
+        if (data.success) {
+            showSuccessAlert('delete-store-alert'); 
+            document.querySelector(`[data-id="${storeId}"]`).remove();
+        } else {
+            throw new Error(data.error || 'Unexpected error');
+        }
+    })
+    .catch(error => {
+        alert('Error deleting store: ' + error.message);
+    });
+}
 
 
 

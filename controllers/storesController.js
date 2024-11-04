@@ -2,9 +2,11 @@ const storesService = require('../services/storesService');
 
 async function getStores(req, res) {
     try {
-        const user = req.session.user;  // Assume customerId is available in the session
+        const user = req.session.user;
         const stores = await storesService.getAllStores();
-        res.render('allStores', { stores: stores , user});
+        const currency = req.session.currency;
+        const rates = req.session.rates;
+        res.render('allStores', { stores: stores , user, rates, currency});
     } catch (error) {
         console.log(error);
         res.redirect('/');
@@ -50,8 +52,22 @@ async function addStore (req, res) {
         .catch(err => res.status(500).send({ error: 'Something went wrong' }));
 }
 
+async function deleteStore (req, res) {
+    const storeId = req.params.storeId;
+  
+    storesService.deleteStoreById(storeId)
+      .then(() => {
+        res.json({ success: true });
+      })
+      .catch(err => {
+        res.status(500).json({ error: err.message });
+      });
+  }
+  
+
 module.exports = {
     getStores,
     updateStoreDetails,
-    addStore
+    addStore,
+    deleteStore
 };

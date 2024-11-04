@@ -78,62 +78,60 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 // Footer -About Us and Talk to Us
-var aboutModal = document.getElementById("aboutModal");
-var talkModal = document.getElementById("talkModal");
-var statisticsModel = document.getElementById("statisticsModel");
+// Footer - About Us, Talk to Us, and Statistics Modals
+document.addEventListener('DOMContentLoaded', () => {
+    const aboutModal = document.getElementById("aboutModal");
+    const talkModal = document.getElementById("talkModal");
+    const statisticsModel = document.getElementById("statisticsModel");
 
-var openAboutModal = document.getElementById("openAboutModal");
-var openTalkModal = document.getElementById("openTalkModal");
-var openstatisticsModel = document.getElementById("openstatisticsModel");
+    const openAboutModal = document.getElementById("openAboutModal");
+    const openTalkModal = document.getElementById("openTalkModal");
+    const openStatisticsModel = document.getElementById("openstatisticsModel");
 
-var closeButtons = document.querySelectorAll(".close-button");
+    const closeButtons = document.querySelectorAll(".close-button");
 
-if(openAboutModal){
-    openAboutModal.onclick = function(event) {
-        event.preventDefault();
-        aboutModal.style.display = "block";
+    // Open About Us modal
+    if (openAboutModal) {
+        openAboutModal.addEventListener('click', (event) => {
+            event.preventDefault();
+            aboutModal.style.display = "block";
+        });
     }
-}
 
-if(openTalkModal){
-    openTalkModal.onclick = function(event) {
-        event.preventDefault();
-        talkModal.style.display = "block";
+    // Open Talk to Us modal
+    if (openTalkModal) {
+        openTalkModal.addEventListener('click', (event) => {
+            event.preventDefault();
+            talkModal.style.display = "block";
+        });
     }
-}
 
-if(openstatisticsModel){
-    openstatisticsModel.onclick = function(event) {
-        event.preventDefault();
-        statisticsModel.style.display = "block";
+    // Open Statistics modal
+    if (openStatisticsModel) {
+        openStatisticsModel.addEventListener('click', (event) => {
+            event.preventDefault();
+            statisticsModel.style.display = "block";
+        });
     }
-}
 
-if(closeButtons)
-{
-    closeButtons.forEach(function(button) {
-        button.onclick = function() {
-            document.getElementById('close-button').onclick = function() {
-                const modal = document.querySelector('.modal'); // מוצא את המודל
-                if (modal) {
-                    modal.style.display = "none"; // מסתיר את המודל
-                } else {
-                    console.error("Modal element not found");
-                }
-            };
-            
-        };
+    // Close modals when clicking on close buttons
+    closeButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const modal = button.closest('.modal'); // Find the closest modal container
+            if (modal) {
+                modal.style.display = "none"; // Hide the modal
+            }
+        });
     });
-}
 
-window.onclick = function(event) {
-    if (event.target == aboutModal) {
-        aboutModal.style.display = "none";
-    } else if (event.target == talkModal) {
-        talkModal.style.display = "none";
-    } else if (event.target == statisticsModel) {
-        statisticsModel.style.display = "none";
-    }
-}
-
-
+    // Close modals when clicking outside of the modal content
+    window.addEventListener('click', (event) => {
+        if (event.target === aboutModal) {
+            aboutModal.style.display = "none";
+        } else if (event.target === talkModal) {
+            talkModal.style.display = "none";
+        } else if (event.target === statisticsModel) {
+            statisticsModel.style.display = "none";
+        }
+    });
+});

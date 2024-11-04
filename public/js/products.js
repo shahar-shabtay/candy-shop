@@ -9,7 +9,7 @@ function showSuccessAlert(id) {
         setTimeout(() => {
             successAlert.classList.remove('visible');
             successAlert.classList.add('hidden');
-        }, 1000);
+        }, 3000);
     }
 }
 
@@ -23,12 +23,20 @@ function updateQuantity(productId, change, event) {
     // Parse the current value and update it based on the change
     let currentQuantity = parseInt(quantityInput.value);
 
-    // Update the quantity by 1
+    // Update the quantity by the change value (either +1 or -1)
     currentQuantity += change;
 
     // Ensure the quantity does not go below 1
     if (currentQuantity < 1) {
         currentQuantity = 1;
+    }
+
+    // Get the max quantity from the input's max attribute
+    const maxQuantity = parseInt(quantityInput.getAttribute('max'), 10);
+
+    // Ensure the quantity does not exceed the max inventory
+    if (currentQuantity > maxQuantity) {
+        currentQuantity = maxQuantity;
     }
 
     // Update the input field with the new value
@@ -53,12 +61,30 @@ function addToCart(button) {
     .then(response => response.json())
     .then(data => {
         if (data.message === 'Product added to cart') {
-            showSuccessAlert('add-cart-alert');
+            showSuccessAlert('prod-add-cart-alert');
         } else if (data.message === 'Product is already in the cart') {
-            showSuccessAlert('exe-cart-alert');
+            showSuccessAlert('prod-exe-cart-alert');
         }
     })
     .catch(error => console.error('Error:', error));
 }
 
+// Add Product To Favorite
+function addToFavorites(productId) {
+    fetch('/products/addFav', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ productId: productId }),
+    })
+    .then(response =>{
+        if(response.ok) {
+            showSuccessAlert('prod-add-favorite-alert');
+            if(document.querySelector(`#favorite-icon-${productId}`)){
+                document.querySelector(`#favorite-icon-${productId}`).classList.add('favorited');
+            }
+        }
+    })
+}
 

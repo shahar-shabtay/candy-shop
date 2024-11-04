@@ -1,9 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const searchController = require('../controllers/searchController.js');
+const { isAuthenticated } = require('../controllers/loginController.js');
 
-router.get('/search', searchController.searchProduct);
-router.get('/search/sweetType/:sweetType', searchController.searchBySweetType);
-router.get('/search/filter', searchController.searchByFilter);
+// Get
+router.get('/search', isAuthenticated, searchController.searchProduct);
+router.get('/search/sweetType/:sweetType', isAuthenticated, searchController.searchBySweetType);
+router.get('/search/filter',isAuthenticated, searchController.searchByFilter);
 
 module.exports = router;

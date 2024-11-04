@@ -10,6 +10,7 @@ function showSuccessAlert(id) {
         }, 3000);
     }
 }
+
 document.addEventListener('DOMContentLoaded', () => {
     recalculateTotal();
 
@@ -42,8 +43,10 @@ function updateCart(itemId, newQuantity) {
     })
     .then(response => {
         if (response.ok) {
-            // Successfully updated cart on server, now update the total price and refresh
-            window.location.reload();
+            showSuccessAlert('update-cart-alert');
+            setTimeout(() => {
+                window.location.reload();
+            }, 3000);
         } else {
             alert('Failed to update cart. Please try again.');
         }
@@ -97,12 +100,16 @@ async function checkoutCart() {
             };
         });
 
-        // Gather address information from the form (if required)
+        // Gather address information from the form
         const city = document.getElementById('shipping-city').value;
         const street = document.getElementById('shipping-street').value;
         const number = document.getElementById('shipping-number').value;
 
-        console.log(number);
+        // Check if any address field is empty
+        if (!city || !street || !number) {
+            showAlert();
+            return; // Stop checkout if address is incomplete
+        }
 
         // Create the checkout data object
         const checkoutData = {
@@ -130,7 +137,7 @@ async function checkoutCart() {
         const data = await response.json();
 
         if (data.success) {
-            showSuccessAlert('order-alert');
+            showSuccessAlert('checkout-alert');
             // Update cart UI to indicate the cart is now empty
             document.querySelector('.cart-container').innerHTML = '<p>Your cart is empty.</p>';
             document.getElementById('total-price').textContent = '0.00';
@@ -141,6 +148,32 @@ async function checkoutCart() {
         console.error('Error during checkout:', error);
         alert('An error occurred while placing the order. Please try again.');
     }
+}
+
+// Function to show a custom alert
+function showAlert() {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = 'jump-alert';
+    alertDiv.innerHTML = `
+        <span class="close-alert">&times;</span>
+        Please complete your address details: city, street, and number are required.
+    `;
+
+    // Append the alert div to the body
+    document.body.appendChild(alertDiv);
+
+    // Add click event for close button
+    const closeButton = alertDiv.querySelector('.close-alert');
+    closeButton.addEventListener('click', () => {
+        alertDiv.classList.add('fade-out');
+    });
+
+    // Automatically remove the alert after fade-out
+    alertDiv.addEventListener('transitionend', () => {
+        if (alertDiv.classList.contains('fade-out')) {
+            alertDiv.remove();
+        }
+    });
 }
 
 // Recalculate the total price every time the page is loaded

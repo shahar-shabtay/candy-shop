@@ -200,6 +200,19 @@ async function editProducts (req,res) {
     }
 }
 
+async function getProductDetail (req, res) {
+    try {
+        const user = req.session.user;
+        const currency = req.session.currency;
+        const rates = req.session.rates || {};
+        const product = await productsService.getProductById(req.params.productId);
+        res.render('productDetail', { product: product, user:user, currency:currency, rates:rates});
+    } catch (error) {
+        console.log(error);
+        res.redirect('/products');
+    }
+}
+
 // Async function to read kosher data from the products collection
 async function getKosherData(req, res) {
     try {
@@ -214,7 +227,7 @@ async function getKosherData(req, res) {
         console.error("Error fetching kosher data:", error);
         res.status(500).json({ error: "Internal server error" });
     }
-}
+};
 
 module.exports = {
 	getAllProducts,
@@ -224,5 +237,6 @@ module.exports = {
 	addNewFavorite,
 	removeFavoriteProduct,
     getKosherData,
-	addProduct
+	addProduct,
+    getProductDetail
 };

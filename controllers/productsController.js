@@ -227,7 +227,7 @@ async function getKosherData(req, res) {
         console.error("Error fetching kosher data:", error);
         res.status(500).json({ error: "Internal server error" });
     }
-};
+}
 
 module.exports = {
 	getAllProducts,

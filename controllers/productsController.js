@@ -1,6 +1,7 @@
 const productsService = require("../services/productsService.js");
 const customerService = require("../services/customerService.js");
 const favoriteService = require('../services/favoriteService');
+const Products = require("../models/products.js");
 const facebookPostService = require('../services/facebookPostService.js');
 const multer = require('multer');
 const path = require('path');
@@ -210,6 +211,22 @@ async function getProductDetail (req, res) {
         console.log(error);
         res.redirect('/products');
     }
+}
+
+// Async function to read kosher data from the products collection
+async function getKosherData(req, res) {
+    try {
+        const kosherCount = await Products.countDocuments({ kosher: "Yes" });
+        const nonKosherCount = await Products.countDocuments({ kosher: "No" });
+
+        res.status(200).json({
+            kosher: kosherCount,
+            nonKosher: nonKosherCount
+        });
+    } catch (error) {
+        console.error("Error fetching kosher data:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
 };
 
 module.exports = {
@@ -219,6 +236,7 @@ module.exports = {
 	deleteProduct,
 	addNewFavorite,
 	removeFavoriteProduct,
+    getKosherData,
 	addProduct,
     getProductDetail
 };

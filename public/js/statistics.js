@@ -5,24 +5,43 @@ document.addEventListener('DOMContentLoaded', function() {
     const closeButton = modal.querySelector('.close-button');
     let myChart = null;
 
-    // Function to create the chart
-    function createChart() {
-        const labels = ['Kosher', 'Non-Kosher'];
-        const counts = [50, 50];
-        const ctx = document.getElementById('candiesChart').getContext('2d');
-
-        // Destroy previous chart instance if exists to prevent duplicates
-        if (myChart) {
-            myChart.destroy();
+    // Function to fetch kosher data from the server
+    async function fetchKosherData() {
+        try {
+            const response = await fetch('/products/kosherData');  // Adjusted route for kosher data
+            if (!response.ok) throw new Error('Failed to fetch kosher data');
+            
+            const data = await response.json();
+            return [data.kosher, data.nonKosher];  // Array format for chart
+        } catch (error) {
+            console.error('Error:', error);
+            return [0, 0];  // Fallback if error occurs
         }
+    }
 
+    // Function to create the chart
+    async function createChart() {
+        const counts = await fetchKosherData();  // Get dynamic data from fetch
+        const labels = ['Kosher', 'Non-Kosher'];
+        const ctx = document.getElementById('candiesChart').getContext('2d');
+    
+        // Destroy previous chart instance if it exists to prevent duplicates
+        if (myChart) {
+            try {
+                myChart.destroy();
+            } catch (error) {
+                console.error('Error destroying previous chart:', error);
+            }
+        }
+    
+        // Create a new chart instance
         myChart = new Chart(ctx, {
             type: 'pie',
             data: {
                 labels: labels,
                 datasets: [{
                     label: 'Candies by Category',
-                    data: counts,
+                    data: counts,  // Dynamic data from fetchKosherData
                     backgroundColor: [
                         'rgba(75, 192, 192, 0.6)',  // Kosher
                         'rgba(255, 99, 132, 0.6)'   // Non-Kosher
@@ -47,7 +66,7 @@ document.addEventListener('DOMContentLoaded', function() {
         modal.style.display = 'block';
 
         // Give the modal some time to be fully rendered, then create the chart
-        setTimeout(createChart, 300);  // Increased timeout to 300ms
+        setTimeout(createChart, 500);  // Increased timeout to 300ms
     });
 
     // Close modal when clicking the close button

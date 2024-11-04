@@ -10,6 +10,16 @@ const { isAuthenticated } = require('../controllers/loginController.js');
 router.get('/', isAuthenticated, productsController.getAllProducts);
 router.get('/:productId',isAuthenticated, productsController.getProductDetail);
 
+
+// Get products list
+router.get('/', productsController.getAllProducts);
+
+// Get kosher products
+router.get('/kosherData', productsController.getKosherData);
+
+// Get delete product form
+router.get('/delete', productsController.showDeleteProductForm);
+
 // Post 
 router.post('/delete', productsController.deleteProduct);
 router.post('/addFav', productsController.addNewFavorite);

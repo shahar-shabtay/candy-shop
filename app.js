@@ -61,7 +61,7 @@ app.use('/personal',adminRoute);
 app.use('/nearMe', nearMeRoutes)
 app.use('/', loginRoutes);
 app.use('/cart', cartRoutes);
-app.use('/', searchRoutes); 
+app.use('/search', searchRoutes); 
 
 // Render 404
 app.use((req, res) => {

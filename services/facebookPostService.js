@@ -20,9 +20,9 @@ const env = loadEnv();
 const ACCESS_TOKEN = env.FACEBOOK_API_KEY;
 const PAGE_ID = env.FACEBOOK_PAGE_ID; 
 
-async function postMessageToFacebook(message, url) {
+async function postMessageToFacebook(message) {
     return new Promise((resolve, reject) => {
-        const postMessage = `${message} Check it out here: ${url}`;
+        const postMessage = `${message}`;
         const postOptions = {
             method: 'POST',
             headers: {

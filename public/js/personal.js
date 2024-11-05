@@ -511,7 +511,8 @@ function editProduct(productId) {
 
 // save product
 function saveProduct(productId) {
-
+    let isValid = true;
+    let errorMessage ='';
     // Select the correct product card using the productId
     const productCard = document.querySelector(`[data-product-id="${productId}"]`);
 
@@ -537,61 +538,117 @@ function saveProduct(productId) {
     const sweetType = productCard.querySelector('.sweet-type-dropdown').value;
     const kosher = productCard.querySelector('.kosher-dropdown').value;
 
-    // Check if any of the values are null or undefined
-    if ([name, price, description, inventory].some(value => value === undefined || value === null || value === '')) {
-        console.error('Missing product details:', { name, price, description, inventory });
-        return;
+    if(!name) {
+        isValid = false;
+        errorMessage += 'Name is required!\n';
+    } else if(!isNaN(name)) {
+        isValid = false;
+        errorMessage += "Name can't be a number!\n";
+    }
+
+    if(!price) {
+        isValid = false;
+        errorMessage += 'Price is required!\n';
+    } else if (isNaN(price)) {
+        isValid = false;
+        errorMessage += 'Price must to be a number!\n';
+    } else if (!(price > 0 && price <= 100)) {
+        isValid = false;
+        errorMessage += 'Price need to be between 1-100!\n';
+    }
+
+    if(!inventory) {
+        isValid = false;
+        errorMessage += 'Inventory is required!\n';
+    } else if(isNaN(inventory)) {
+        isValid = false;
+        errorMessage += 'Inventory must to e a number!\n';
+    } else if (!(inventory >= 0 && inventory <=200)) {
+        isValid = false;
+        errorMessage += 'Inventory need to be between 0-200!\n';
+    }
+
+    if(!description) {
+        isValid = false;
+        errorMessage += 'Description is required!\n';
+    } else if(!isNaN(description)) {
+        isValid = false;
+        errorMessage += "Description can't be a number!\n";
+    }
+
+    if(!flavors) {
+        isValid = false;
+        errorMessage += "You need to choose at least one flavor!\n";
+    }
+
+    if(!allergans) {
+        isValid = false;
+        errorMessage += "You need to choose at least one allergans!\n";
+    }
+
+    if(!sweetType) {
+        isValid = false;
+        errorMessage += "You need to choose sweet type!\n";
+    }
+
+    if(!kosher) {
+        isValid = false;
+        errorMessage += "You need to decide if the product kosher or not!\n";
     }
 
     // Send updated product data to the server
-    fetch(`/personal/admin/products/${productId}/edit`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ name, price, description, inventory, flavors: JSON.stringify(flavors), allergans: JSON.stringify(allergans), sweetType, kosher }),
-    })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Make inputs readonly again after saving
-                showSuccessAlert('product-save-alert');
-                // Remove edit-mode class from the product card
-                productCard.classList.remove('edit-mode');
-                const inputs = productCard.querySelectorAll('input');
-                inputs.forEach(input => {
-                    input.setAttribute('readonly', 'readonly');
-                    input.classList.remove('editable');
-                });
-                setTimeout (() =>{
-                    window.location.reload();
-                }, 2000);
-                
-
-
-                // Hide dropdowns
-                const dropdownContainer = productCard.querySelector('.dropdown-container');
-                if (dropdownContainer) {
-                    dropdownContainer.style.display = 'none';
-                }
-
-                // Change the save button back to an edit button
-                const editButton = productCard.querySelector('.edit-btn');
-                if (editButton) {
-                    editButton.src = '/public/images/edit.svg'; // Change icon back to edit
-                    editButton.onclick = () => editProduct(productId); // Reassign the edit function
-                } else {
-                    console.error('Edit button not found in product card for ID:', productId);
-                }
-
-            } else {
-                alert('Failed to update product');
-            }
+    if(isValid) {
+        fetch(`/personal/admin/products/${productId}/edit`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ name, price, description, inventory, flavors: JSON.stringify(flavors), allergans: JSON.stringify(allergans), sweetType, kosher }),
         })
-        .catch(error => {
-            console.error('Error updating product:', error);
-            alert('An error occurred while updating the product. Please try again.');
-        });
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Make inputs readonly again after saving
+                    showSuccessAlert('product-save-alert');
+                    // Remove edit-mode class from the product card
+                    productCard.classList.remove('edit-mode');
+                    const inputs = productCard.querySelectorAll('input');
+                    inputs.forEach(input => {
+                        input.setAttribute('readonly', 'readonly');
+                        input.classList.remove('editable');
+                    });
+                    setTimeout (() =>{
+                        window.location.reload();
+                    }, 2000);
+                    
+    
+    
+                    // Hide dropdowns
+                    const dropdownContainer = productCard.querySelector('.dropdown-container');
+                    if (dropdownContainer) {
+                        dropdownContainer.style.display = 'none';
+                    }
+    
+                    // Change the save button back to an edit button
+                    const editButton = productCard.querySelector('.edit-btn');
+                    if (editButton) {
+                        editButton.src = '/public/images/edit.svg'; // Change icon back to edit
+                        editButton.onclick = () => editProduct(productId); // Reassign the edit function
+                    } else {
+                        console.error('Edit button not found in product card for ID:', productId);
+                    }
+    
+                } else {
+                    alert('Failed to update product');
+                }
+            })
+            .catch(error => {
+                console.error('Error updating product:', error);
+                alert('An error occurred while updating the product. Please try again.');
+            });
+    } else {
+        showErrorAlert(errorMessage);
+    }
 }
 
 

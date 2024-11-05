@@ -46,8 +46,8 @@
                                         <tbody>
                                             <% customers.forEach(user => { %>
                                             <tr data-id="<%= user.customerId %>" class="customer-tr">
-                                                <td class="customer-td"><input name="name" class="customer-name-input customer-input" type="text" value="<%= user.name %>" readonly></td>
-                                                <td class="customer-td"><input name="email" class="customer-email-input customer-input" type="email" value="<%= user.email %>" readonly></td>
+                                                <td class="customer-td"><input id="name" name="name" class="customer-name-input customer-input" type="text" value="<%= user.name %>" readonly></td>
+                                                <td class="customer-td"><input id="email" name="email" class="customer-email-input customer-input" type="email" value="<%= user.email %>" readonly></td>
                                                 <td class="customer-td">
                                                     <div class="birthday-select-container">
                                                         <!-- Select field for customer b-day -->
@@ -67,11 +67,11 @@
                                                             <% } %>
                                                         </select>
                                                 </td>
-                                                <td class="customer-td"><input name="phone" class="customer-phone-input customer-input" type="tel" value="<%= user.phone %>" readonly></td>
+                                                <td class="customer-td"><input id="phone" name="phone" class="customer-phone-input customer-input" type="tel" value="<%= user.phone %>" readonly></td>
                                                 <td class="customer-td">
-                                                    <input name="city" class="customer-address-input customer-input" type="text" value="<%= user.address.street %>" readonly>
-                                                    <input name="street" class="customer-address-input customer-input" type="text" value="<%= user.address.city %>" readonly>
-                                                    <input name="number" class="customer-address-input customer-input" type="number" value="<%= user.address.number %>" readonly>
+                                                    <input id="city" name="city" class="customer-address-input customer-input" type="text" value="<%= user.address.street %>" readonly>
+                                                    <input id="street" name="street" class="customer-address-input customer-input" type="text" value="<%= user.address.city %>" readonly>
+                                                    <input id="addNumber" name="number" class="customer-address-input customer-input" type="number" value="<%= user.address.number %>" readonly>
                                                 </td>
                                                 <td class="customer-td">
                                                     <select id="role" name="role" class="customer-role-select customer-input" disabled>

@@ -292,51 +292,100 @@ function toggleEditMode(customerId) {
 
 // Save new customer details
 function saveCustomer(customerId) {
-    const customerRow = document.querySelector(`tr[data-id="${customerId}"]`);
-    const editButton = customerRow.querySelector('.edit-btn-cust');
-    const saveButton = customerRow.querySelector('.save-btn-cust');
+    let isValid = true;
+    let errorMessage = '';
 
-    // Toggle visibility: Show edit button, hide save button
-    editButton.style.display = 'inline-block';
-    saveButton.style.display = 'none';
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const year = document.getElementById('year').value;
+    const phone = document.getElementById('phone').value;
+    const addNumber = document.getElementById('addNumber').value;
+    const city = document.getElementById('city').value;
+    const street =  document.getElementById('street').value;
 
-    // Collect data and disable inputs
-    const inputs = customerRow.querySelectorAll('.customer-input');
-    const customerData = {};
-    inputs.forEach(input => {
-        customerData[input.name] = input.value;
-        if (input.tagName === 'SELECT') {
-            input.setAttribute('disabled', 'true');
-        } else {
-            input.setAttribute('readonly', 'true');
-        }
-        input.classList.remove('editable');
-    });
+    if (!name) {
+        isValid = false;
+        errorMessage += 'Name is required!\n';
+    } else if(!isNaN(name)) {
+        isValid = false;
+        errorMessage += "Name can't be a number!\n";
+    }
 
-    // Log the data to check if the values are correct
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!email) {
+        isValid = false;
+        errorMessage += 'Email is required!\n';
+    } else if(!emailPattern.test(email)) {
+        isValid = false;
+        errorMessage += "Please enter a valid email!\n";
+    }
+    
+    if(year > 2014) {
+        isValid = false;
+        errorMessage += 'Age too young - year need to be 2014 and less!\n';
+    }
 
-    // Send the data to the server using fetch
-    fetch(`/personal/admin/customers/update/${customerId}`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(customerData),
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            showSuccessAlert('save-alert');
+    const phonePattern = /^(052|050|053|054|055|058)\d{7}$/;
+    if(!phone) {
+        isValid = false;
+        errorMessage += "Phone is required!\n";
+    } else if(!phonePattern.test(phone)) {
+        isValid = false;
+        errorMessage += "Please enter a valid phone!\n";
+    }
 
-            // Remove background color when exiting edit mode
-            customerRow.classList.remove('edit-mode');
-        } else {
-            console.error('Error updating customer:', data.message);
-        }
-    })
-    .catch(error => {
-        console.error('Error with the server request:', error);
-    });
+    if(!city || !street || !addNumber) {
+        isValid = false;
+        errorMessage += "Please enter address!\n";
+    }
+
+    if(isValid) {
+        const customerRow = document.querySelector(`tr[data-id="${customerId}"]`);
+        const editButton = customerRow.querySelector('.edit-btn-cust');
+        const saveButton = customerRow.querySelector('.save-btn-cust');
+
+        // Toggle visibility: Show edit button, hide save button
+        editButton.style.display = 'inline-block';
+        saveButton.style.display = 'none';
+
+        // Collect data and disable inputs
+        const inputs = customerRow.querySelectorAll('.customer-input');
+        const customerData = {};
+        inputs.forEach(input => {
+            customerData[input.name] = input.value;
+            if (input.tagName === 'SELECT') {
+                input.setAttribute('disabled', 'true');
+            } else {
+                input.setAttribute('readonly', 'true');
+            }
+            input.classList.remove('editable');
+        });
+
+        fetch(`/personal/admin/customers/update/${customerId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(customerData),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showSuccessAlert('save-alert');
+
+                // Remove background color when exiting edit mode
+                customerRow.classList.remove('edit-mode');
+            } else {
+                console.error('Error updating customer:', data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error with the server request:', error);
+        });
+    } else {
+        showErrorAlert(errorMessage);
+    }
+    
 }
 //---------------
 // All Orders    |
@@ -443,7 +492,7 @@ function deleteProduct(productId) {
     .then(response => {
         if (response.ok) {
             showSuccessAlert('delete-alert');
-            document.querySelector(`[data-product-id="${productId}"]`).remove(); // Remove product card from view
+            document.querySelector(`[data-product-id="${productId}"]`).remove();
         } else {
             return response.text().then(text => {
                 try {
@@ -462,48 +511,38 @@ function deleteProduct(productId) {
 
 // edit product
 function editProduct(productId) {
-    // Select the correct product card using the provided productId
     const productCard = document.querySelector(`[data-product-id="${productId}"]`);
 
     if (!productCard) {
         console.error('Product card not found for ID:', productId);
         return;
     }
-
-    // Add edit-mode class to the product card
     productCard.classList.add('edit-mode');
 
-    // Find all input fields within the product card
     const inputs = productCard.querySelectorAll('input');
 
-    // Check if the inputs exist and make them editable
     if (inputs.length === 0) {
         console.error('No input fields found in product card for ID:', productId);
     } else {
         inputs.forEach(input => {
             input.removeAttribute('readonly');
-            input.classList.add('editable');  // Add a class to indicate that the input is now editable
+            input.classList.add('editable');
             if (input.classList.contains('product-price-input')) {
-                // Retrieve the original price from data-original-price on the input itself
                 const originalPrice = input.getAttribute('data-original-price');
-            
-                // Set the input value to the original price from the DB without currency sign
                 input.value = originalPrice;
             }
         });
     }
 
-    // Show dropdowns
     const dropdownContainer = productCard.querySelector('.dropdown-container');
     if (dropdownContainer) {
         dropdownContainer.style.display = 'block';
     }
 
-    // Change the edit button to a save button
     const editButton = productCard.querySelector('.edit-btn');
     if (editButton) {
-        editButton.src = '/public/images/save.svg'; // Change icon to save
-        editButton.onclick = () => saveProduct(productId); // Assign save function to the button
+        editButton.src = '/public/images/save.svg';
+        editButton.onclick = () => saveProduct(productId);
     } else {
         console.error('Edit button not found in product card for ID:', productId);
     }
@@ -513,7 +552,6 @@ function editProduct(productId) {
 function saveProduct(productId) {
     let isValid = true;
     let errorMessage ='';
-    // Select the correct product card using the productId
     const productCard = document.querySelector(`[data-product-id="${productId}"]`);
 
     if (!productCard) {
@@ -521,20 +559,13 @@ function saveProduct(productId) {
         return;
     }
 
-    // Get values from the inputs using the correct class selectors
     const name = productCard.querySelector('.product-name')?.value;
     const price = productCard.querySelector('.product-price')?.value;
     const description = productCard.querySelector('.product-description')?.value;
     const inventory = productCard.querySelector('.product-inventory')?.value;
 
-    // Get selected flavors
     const flavors = Array.from(productCard.querySelectorAll('.flavor-dropdown option:checked')).map(e => e.value);
-    
-    // Get selected allergans
     const allergans = Array.from(productCard.querySelectorAll('.allergan-dropdown option:checked')).map(e => e.value);
-    
-    //const flavors = Array.from(productCard.querySelectorAll('.flavor-dropdown option:checked')).map(e => e.value);
-    //const allergans = Array.from(productCard.querySelectorAll('.allergan-dropdown option:checked')).map(e => e.value);
     const sweetType = productCard.querySelector('.sweet-type-dropdown').value;
     const kosher = productCard.querySelector('.kosher-dropdown').value;
 
@@ -596,7 +627,6 @@ function saveProduct(productId) {
         errorMessage += "You need to decide if the product kosher or not!\n";
     }
 
-    // Send updated product data to the server
     if(isValid) {
         fetch(`/personal/admin/products/${productId}/edit`, {
             method: 'POST',
@@ -608,9 +638,7 @@ function saveProduct(productId) {
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    // Make inputs readonly again after saving
                     showSuccessAlert('product-save-alert');
-                    // Remove edit-mode class from the product card
                     productCard.classList.remove('edit-mode');
                     const inputs = productCard.querySelectorAll('input');
                     inputs.forEach(input => {
@@ -620,20 +648,16 @@ function saveProduct(productId) {
                     setTimeout (() =>{
                         window.location.reload();
                     }, 2000);
-                    
-    
-    
-                    // Hide dropdowns
+                        
                     const dropdownContainer = productCard.querySelector('.dropdown-container');
                     if (dropdownContainer) {
                         dropdownContainer.style.display = 'none';
                     }
     
-                    // Change the save button back to an edit button
                     const editButton = productCard.querySelector('.edit-btn');
                     if (editButton) {
-                        editButton.src = '/public/images/edit.svg'; // Change icon back to edit
-                        editButton.onclick = () => editProduct(productId); // Reassign the edit function
+                        editButton.src = '/public/images/edit.svg';
+                        editButton.onclick = () => editProduct(productId);
                     } else {
                         console.error('Edit button not found in product card for ID:', productId);
                     }
@@ -653,9 +677,8 @@ function saveProduct(productId) {
 
 
 //---------------
-// Add Products  |
+// Add Product   |
 //---------------
-// JavaScript function to update the live preview of the product details
 
 document.addEventListener('DOMContentLoaded', () => {
     const nameInput = document.getElementById('name');
@@ -670,35 +693,30 @@ document.addEventListener('DOMContentLoaded', () => {
     const previewDescription = document.getElementById('previewDescription');
     const previewImage = document.getElementById('previewImage');
 
-    // Update the name in the preview card
     if (nameInput) {
         nameInput.addEventListener('input', () => {
             previewName.textContent = nameInput.value || 'Product Name';
         });
     }
 
-    // Update the price in the preview card
     if (priceInput) {
         priceInput.addEventListener('input', () => {
             previewPrice.textContent = priceInput.value ? `${priceInput.value}₪` : 'Price: $0';
         });
     }
 
-    // Update the inventory in the preview card
     if (inventoryInput) {
         inventoryInput.addEventListener('input', () => {
             previewInventory.textContent = inventoryInput.value ? `${inventoryInput.value} items` : 'Inventory: 0 items';
         });
     }
 
-    // Update the description in the preview card
     if (descriptionInput) {
         descriptionInput.addEventListener('input', () => {
             previewDescription.textContent = descriptionInput.value || 'Description';
         });
     }
 
-    // Update the image in the preview card
     if (fileInput) {
         fileInput.addEventListener('change', () => {
             const file = fileInput.files[0];
@@ -715,7 +733,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-//add the flavors array
 let selectedFlavors = [];
 
 document.getElementById('FlavorDropdown').addEventListener('change', function() {
@@ -729,7 +746,7 @@ document.getElementById('FlavorDropdown').addEventListener('change', function() 
 
 function renderSelectedFlavors() {
     const selectedFlavorsDiv = document.getElementById('selectedFlavors');
-    selectedFlavorsDiv.innerHTML = ''; // Clear the div before rendering
+    selectedFlavorsDiv.innerHTML = '';
     
     selectedFlavors.forEach((flavor, index) => {
         const flavorSpan = document.createElement('span');
@@ -753,7 +770,6 @@ function removeFlavor(index) {
     renderSelectedFlavors();
 }
 
-//add the allergans array
 let selectedAllergans = [];
 
 document.getElementById('AllerganDropdown').addEventListener('change', function() {
@@ -767,7 +783,7 @@ document.getElementById('AllerganDropdown').addEventListener('change', function(
 
 function renderSelectedAllergans() {
     const selectedAllergansDiv = document.getElementById('selectedAllergans');
-    selectedAllergansDiv.innerHTML = ''; // Clear the div before rendering
+    selectedAllergansDiv.innerHTML = '';
     
     selectedAllergans.forEach((allergan, index) => {
         const allerganSpan = document.createElement('span');
@@ -791,7 +807,6 @@ function removeAllergan(index) {
     renderSelectedAllergans();
 }
 
-//add the sweet type
 let selectedSweetType = "";
 
 document.getElementById('SweetTypeDropdown').addEventListener('change', function() {
@@ -799,13 +814,13 @@ document.getElementById('SweetTypeDropdown').addEventListener('change', function
 
     if (selectedValue !== "") {
         selectedSweetType = selectedValue;
-        renderSelectedSweetType(); // Display the selected sweet type
+        renderSelectedSweetType();
     }
 });
 
 function renderSelectedSweetType() {
     const selectedSweetTypeDiv = document.getElementById('selectedSweetType');
-    selectedSweetTypeDiv.innerHTML = ''; // Clear the div before rendering
+    selectedSweetTypeDiv.innerHTML = '';
     
     const sweetTypeSpan = document.createElement('span');
     sweetTypeSpan.textContent = selectedSweetType;
@@ -814,7 +829,6 @@ function renderSelectedSweetType() {
     selectedSweetTypeDiv.appendChild(sweetTypeSpan);
 }
 
-//add if kosher
 let selectedKosher = "";
 
 document.getElementById('KosherDropdown').addEventListener('change', function() {
@@ -822,13 +836,13 @@ document.getElementById('KosherDropdown').addEventListener('change', function() 
 
     if (selectedValue !== "") {
         selectedKosher = selectedValue;
-        renderSelectedKosher(); // Display the selected kosher
+        renderSelectedKosher();
     }
 });
 
 function renderSelectedKosher() {
     const selectedKosherDiv = document.getElementById('selectedKosher');
-    selectedKosherDiv.innerHTML = ''; // Clear the div before rendering
+    selectedKosherDiv.innerHTML = '';
     
     const kosherSpan = document.createElement('span');
     kosherSpan.textContent = selectedKosher;
@@ -837,6 +851,7 @@ function renderSelectedKosher() {
     selectedKosherDiv.appendChild(kosherSpan);
 }
 
+// Function of validate the add product form and sent the new product to the server.
 async function submitProduct() {
     let isValid = true;
     let errorMessage = '';
@@ -959,7 +974,7 @@ async function submitProduct() {
     
 }
 
-// Attach submit event listener to the form
+// Event listener of add product
 document.addEventListener('DOMContentLoaded', () => {
     const productForm = document.getElementById('productForm');
     if (productForm) {

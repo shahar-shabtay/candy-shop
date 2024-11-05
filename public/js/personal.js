@@ -76,27 +76,47 @@ document.addEventListener('DOMContentLoaded', () => {
         event.preventDefault(); // Prevent default form submission
 
         // Get form values
+        const name = document.getElementById('name').value;
         const email = document.getElementById('email').value;
         const phone = document.getElementById('phone').value;
-        const birthDay = document.getElementById('day').value;
-        const birthMonth = document.getElementById('month').value;
         const birthYear = parseInt(document.getElementById('year').value, 10);
         const password = document.getElementById('password').value;
+        const city = document.getElementById('city').value;
+        const street = document.getElementById('street').value;
+        const addNumber = document.getElementById('number').value;
 
         // Validation flags and error message
         let isValid = true;
         let errorMessage = '';
+        if(!password) {
+            isValid = false;
+            errorMessage += 'Password is required.\n';
+        }
+
+        if(!name) {
+            isValid = false;
+            errorMessage += "Name is required!\n";
+        } else if(!isNaN(name)) {
+            isValid = false;
+            errorMessage += "Name can't be number!\n";
+        }
 
         // Email validation
         const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailPattern.test(email)) {
+        if(!email) {
+            isValid = false;
+            errorMessage += 'Email is required.\n';
+        } else if (!emailPattern.test(email)) {
             isValid = false;
             errorMessage += 'Invalid email format.\n';
         }
 
         // Phone number validation (assuming format: 050/055/054/058/053/052 + 7 digits)
         const phonePattern = /^(050|055|054|058|053|052)\d{7}$/;
-        if (!phonePattern.test(phone)) {
+        if(!phone) {
+            isValid = false;
+            errorMessage += 'Phone is required.\n';
+        } else if (!phonePattern.test(phone)) {
             isValid = false;
             errorMessage += 'Phone number must start with 050, 055, 054, 058, 053, or 052, followed by 7 digits.\n';
         }
@@ -104,7 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Birth year validation (must be 2014 or earlier)
         if (birthYear > 2014 || isNaN(birthYear)) {
             isValid = false;
-            errorMessage += 'Birth year must be 2014 or earlier.\n';
+            errorMessage += 'You are too yound, you need to be at least 10.\n';
         }
 
         // Password validation (minimum 6 characters, English letters and numbers only)
@@ -114,6 +134,10 @@ document.addEventListener('DOMContentLoaded', () => {
             errorMessage += 'Password must be at least 6 characters and contain only English letters or numbers.\n';
         }
 
+        if(!city || !addNumber || !street) {
+            isValid = false;
+            errorMessage += "Please enter address!\n";
+        }
         if (isValid) {
             setTimeout(() => {
                 if(document.getElementById('updateForm')){

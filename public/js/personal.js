@@ -11,6 +11,41 @@ function showSuccessAlert(id) {
     }
 }
 
+
+function showErrorAlert(message) {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = 'jump-alert';
+    alertDiv.innerHTML = `
+        <span class="close-alert">&times;</span>
+        ${message.replace(/\n/g, '<br>')}
+    `;
+
+    // Append the alert div to the body
+    document.body.appendChild(alertDiv);
+
+    // Calculate the duration based on the number of lines (1 second per line)
+    const lineCount = message.split('\n').length;
+    const displayDuration = lineCount * 1000; // Duration in milliseconds
+
+    // Close button functionality
+    const closeButton = alertDiv.querySelector('.close-alert');
+    closeButton.addEventListener('click', () => {
+        alertDiv.classList.add('fade-out');
+    });
+
+    // Automatically remove the alert after the calculated display duration
+    setTimeout(() => {
+        alertDiv.classList.add('fade-out');
+    }, displayDuration);
+
+    // Remove the alert after fade-out transition
+    alertDiv.addEventListener('transitionend', () => {
+        if (alertDiv.classList.contains('fade-out')) {
+            alertDiv.remove();
+        }
+    });
+}
+
 // *****************
 // My Account      *
 // *****************   
@@ -746,8 +781,80 @@ function renderSelectedKosher() {
 }
 
 async function submitProduct() {
+    let isValid = true;
+    let errorMessage = '';
 
-    const form = document.getElementById('productForm');
+    const name = document.getElementById('name').value;
+    const price = document.getElementById('price').value;
+    const inventory = document.getElementById('inventory').value;
+    const description = document.getElementById('description').value;
+    const flavors = document.getElementById('FlavorDropdown').value;
+    const allergans = document.getElementById('AllerganDropdown').value;
+    const sweetType = document.getElementById('SweetTypeDropdown').value;
+    const kosher = document.getElementById('KosherDropdown').value;
+
+    if(!name) {
+        isValid = false;
+        errorMessage += 'Name is required!\n';
+    } else if(!isNaN(name)) {
+        isValid = false;
+        errorMessage += "Name can't be a number!\n";
+    }
+
+    if(!price) {
+        isValid = false;
+        errorMessage += 'Price is required!\n';
+    } else if (isNaN(price)) {
+        isValid = false;
+        errorMessage += 'Price must to be a number!\n';
+    } else if (!(price > 0 && price <= 100)) {
+        isValid = false;
+        errorMessage += 'Price need to be between 1-100!\n';
+    }
+
+    if(!inventory) {
+        isValid = false;
+        errorMessage += 'Inventory is required!\n';
+    } else if(isNaN(inventory)) {
+        isValid = false;
+        errorMessage += 'Inventory must to e a number!\n';
+    } else if (!(inventory >= 0 && inventory <=200)) {
+        isValid = false;
+        errorMessage += 'Inventory need to be between 0-200!\n';
+    }
+
+    if(!description) {
+        isValid = false;
+        errorMessage += 'Description is required!\n';
+    } else if(!isNaN(description)) {
+        isValid = false;
+        errorMessage += "Description can't be a number!\n";
+    }
+
+    if(!flavors) {
+        isValid = false;
+        errorMessage += "You need to choose at least one flavor!\n";
+    }
+
+    if(!allergans) {
+        isValid = false;
+        errorMessage += "You need to choose at least one allergans!\n";
+    }
+
+    if(!sweetType) {
+        isValid = false;
+        errorMessage += "You need to choose sweet type!\n";
+    }
+
+    if(!kosher) {
+        isValid = false;
+        errorMessage += "You need to decide if the product kosher or not!\n";
+    }
+
+    if(!isValid) {
+        showErrorAlert(errorMessage);
+    } else  {
+        const form = document.getElementById('productForm');
     const formData = new FormData(form); // Get form data, including the file
 
     // Add selected flavors to the form data
@@ -791,6 +898,8 @@ async function submitProduct() {
         alert('Error: ' + error.message);
         submitButton.disabled = false; // Re-enable the submit button on error
     }
+    }
+    
 }
 
 // Attach submit event listener to the form

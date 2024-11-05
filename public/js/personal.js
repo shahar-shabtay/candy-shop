@@ -745,8 +745,7 @@ function renderSelectedKosher() {
     selectedKosherDiv.appendChild(kosherSpan);
 }
 
-async function submitProduct(event) {
-    event.preventDefault(); // Prevent default form submission behavior
+async function submitProduct() {
 
     const form = document.getElementById('productForm');
     const formData = new FormData(form); // Get form data, including the file

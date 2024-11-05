@@ -1,3 +1,5 @@
+const e = require("express");
+
 function showSuccessAlert(id) {
     const successAlert = document.getElementById(id);
     if (successAlert) {
@@ -1032,6 +1034,8 @@ function toggleEditModeStore(storeId) {
 }
 
 function saveStore(storeId) {
+
+
     const storeRow = document.querySelector(`tr[data-id="${storeId}"]`);
     const editButton = storeRow.querySelector('.edit-btn-store');
     const saveButton = storeRow.querySelector('.save-btn-store');
@@ -1078,55 +1082,89 @@ function saveStore(storeId) {
 }
 
 async function submitStore() {
-    // Get form data
-    let name = document.getElementById('name').value;
-    let address = document.getElementById('address').value;
-    let coordinates = document.getElementById('coordinates').value
-                        .split(',')
-                        .map(coord => parseFloat(coord.trim()));
-    console.log(coordinates)
-    let storeId = new Date().getTime().toString();
+    const name = document.getElementById('name').value;
+    const city = document.getElementById('city').value;
+    const street = document.getElementById('street').value;
+    const number = document.getElementById('number').value;
+    const latitude = document.getElementById('latitude').value.trim();
+    const longtitude = document.getElementById('longitude').value.trim();
 
-    // Construct the store object
-    let store = {
-        name: name,
-        address: address,
-        coordinates: coordinates,
-        storeId: storeId
-    };
+    let isValid = true;
+    let errorMessage ='';
 
-    // Disable submit button to prevent duplicate submissions
-    const submitButton = document.getElementById('submitButton');
-    submitButton.disabled = true;
-
-    // Prepare fetch options
-    const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams(store),
-        credentials: 'same-origin'
-    };
-
-    try {
-        // Make fetch request
-        const response = await fetch('/personal/admin/addStores', requestOptions);
-
-        if (response.ok) {
-            // If store creation succeeded, redirect to stores page
-            showSuccessAlert('save-store-alert'); // Show success alert
-            setTimeout(() => {
-                window.location.href = '/personal/admin/stores';
-            },2000);
-            
-        } else {
-            // Log error
-            console.error(`Error ${response.status}: ${response.statusText}`);
-        }
-    } catch (error) {
-        console.log('Error:', error);
-        alert('Error: ' + error);
-        submitButton.disabled = false;  // Enable the button again
+    if(!name) {
+        isValid = false;
+        errorMessage += 'Name is required!\n';
+    } else if (!isNaN(name)) {
+        isValid = false;
+        errorMessage += "Name can't be a number!\n";
     }
+
+    if(!city || !street || !number) {
+        isValid = false;
+        errorMessage += 'Address is required!\n';
+    }
+
+    const coordinatePatern = /^(\+|-)?((([1-8]?[0-9])(\.\d+)?)|(90(\.0+)?))$/;
+    if(!latitude || !longtitude) {
+        isValid = false;
+        errorMessage += 'Coordinates are required!\n';
+    } else if(!coordinatePatern.test(latitude) || !coordinatePatern.test(longtitude)) {
+        isValid = false;
+        errorMessage += 'The coordinate you enter are invalid! (ex 34.0000,34.0000)\n';
+    }
+
+    if(isValid) {
+        // Get form data
+        let address = city + ',' + street + ',' + number;
+        let coordinates = [latitude, longtitude];
+        console.log(coordinates)
+        let storeId = new Date().getTime().toString();
+
+        // Construct the store object
+        let store = {
+            name: name,
+            address: address,
+            coordinates: coordinates,
+            storeId: storeId
+        };
+
+        // Disable submit button to prevent duplicate submissions
+        const submitButton = document.getElementById('submitButton');
+        submitButton.disabled = true;
+
+        // Prepare fetch options
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams(store),
+            credentials: 'same-origin'
+        };
+
+        try {
+            // Make fetch request
+            const response = await fetch('/personal/admin/addStores', requestOptions);
+
+            if (response.ok) {
+                // If store creation succeeded, redirect to stores page
+                showSuccessAlert('save-store-alert'); // Show success alert
+                setTimeout(() => {
+                    window.location.href = '/personal/admin/stores';
+                },2000);
+                
+            } else {
+                // Log error
+                console.error(`Error ${response.status}: ${response.statusText}`);
+            }
+        } catch (error) {
+            console.log('Error:', error);
+            alert('Error: ' + error);
+            submitButton.disabled = false;  // Enable the button again
+        }
+    } else {
+        showErrorAlert(errorMessage);
+    }
+    
 }
 
 // Delete store

@@ -1031,15 +1031,13 @@ function saveStore(storeId) {
     const saveButton = storeRow.querySelector('.save-btn-store');
 
     // Retrieve specific values from the input fields within the storeRow
-    const name = document.getElementById('name').value;
-    const city = document.getElementById('city').value;
-    const street = document.getElementById('street').value;
-    const number = document.getElementById('number').value;
-    const latitude = document.getElementById('latitude').value.trim();
-    const longitude = document.getElementById('longitude').value.trim();
+    const name = storeRow.querySelector('.name').value;
+    const city = storeRow.querySelector('.city').value;
+    const street = storeRow.querySelector('.street').value;
+    const number = storeRow.querySelector('.number').value;
+    const latitude = storeRow.querySelector('.latitude').value.trim();
+    const longitude = storeRow.querySelector('.longitude').value.trim();
 
-    const coordinates = [latitude,longitude];
-    console.log(coordinates);
     // Create store data object
     const storeData = {
         name: name,
@@ -1048,10 +1046,8 @@ function saveStore(storeId) {
             street: street,
             number: number,
         },
-        coordinates: coordinates,
+        coordinates: [parseFloat(latitude), parseFloat(longitude)],
     };
-
-    console.log(storeData);
 
     // Toggle visibility: Show edit button, hide save button
     editButton.style.display = 'inline-block';
@@ -1070,7 +1066,7 @@ function saveStore(storeId) {
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({storeData: storeData}),
+        body: JSON.stringify(storeData),
     })
     .then(response => response.json())
     .then(data => {

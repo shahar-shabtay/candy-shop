@@ -11,7 +11,7 @@ async function getAllStores() {
 async function updateStoreDetails(storeId, updateStore) {
     try {
         const updatedStore = await Stores.findOneAndUpdate(
-            {storeId : storeId},
+            { storeId: storeId },
             updateStore,
             { new: true, runValidators: true }
         );
@@ -21,7 +21,7 @@ async function updateStoreDetails(storeId, updateStore) {
         return updatedStore;
     } catch(err) {
         console.error('Error while updating store', err);
-        
+        throw err;
     }
 }
 

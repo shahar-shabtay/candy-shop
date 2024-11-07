@@ -48,16 +48,16 @@
                                             <% stores.forEach(store => { %>
                                             <tr id="store-row" data-id="<%= store.storeId %>" class="store-item">
                                                 <td class="store-name">
-                                                    <input id="name" name="name" class="store-name-input store-input" type="text" value="<%= store.name %>" readonly>
+                                                    <input id="name" name="name" class="store-name-input store-input name" type="text" value="<%= store.name %>" readonly>
                                                 </td>
                                                 <td class="store-address">
-                                                    <input id="city" name="city" class="store-address-input store-input" type="text" value="<%= store.address.city %>" readonly>
-                                                    <input id="street" name="street" class="store-address-input store-input" type="text" value="<%= store.address.street %>" readonly>
-                                                    <input id="number" name="number" class="store-address-input store-input" type="input" value="<%= store.address.number %>" readonly>
+                                                    <input id="city" name="city" class="store-address-input store-input city" type="text" value="<%= store.address.city %>" readonly>
+                                                    <input id="street" name="street" class="store-address-input store-input street" type="text" value="<%= store.address.street %>" readonly>
+                                                    <input id="number" name="number" class="store-address-input store-input number" type="input" value="<%= store.address.number %>" readonly>
                                                 </td>
                                                 <td class="store-coordinates">
-                                                    <input id="latitude" name="latitude" class="store-coordinates-input store-input" type="text" value="<%= store.coordinates[0] %>" readonly>
-                                                    <input id="longitude" name="longitude" class="store-coordinates-input store-input" type="text" value="<%= store.coordinates[1]%>" readonly>
+                                                    <input id="latitude" name="latitude" class="store-coordinates-input store-input latitude" type="text" value="<%= store.coordinates[0] %>" readonly>
+                                                    <input id="longitude" name="longitude" class="store-coordinates-input store-input longitude" type="text" value="<%= store.coordinates[1]%>" readonly>
                                                 </td>
                                                 <td class="action-td">
                                                     <img class="edit-btn-store edit-btn" src="/public/images/edit.svg" onclick="toggleEditModeStore('<%= store.storeId %>')" style="display:inline-block;">

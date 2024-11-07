@@ -16,18 +16,8 @@ async function getStores(req, res) {
 async function updateStoreDetails(req, res) {
     try {
         const storeId = req.params.storeId; // Get storeId from the route parameters
-        const storeData = req.body.storeData;
-        const coordinates= [latitude, longitude];
-        // const storeData = {
-        //     name: name,
-        //     address: {
-        //         city:city,
-        //         street: street,
-        //         number : number,
-        //     },
-        //     coordinates: coordinates,
-        // }
-        console.log('controller', {storeData});
+        const storeData = req.body;
+
         const updatedStore = await storesService.updateStoreDetails(storeId, storeData);
 
         if (updatedStore) {

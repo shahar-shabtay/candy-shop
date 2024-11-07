@@ -53,7 +53,7 @@
                                             </td>
                                             <td><%= order.status %></td>
                                             <td class="action-buttons">
-                                                <img class="order-actions see-order-btn see-order2-btn" src="/public/images/seeOrder.svg" data-order-id="<%= order.orderId %>">
+                                                <img id="see-order" class="order-actions see-order-btn see-order2-btn" src="/public/images/seeOrder.svg" data-order-id="<%= order.orderId %>" onclick="showCustOrder()">
                                             </td>
                                         </tr>
                                     <% }) %>

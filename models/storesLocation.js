@@ -16,9 +16,13 @@ const storesLocationSchema = new Schema({
     validate: [arrayLimit, 'Coordinates should be an array of two numbers']
   },
   address: {
-    type: String,
-    required: true
-  }
+    type: {
+        city: String,
+        street: String,
+        number: Number
+    },
+    required: true,
+},
 });
 
 // Validator for coordinates array

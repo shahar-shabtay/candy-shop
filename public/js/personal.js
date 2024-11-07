@@ -1,5 +1,3 @@
-const e = require("express");
-
 function showSuccessAlert(id) {
     const successAlert = document.getElementById(id);
     if (successAlert) {
@@ -12,7 +10,6 @@ function showSuccessAlert(id) {
         }, 3000);
     }
 }
-
 
 function showErrorAlert(message) {
     const alertDiv = document.createElement('div');
@@ -155,36 +152,36 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Function to show custom alert
-function showAlert(message) {
-    const alertDiv = document.createElement('div');
-    alertDiv.className = 'jump-alert';
-    alertDiv.innerHTML = `
-        <span class="close-alert">&times;</span>
-        ${message.replace(/\n/g, '<br>')}
-    `;
+// function showAlert(message) {
+//     const alertDiv = document.createElement('div');
+//     alertDiv.className = 'jump-alert';
+//     alertDiv.innerHTML = `
+//         <span class="close-alert">&times;</span>
+//         ${message.replace(/\n/g, '<br>')}
+//     `;
 
-    // Append the alert div to the body
-    document.body.appendChild(alertDiv);
+//     // Append the alert div to the body
+//     document.body.appendChild(alertDiv);
 
-    // Close button functionality
-    const closeButton = alertDiv.querySelector('.close-alert');
-    closeButton.addEventListener('click', () => {
-        alertDiv.classList.add('fade-out');
-    });
+//     // Close button functionality
+//     const closeButton = alertDiv.querySelector('.close-alert');
+//     closeButton.addEventListener('click', () => {
+//         alertDiv.classList.add('fade-out');
+//     });
 
-    // Remove the alert after fade-out transition
-    alertDiv.addEventListener('transitionend', () => {
-        if (alertDiv.classList.contains('fade-out')) {
-            alertDiv.remove();
-        }
-    });
-}
+//     // Remove the alert after fade-out transition
+//     alertDiv.addEventListener('transitionend', () => {
+//         if (alertDiv.classList.contains('fade-out')) {
+//             alertDiv.remove();
+//         }
+//     });
+// }
 
 //--------------
 // My Favorite  |
 //--------------
 
-// Add Product To Favorite
+// Add Product To Favorite - work
 function addToFavorites(productId) {
     fetch('/products/addFav', {
         method: 'POST',
@@ -203,7 +200,7 @@ function addToFavorites(productId) {
     })
 }
 
-// Remove Product From Favorite
+// Remove Product From Favorite - work
 async function removeFavorite(productId) {
     try {
         const response = await fetch('/personal/myAccount/favorite/remove', {
@@ -230,16 +227,11 @@ async function removeFavorite(productId) {
 // My Orders    |
 //--------------
 
-// fetch order id for details
-document.querySelectorAll('.see-order2-btn').forEach(button => {
-    button.addEventListener('click', function () {
-      const orderId = this.getAttribute('data-order-id');
-  
-      // Redirect the user to the order details page
-      window.location.href = `/personal/myAccount/orders/${orderId}`;
-    });
-});
-  
+// See order details - work
+async function showCustOrder() {
+    const orderId = document.getElementById('see-order').getAttribute('data-order-id');
+    window.location.href = `/personal/myAccount/orders/${orderId}`;
+}
 
 // Dynamic status bar logic
 const statusBar = document.getElementById('statusBar');
@@ -490,14 +482,12 @@ document.querySelectorAll('.remove').forEach(icon => {
     });
 });
 
-document.querySelectorAll('.see-order1-btn').forEach(button => {
-    button.addEventListener('click', function () {
-      const orderId = this.getAttribute('data-order-id');
-  
-      // Redirect the user to the order details page
-      window.location.href = `/personal/admin/orders/${orderId}`;
-    });
-});
+// See order details - works
+async function seeOrder() {
+    const orderId = document.getElementById('see-order').getAttribute('data-order-id');
+    window.location.href=`/personal/admin/orders/${orderId}`;
+}
+
 
 //---------------
 // All Products  |
@@ -707,6 +697,8 @@ function saveProduct(productId) {
 //---------------
 
 document.addEventListener('DOMContentLoaded', () => {
+    console.log("Preview script loaded");
+
     const nameInput = document.getElementById('name');
     const priceInput = document.getElementById('price');
     const inventoryInput = document.getElementById('inventory');
@@ -1034,44 +1026,59 @@ function toggleEditModeStore(storeId) {
 }
 
 function saveStore(storeId) {
-
-
     const storeRow = document.querySelector(`tr[data-id="${storeId}"]`);
     const editButton = storeRow.querySelector('.edit-btn-store');
     const saveButton = storeRow.querySelector('.save-btn-store');
+
+    // Retrieve specific values from the input fields within the storeRow
+    const name = document.getElementById('name').value;
+    const city = document.getElementById('city').value;
+    const street = document.getElementById('street').value;
+    const number = document.getElementById('number').value;
+    const latitude = document.getElementById('latitude').value.trim();
+    const longitude = document.getElementById('longitude').value.trim();
+
+    const coordinates = [latitude,longitude];
+    console.log(coordinates);
+    // Create store data object
+    const storeData = {
+        name: name,
+        address: {
+            city: city,
+            street: street,
+            number: number,
+        },
+        coordinates: coordinates,
+    };
+
+    console.log(storeData);
 
     // Toggle visibility: Show edit button, hide save button
     editButton.style.display = 'inline-block';
     saveButton.style.display = 'none';
 
+    // Set inputs to readonly and remove editable styling
     const inputs = storeRow.querySelectorAll('.store-input');
-    const storeData = {};
-
     inputs.forEach(input => {
-        if (input.name === 'coordinates') {
-            storeData[input.name] = input.value.split(',').map(Number);
-        } else {
-            storeData[input.name] = input.value;
-        }
         input.setAttribute('readonly', 'true');
         input.classList.remove('editable');
     });
 
+    // Send data to server
     fetch(`/personal/admin/stores/update/${storeId}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(storeData),
+        body: JSON.stringify({storeData: storeData}),
     })
     .then(response => response.json())
     .then(data => {
         if (data.success) {
             showSuccessAlert('save-store-alert');
-            setTimeout(() =>{
+            setTimeout(() => {
                 storeRow.classList.remove('edit-mode');
-            },2000);
-            
+            }, 2000);
         } else {
             console.error('Error updating store:', data.message);
         }
@@ -1080,6 +1087,7 @@ function saveStore(storeId) {
         console.error('Error with the server request:', error);
     });
 }
+
 
 async function submitStore() {
     const name = document.getElementById('name').value;

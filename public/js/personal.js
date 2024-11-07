@@ -1010,18 +1010,15 @@ function toggleEditModeStore(storeId) {
     const editButton = storeRow.querySelector('.edit-btn-store');
     const saveButton = storeRow.querySelector('.save-btn-store');
 
-    // Toggle visibility: Hide edit button, show save button
     editButton.style.display = 'none';
     saveButton.style.display = 'inline-block';
 
-    // Enable inputs
     const inputs = storeRow.querySelectorAll('.store-input');
     inputs.forEach(input => {
         input.removeAttribute('readonly');
         input.classList.add('editable');
     });
 
-    // Add background color to row in edit mode
     storeRow.classList.add('edit-mode');
 }
 
@@ -1038,50 +1035,79 @@ function saveStore(storeId) {
     const latitude = storeRow.querySelector('.latitude').value.trim();
     const longitude = storeRow.querySelector('.longitude').value.trim();
 
-    // Create store data object
-    const storeData = {
-        name: name,
-        address: {
-            city: city,
-            street: street,
-            number: number,
-        },
-        coordinates: [parseFloat(latitude), parseFloat(longitude)],
-    };
+    let isValid = true;
+    let errorMessage = '';
 
-    // Toggle visibility: Show edit button, hide save button
-    editButton.style.display = 'inline-block';
-    saveButton.style.display = 'none';
+    if(!name) {
+        isValid = false;
+        errorMessage += 'Name is required\n';
+    } else if(!isNaN(name)) {
+        isValid = false;
+        errorMessage += "Name can't be a number!\n";
+    }
 
-    // Set inputs to readonly and remove editable styling
-    const inputs = storeRow.querySelectorAll('.store-input');
-    inputs.forEach(input => {
-        input.setAttribute('readonly', 'true');
-        input.classList.remove('editable');
-    });
+    if(!city || !street || !number) {
+        isValid = false;
+        errorMessage += 'City, Street and Number are required!\n';
+    } if (!isNaN(city) || !isNaN(street) || isNaN(number)) {
+        isValid = false;
+        errorMessage += "City and Street - String, Number - number!\n";
+    }
 
-    // Send data to server
-    fetch(`/personal/admin/stores/update/${storeId}`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(storeData),
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            showSuccessAlert('save-store-alert');
-            setTimeout(() => {
-                storeRow.classList.remove('edit-mode');
-            }, 2000);
-        } else {
-            console.error('Error updating store:', data.message);
-        }
-    })
-    .catch(error => {
-        console.error('Error with the server request:', error);
-    });
+    const coordinatePatern = /^(\+|-)?((([1-8]?[0-9])(\.\d+)?)|(90(\.0+)?))$/;
+    if(!latitude || !longitude) {
+        isValid = false;
+        errorMessage += 'Coordinates are required!\n';
+    } else if(!coordinatePatern.test(latitude) || !coordinatePatern.test(longitude)) {
+        isValid = false;
+        errorMessage += 'The coordinate you enter are invalid! (ex 34.0000,34.0000)\n';
+    }
+
+    if(isValid) {
+        const storeData = {
+            name: name,
+            address: {
+                city: city,
+                street: street,
+                number: number,
+            },
+            coordinates: [parseFloat(latitude), parseFloat(longitude)],
+        };
+
+        editButton.style.display = 'inline-block';
+        saveButton.style.display = 'none';
+
+        const inputs = storeRow.querySelectorAll('.store-input');
+        inputs.forEach(input => {
+            input.setAttribute('readonly', 'true');
+            input.classList.remove('editable');
+        });
+
+        fetch(`/personal/admin/stores/update/${storeId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(storeData),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showSuccessAlert('save-store-alert');
+                setTimeout(() => {
+                    storeRow.classList.remove('edit-mode');
+                }, 2000);
+            } else {
+                console.error('Error updating store:', data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error with the server request:', error);
+        });
+    } else {
+        showErrorAlert(errorMessage);
+    }
+    
 }
 
 

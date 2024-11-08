@@ -11,12 +11,12 @@
   "allergans": [
     "Nuts"
   ],
-  "sweetType": "Chocolate",
+  "sweetType": "Gummy",
   "kosher": "No",
   "description": "White Chocolate",
   "price": 29,
-  "imageUrl": "/public/images/product_2670143.svg",
-  "inventory": 0
+  "imageUrl": "/public/images/product-images/product_2670143.svg",
+  "inventory": 30
 },
 {
   "_id": {
@@ -31,32 +31,12 @@
   "allergans": [
     "Soy"
   ],
-  "sweetType": "Candies",
+  "sweetType": "Snacks",
   "kosher": "Yes",
   "description": "Salsa",
   "price": 25,
-  "imageUrl": "/public/images/product_2314872.svg",
-  "inventory": 90
-},
-{
-  "_id": {
-    "$oid": "671a74a92cfc670bda6d6cf3"
-  },
-  "productId": 4092363,
-  "name": "Popfully",
-  "flavors": [
-    "Sweet",
-    "Salty"
-  ],
-  "allergans": [
-    "Eggs"
-  ],
-  "sweetType": "Candies",
-  "kosher": "Yes",
-  "description": "Marshmallow",
-  "price": 35,
-  "imageUrl": "/public/images/product_4092363.svg",
-  "inventory": 98
+  "imageUrl": "/public/images/product-images/product_2314872.svg",
+  "inventory": 100
 },
 {
   "_id": {
@@ -75,8 +55,8 @@
   "kosher": "No",
   "description": "Beef",
   "price": 19,
-  "imageUrl": "/public/images/product_3969697.svg",
-  "inventory": 95
+  "imageUrl": "/public/images/product-images/product_3969697.svg",
+  "inventory": 93
 },
 {
   "_id": {
@@ -95,7 +75,7 @@
   "kosher": "No",
   "description": "Chedder",
   "price": 22,
-  "imageUrl": "/public/images/product_6129979.svg",
+  "imageUrl": "/public/images/product-images/product_6129979.svg",
   "inventory": 100
 },
 {
@@ -113,7 +93,7 @@
   "kosher": "Yes",
   "description": "Strawberry",
   "price": 12,
-  "imageUrl": "/public/images/product_7616503.svg",
+  "imageUrl": "/public/images/product-images/product_7616503.svg",
   "inventory": 93
 },
 {
@@ -131,8 +111,8 @@
   "kosher": "Yes",
   "description": "Starfish",
   "price": 12,
-  "imageUrl": "/public/images/product_8903298.svg",
-  "inventory": 93
+  "imageUrl": "/public/images/product-images/product_8903298.svg",
+  "inventory": 100
 },
 {
   "_id": {
@@ -149,7 +129,7 @@
   "kosher": "Yes",
   "description": "Shark",
   "price": 12,
-  "imageUrl": "/public/images/product_1283293.svg",
+  "imageUrl": "/public/images/product-images/product_1283293.svg",
   "inventory": 98
 },
 {
@@ -167,7 +147,7 @@
   "kosher": "No",
   "description": "Lips",
   "price": 12,
-  "imageUrl": "/public/images/product_6522661.svg",
+  "imageUrl": "/public/images/product-images/product_6522661.svg",
   "inventory": 100
 },
 {
@@ -184,7 +164,7 @@
   "kosher": "No",
   "description": "Red & White",
   "price": 15,
-  "imageUrl": "/public/images/product_1332457.svg",
+  "imageUrl": "/public/images/product-images/product_1332457.svg",
   "inventory": 100
 },
 {
@@ -202,7 +182,7 @@
   "kosher": "Yes",
   "description": "Watermelon",
   "price": 15,
-  "imageUrl": "/public/images/product_3788547.svg",
+  "imageUrl": "/public/images/product-images/product_3788547.svg",
   "inventory": 100
 },
 {
@@ -219,7 +199,7 @@
   "kosher": "No",
   "description": "Black",
   "price": 15,
-  "imageUrl": "/public/images/product_518054.svg",
+  "imageUrl": "/public/images/product-images/product_518054.svg",
   "inventory": 100
 },
 {
@@ -236,7 +216,7 @@
   "kosher": "No",
   "description": "Hot Dog",
   "price": 15,
-  "imageUrl": "/public/images/product_6133443.svg",
+  "imageUrl": "/public/images/product-images/product_6133443.svg",
   "inventory": 49
 },
 {
@@ -254,7 +234,7 @@
   "kosher": "Yes",
   "description": "Coca Cola",
   "price": 26,
-  "imageUrl": "/public/images/product_8930205.svg",
+  "imageUrl": "/public/images/product-images/product_8930205.svg",
   "inventory": 50
 },
 {
@@ -274,7 +254,7 @@
   "kosher": "Yes",
   "description": "Peach",
   "price": 17,
-  "imageUrl": "/public/images/product_1559770.svg",
+  "imageUrl": "/public/images/product-images/product_1559770.svg",
   "inventory": 20
 },
 {
@@ -291,7 +271,7 @@
   "kosher": "No",
   "description": "Lychee",
   "price": 15,
-  "imageUrl": "/public/images/product_1849985.svg",
+  "imageUrl": "/public/images/product-images/product_1849985.svg",
   "inventory": 20
 },
 {
@@ -308,7 +288,7 @@
   "kosher": "No",
   "description": "Fruits",
   "price": 14,
-  "imageUrl": "/public/images/product_1169037.svg",
+  "imageUrl": "/public/images/product-images/product_1169037.svg",
   "inventory": 10
 },
 {
@@ -328,7 +308,7 @@
   "kosher": "Yes",
   "description": "Coffee",
   "price": 29,
-  "imageUrl": "/public/images/product_8232962.svg",
+  "imageUrl": "/public/images/product-images/product_8232962.svg",
   "inventory": 4
 },
 {
@@ -348,7 +328,7 @@
   "kosher": "Yes",
   "description": "Maxi Pack",
   "price": 55,
-  "imageUrl": "/public/images/product_3482647.svg",
+  "imageUrl": "/public/images/product-images/product_3482647.svg",
   "inventory": 100
 },
 {
@@ -368,7 +348,7 @@
   "kosher": "Yes",
   "description": "Strawberry",
   "price": 19,
-  "imageUrl": "/public/images/product_9862154.svg",
+  "imageUrl": "/public/images/product-images/product_9862154.svg",
   "inventory": 100
 },
 {
@@ -389,6 +369,101 @@
   "kosher": "No",
   "description": "Brownie",
   "price": 20,
-  "imageUrl": "/public/images/product_3380584.svg",
-  "inventory": 10
+  "imageUrl": "/public/images/product-images/product_3380584.svg",
+  "inventory": 8
+},
+{
+  "_id": {
+    "$oid": "672792a921dd0f6f468a2c78"
+  },
+  "productId": 1730646695338,
+  "name": "testing",
+  "flavors": [
+    "Sweet"
+  ],
+  "allergans": [
+    "Gluten"
+  ],
+  "sweetType": "Drinks",
+  "kosher": "Yes",
+  "description": "testing",
+  "price": 10,
+  "imageUrl": "/public/images/product-images/product_1730646695338.svg",
+  "inventory": 100
+},
+{
+  "_id": {
+    "$oid": "672a1361c878ff4200ee64dd"
+  },
+  "productId": 1730810721298,
+  "name": "nerds",
+  "flavors": [
+    "Sweet"
+  ],
+  "allergans": [
+    "Dairy"
+  ],
+  "sweetType": "Gummy",
+  "kosher": "No",
+  "description": "fruits",
+  "price": 30,
+  "imageUrl": "/public/images/product-images/product_1730810721298.svg",
+  "inventory": 100
+},
+{
+  "_id": {
+    "$oid": "672a1589dd806e8e3e08c571"
+  },
+  "productId": 1730811273422,
+  "name": "nerds",
+  "flavors": [
+    "Spicy"
+  ],
+  "allergans": [
+    "Dairy"
+  ],
+  "sweetType": "Chocolate",
+  "kosher": "Yes",
+  "description": "fruits",
+  "price": 30,
+  "imageUrl": "/public/images/product-images/product_1730811273422.svg",
+  "inventory": 100
+},
+{
+  "_id": {
+    "$oid": "672a1971f234a90cbf114458"
+  },
+  "productId": 1730812273979,
+  "name": "nerds",
+  "flavors": [
+    "Sour"
+  ],
+  "allergans": [
+    "Dairy"
+  ],
+  "sweetType": "Chocolate",
+  "kosher": "Yes",
+  "description": "Classic",
+  "price": 10,
+  "imageUrl": "/public/images/product-images/product_1730812273979.svg",
+  "inventory": 100
+},
+{
+  "_id": {
+    "$oid": "672a1dc604d3faf0e45ff771"
+  },
+  "productId": 1730813382531,
+  "name": "nerds",
+  "flavors": [
+    "Salty"
+  ],
+  "allergans": [
+    "Dairy"
+  ],
+  "sweetType": "Gummy",
+  "kosher": "No",
+  "description": "fruits",
+  "price": 30,
+  "imageUrl": "/public/images/product-images/product_1730813382531.svg",
+  "inventory": 100
 }]

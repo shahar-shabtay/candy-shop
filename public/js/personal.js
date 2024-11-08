@@ -213,10 +213,10 @@ async function removeFavorite(productId) {
 
         const result = await response.json();
         if (response.ok) {
+            showSuccessAlert('remove-favorite-alert');
             // Find the closest product card element and remove it
             const productCard = document.querySelector(`[data-product-id="${productId}"]`).closest('.product-card');
             productCard.remove();
-            showSuccessAlert('favorite-alert');
         }
     } catch (error) {
         console.error('Error removing favorite:', error);

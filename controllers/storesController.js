@@ -32,9 +32,6 @@ async function updateStoreDetails(req, res) {
 
 async function addStore (req, res) {
     const storeData = req.body;
-    // let receivedCoordinates = req.body.coordinates;    // This will be a string "123,123"
-    // let coordinatesArray = receivedCoordinates.split(',').map(Number); // This will be an array [123, 123]
-    // storeData.coordinates = coordinatesArray;
 
     storesService.createStore(storeData)
         .then(store => res.status(200).json({ message: 'Store successfully added', data: store }))

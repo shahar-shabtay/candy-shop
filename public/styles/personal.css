@@ -176,28 +176,25 @@ input[type="date"]:focus,
 input[type="number"]:focus,
 input[type="file"]:focus {
     outline: none;
-    border-bottom-color: #FF418A; /* Show bottom border on focus */
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.2); /* Optional shadow on focus */
+    border-bottom-color: #FF418A;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.2);
 }
 
-/* Remove arrows from select elements and center align text */
 select {
-    appearance: none; /* Remove default arrow */
+    appearance: none;
     background: none;
     border: none;
     text-align: center;
     padding: 8px;
-    width: 100%; /* Ensures dropdown fits cell width */
+    width: 100%;
 }
 
-/* Birthday container styling */
 .birthday-select-container {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-/* Specific adjustments for input widths */
 .customer-address-input,
 .customer-phone-input,
 .customer-email-input,
@@ -207,7 +204,6 @@ select {
     width: 100%;
 }
 
-/* Styles for action buttons */
 .edit-btn-cust {
     cursor: pointer;
     width: 20px;
@@ -322,7 +318,6 @@ select {
 }
 
 
-/* Image upload section */
 .image-upload {
 margin-bottom: 15px;
 }
@@ -333,7 +328,6 @@ height: 24px;
 cursor: pointer;
 }
 
-/* Product info section */
 .product-info {
 text-align: center;
 margin-bottom: 15px;
@@ -349,7 +343,6 @@ margin-bottom: 15px;
     text-align: center;
 }
 
-/* Actions section */
 .actions {
     display: flex;
     justify-content: space-around;
@@ -755,4 +748,133 @@ color: pink; /* Change the color */
     transform: translate(-50%, -50%);
     top: 50%;
     left: 50%;
+}
+
+.change-pass {
+
+    padding: 5px;
+    background-color: #ff6ec4;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    align-self: flex-end;
+}
+.change-pass:hover {
+    background: linear-gradient(45deg, #ff6ec4, #7873f5);
+}
+
+
+/* Modal Header Styling */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.close-btn {
+    cursor: pointer;
+    font-size: 20px;
+    color: #333;
+}
+
+/* Password Field Styling */
+.password-field {
+    position: relative;
+    margin: 20px 0;
+}
+
+.password-field input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    padding-right: 30px; /* Space for the eye icon */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Eye Icon Styling */
+.password-field .toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #6c63ff;
+}
+.password-field .toggle-password:hover {
+    color: #ff6ec4;
+}
+
+/* Change Password Button Styling */
+.change-password-btn {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #6c63ff;
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.change-password-btn:hover {
+    background-color: #ff6ec4;
+}
+
+.admin-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    max-width: 700px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.admin-card form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+}
+
+.form-row {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+}
+
+.form-row .full-width {
+    flex: 1;
+}
+
+.form-row .third-width {
+    flex: 1;
+}
+
+.admin-card button {
+    padding: 10px 20px;
+    background-color: #f78fb3;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 200px;
+    margin-top: 10px;
+}
+
+.admin-card button:hover {
+    background-color: #f7658d;
 }

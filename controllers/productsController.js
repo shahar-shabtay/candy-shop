@@ -31,7 +31,7 @@ async function addProduct(req, res) {
     try {
         const storage = multer.diskStorage({
             destination: function (req, file, cb) {
-                cb(null, path.join(__dirname, '../public/images'));
+                cb(null, path.join(__dirname, '../public/images/product-images'));
             },
             filename: function (req, file, cb) {
                 const fileName = `product_${productId}.svg`;
@@ -69,7 +69,7 @@ async function addProduct(req, res) {
                 return res.status(400).json({ error: 'Invalid allergans data' });
             }
 
-            const imageUrl = `/public/images/product_${productId}.svg`;
+            const imageUrl = `/public/images/product-images/product_${productId}.svg`;
 
             const productData = {
                 productId:productId,
@@ -122,7 +122,7 @@ async function deleteProduct(req, res) {
         }
 
         // Construct the path to the product image
-        const imagePath = path.join(__dirname, '../public/images', `product_${productId}.svg`);
+        const imagePath = path.join(__dirname, '../public/images/product-images', `product_${productId}.svg`);
 
         // Log the image path for debugging
 

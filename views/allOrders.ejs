@@ -42,7 +42,7 @@
                                     </thead>
                                     <tbody>
                                         <% orders.forEach(order => { %>
-                                            <tr  class="orders-tr" data-order-id="<%= order.orderId %>">
+                                            <tr class="orders-tr" data-order-id="<%= order.orderId %>">
                                                 <td class="orders-td"><%= order.orderId %></td>
                                                 <td class="orders-td"><%= new Date(order.orderDate).toLocaleDateString() %></td>
                                                 <td class="orders-td">
@@ -65,8 +65,7 @@
                                                     </select>
                                                 </td>
                                                 <td class="action-buttons">
-                                                    <img id="see-order" class="order-actions see-order-btn see-order1-btn" src="/public/images/seeOrder.svg" data-order-id="<%= order.orderId %>" onClick="seeOrder()">
-                                                    <img id="editStatusButton-<%= order.orderId %>" class="order-actions edit-btn-cust" src="/public/images/editOrder.svg" data-order-id="<%= order.orderId %>" onclick="enableStatusEdit('<%= order.orderId %>')">
+                                                    <img class="order-actions see-order-btn see-order1-btn" src="/public/images/seeOrder.svg" data-order-id="<%= order.orderId %>" onClick="seeOrder(this)">                                                    <img id="editStatusButton-<%= order.orderId %>" class="order-actions edit-btn-cust" src="/public/images/editOrder.svg" data-order-id="<%= order.orderId %>" onclick="enableStatusEdit('<%= order.orderId %>')">
                                                     <img id="saveStatusButton-<%= order.orderId %>" class="order-actions save-btn-cust" src="/public/images/save.svg" data-order-id="<%= order.orderId %>" onclick="updateOrderStatus('<%= order.orderId %>')" style="display:none;">
                                                     <img class="order-actions remove" src="/public/images/cancelOrder.svg" data-order-id="<%= order.orderId %>">
                                                 </td>
@@ -78,6 +77,7 @@
                                 <p class="no-orders">No Orders yet</p>
                             <% } %> 
                         </div>
+                        <div id="bthn" lang="en"></div>
                         <div id="order-status-alert" class="custom-alert hidden">Order Status Changed</div>
                         <div id="delete-order-alert" class="custom-alert hidden">Order Deleted</div>
                     </div>

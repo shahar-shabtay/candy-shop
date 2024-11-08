@@ -124,7 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             },3000);
         } else {
-            showAlert(errorMessage);
+            showErrorAlert(errorMessage);
         }
     });
 });

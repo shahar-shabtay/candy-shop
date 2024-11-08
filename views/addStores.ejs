@@ -32,20 +32,32 @@
                         <div id="addStore" class="content-item active">
                             <div class="container">                            
                                 <div class="store-preview-container">
-                                    <!-- Form Card -->
                                     <div class="admin-card">
                                         <form id="storeForm">
-                                            <input type="text" id="name" name="name" placeholder="Store Name" required/>
-                                            <input type="text" id="city" name="city" placeholder="City" required/>
-                                            <input type="text" id="street" name="street" placeholder="Street" required/>
-                                            <input type="number" id="number" name="number" placeholder="Number" required/>
-                                            <input type="text" id="latitude" name="latitude" placeholder="Latitude" required/>
-                                            <input type="text" id="longitude" name="longitude" placeholder="Longitude" required/>
+                                            <!-- Store Name Row -->
+                                            <div class="form-row">
+                                                <input type="text" id="name" name="name" class="full-width" placeholder="Store Name" required/>
+                                            </div>
+                                            
+                                            <!-- Address Row -->
+                                            <div class="form-row">
+                                                <input type="text" id="city" name="city" class="third-width" placeholder="City" required/>
+                                                <input type="text" id="street" name="street" class="third-width" placeholder="Street" required/>
+                                                <input type="number" id="number" name="number" class="third-width" placeholder="Number" required/>
+                                            </div>
+                                            
+                                            <!-- Coordinates Row -->
+                                            <div class="form-row">
+                                                <input type="text" id="latitude" name="latitude" class="third-width" placeholder="Latitude" required/>
+                                                <input type="text" id="longitude" name="longitude" class="third-width" placeholder="Longitude" required/>
+                                            </div>
+                                            
+                                            <!-- Submit Button Row -->
                                             <button type="button" id="submitButton" onclick="submitStore()">Submit</button>
                                         </form>
-                                    </div>
-                                    <div id="save-store-alert" class="custom-alert hidden">
-                                        Store Added
+                                        <div id="save-store-alert" class="custom-alert hidden">
+                                            Store Added
+                                        </div>
                                     </div>
                                 </div>
                             </div>

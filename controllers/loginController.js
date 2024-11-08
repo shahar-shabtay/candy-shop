@@ -9,11 +9,7 @@ async function loginUser(req, res) {
     const connect = await loginService.loginAttempt(email, password);
     const customer = await customerService.getCustomerByEmail(email)
     if (connect){
-      req.session.user = {
-        id: customer.customerId,
-        user: customer,
-        role: customer.role,
-      };
+      req.session.user = customer;
       return res.redirect('/products');
     }
     else{

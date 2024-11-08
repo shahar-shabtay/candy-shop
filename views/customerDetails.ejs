@@ -68,7 +68,7 @@
                                             <label for="address">Address:</label>
                                             <div class="address-container">
                                                 <input type="text" id="street" name="street" value="<%= user.address ? user.address.street : '' %>" required placeholder="Street">
-                                                <input type="text" id="number" name="number" value="<%= user.address ? user.address.number : '' %>" required placeholder="Number" class="small-input">
+                                                <input type="number" id="number" name="number" value="<%= user.address ? user.address.number : '' %>" required placeholder="Number" class="small-input">
                                                 <input type="text" id="city" name="city" value="<%= user.address ? user.address.city : '' %>" required placeholder="City">
                                             </div>
                                         </div>

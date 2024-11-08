@@ -33,9 +33,9 @@
                         <div class="product-info">
                                 <div class="product-text">
                                     <input type="hidden" name="productId" id="productId" value="<%= product.productId %>">
-                                    <h2><a href="/products/<%= product.productId %>" class="product-link"><%= product.name %></a></h2>
+                                    <h3><a href="/products/<%= product.productId %>" class="product-link"><%= product.name %></a></h3>
                                     <a href="/products/<%= product.productId %>" class="product-link">
-                                        <p class="product"><b><%= product.name %></b> - <%= product.description %></p>
+                                        <p class="product"><%= product.description %></p>
                                         <p class="product-kosher"><u>Kosher:</u> <%= product.kosher %></p>
                                     </a>
                                 </div>

@@ -1,3 +1,5 @@
+const e = require("express");
+
 function showSuccessAlert(id) {
     const successAlert = document.getElementById(id);
     if (successAlert) {
@@ -9,6 +11,41 @@ function showSuccessAlert(id) {
             successAlert.classList.add('hidden');
         }, 3000);
     }
+}
+
+
+function showErrorAlert(message) {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = 'jump-alert';
+    alertDiv.innerHTML = `
+        <span class="close-alert">&times;</span>
+        ${message.replace(/\n/g, '<br>')}
+    `;
+
+    // Append the alert div to the body
+    document.body.appendChild(alertDiv);
+
+    // Calculate the duration based on the number of lines (1 second per line)
+    const lineCount = message.split('\n').length;
+    const displayDuration = lineCount * 1000; // Duration in milliseconds
+
+    // Close button functionality
+    const closeButton = alertDiv.querySelector('.close-alert');
+    closeButton.addEventListener('click', () => {
+        alertDiv.classList.add('fade-out');
+    });
+
+    // Automatically remove the alert after the calculated display duration
+    setTimeout(() => {
+        alertDiv.classList.add('fade-out');
+    }, displayDuration);
+
+    // Remove the alert after fade-out transition
+    alertDiv.addEventListener('transitionend', () => {
+        if (alertDiv.classList.contains('fade-out')) {
+            alertDiv.remove();
+        }
+    });
 }
 
 // *****************
@@ -41,27 +78,47 @@ document.addEventListener('DOMContentLoaded', () => {
         event.preventDefault(); // Prevent default form submission
 
         // Get form values
+        const name = document.getElementById('name').value;
         const email = document.getElementById('email').value;
         const phone = document.getElementById('phone').value;
-        const birthDay = document.getElementById('day').value;
-        const birthMonth = document.getElementById('month').value;
         const birthYear = parseInt(document.getElementById('year').value, 10);
         const password = document.getElementById('password').value;
+        const city = document.getElementById('city').value;
+        const street = document.getElementById('street').value;
+        const addNumber = document.getElementById('number').value;
 
         // Validation flags and error message
         let isValid = true;
         let errorMessage = '';
+        if(!password) {
+            isValid = false;
+            errorMessage += 'Password is required.\n';
+        }
+
+        if(!name) {
+            isValid = false;
+            errorMessage += "Name is required!\n";
+        } else if(!isNaN(name)) {
+            isValid = false;
+            errorMessage += "Name can't be number!\n";
+        }
 
         // Email validation
         const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailPattern.test(email)) {
+        if(!email) {
+            isValid = false;
+            errorMessage += 'Email is required.\n';
+        } else if (!emailPattern.test(email)) {
             isValid = false;
             errorMessage += 'Invalid email format.\n';
         }
 
         // Phone number validation (assuming format: 050/055/054/058/053/052 + 7 digits)
         const phonePattern = /^(050|055|054|058|053|052)\d{7}$/;
-        if (!phonePattern.test(phone)) {
+        if(!phone) {
+            isValid = false;
+            errorMessage += 'Phone is required.\n';
+        } else if (!phonePattern.test(phone)) {
             isValid = false;
             errorMessage += 'Phone number must start with 050, 055, 054, 058, 053, or 052, followed by 7 digits.\n';
         }
@@ -69,7 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Birth year validation (must be 2014 or earlier)
         if (birthYear > 2014 || isNaN(birthYear)) {
             isValid = false;
-            errorMessage += 'Birth year must be 2014 or earlier.\n';
+            errorMessage += 'You are too yound, you need to be at least 10.\n';
         }
 
         // Password validation (minimum 6 characters, English letters and numbers only)
@@ -79,6 +136,10 @@ document.addEventListener('DOMContentLoaded', () => {
             errorMessage += 'Password must be at least 6 characters and contain only English letters or numbers.\n';
         }
 
+        if(!city || !addNumber || !street) {
+            isValid = false;
+            errorMessage += "Please enter address!\n";
+        }
         if (isValid) {
             setTimeout(() => {
                 if(document.getElementById('updateForm')){
@@ -257,51 +318,100 @@ function toggleEditMode(customerId) {
 
 // Save new customer details
 function saveCustomer(customerId) {
-    const customerRow = document.querySelector(`tr[data-id="${customerId}"]`);
-    const editButton = customerRow.querySelector('.edit-btn-cust');
-    const saveButton = customerRow.querySelector('.save-btn-cust');
+    let isValid = true;
+    let errorMessage = '';
 
-    // Toggle visibility: Show edit button, hide save button
-    editButton.style.display = 'inline-block';
-    saveButton.style.display = 'none';
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const year = document.getElementById('year').value;
+    const phone = document.getElementById('phone').value;
+    const addNumber = document.getElementById('addNumber').value;
+    const city = document.getElementById('city').value;
+    const street =  document.getElementById('street').value;
 
-    // Collect data and disable inputs
-    const inputs = customerRow.querySelectorAll('.customer-input');
-    const customerData = {};
-    inputs.forEach(input => {
-        customerData[input.name] = input.value;
-        if (input.tagName === 'SELECT') {
-            input.setAttribute('disabled', 'true');
-        } else {
-            input.setAttribute('readonly', 'true');
-        }
-        input.classList.remove('editable');
-    });
+    if (!name) {
+        isValid = false;
+        errorMessage += 'Name is required!\n';
+    } else if(!isNaN(name)) {
+        isValid = false;
+        errorMessage += "Name can't be a number!\n";
+    }
 
-    // Log the data to check if the values are correct
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!email) {
+        isValid = false;
+        errorMessage += 'Email is required!\n';
+    } else if(!emailPattern.test(email)) {
+        isValid = false;
+        errorMessage += "Please enter a valid email!\n";
+    }
+    
+    if(year > 2014) {
+        isValid = false;
+        errorMessage += 'Age too young - year need to be 2014 and less!\n';
+    }
 
-    // Send the data to the server using fetch
-    fetch(`/personal/admin/customers/update/${customerId}`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(customerData),
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            showSuccessAlert('save-alert');
+    const phonePattern = /^(052|050|053|054|055|058)\d{7}$/;
+    if(!phone) {
+        isValid = false;
+        errorMessage += "Phone is required!\n";
+    } else if(!phonePattern.test(phone)) {
+        isValid = false;
+        errorMessage += "Please enter a valid phone!\n";
+    }
 
-            // Remove background color when exiting edit mode
-            customerRow.classList.remove('edit-mode');
-        } else {
-            console.error('Error updating customer:', data.message);
-        }
-    })
-    .catch(error => {
-        console.error('Error with the server request:', error);
-    });
+    if(!city || !street || !addNumber) {
+        isValid = false;
+        errorMessage += "Please enter address!\n";
+    }
+
+    if(isValid) {
+        const customerRow = document.querySelector(`tr[data-id="${customerId}"]`);
+        const editButton = customerRow.querySelector('.edit-btn-cust');
+        const saveButton = customerRow.querySelector('.save-btn-cust');
+
+        // Toggle visibility: Show edit button, hide save button
+        editButton.style.display = 'inline-block';
+        saveButton.style.display = 'none';
+
+        // Collect data and disable inputs
+        const inputs = customerRow.querySelectorAll('.customer-input');
+        const customerData = {};
+        inputs.forEach(input => {
+            customerData[input.name] = input.value;
+            if (input.tagName === 'SELECT') {
+                input.setAttribute('disabled', 'true');
+            } else {
+                input.setAttribute('readonly', 'true');
+            }
+            input.classList.remove('editable');
+        });
+
+        fetch(`/personal/admin/customers/update/${customerId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(customerData),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showSuccessAlert('save-alert');
+
+                // Remove background color when exiting edit mode
+                customerRow.classList.remove('edit-mode');
+            } else {
+                console.error('Error updating customer:', data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error with the server request:', error);
+        });
+    } else {
+        showErrorAlert(errorMessage);
+    }
+    
 }
 //---------------
 // All Orders    |
@@ -408,7 +518,7 @@ function deleteProduct(productId) {
     .then(response => {
         if (response.ok) {
             showSuccessAlert('delete-alert');
-            document.querySelector(`[data-product-id="${productId}"]`).remove(); // Remove product card from view
+            document.querySelector(`[data-product-id="${productId}"]`).remove();
         } else {
             return response.text().then(text => {
                 try {
@@ -427,48 +537,38 @@ function deleteProduct(productId) {
 
 // edit product
 function editProduct(productId) {
-    // Select the correct product card using the provided productId
     const productCard = document.querySelector(`[data-product-id="${productId}"]`);
 
     if (!productCard) {
         console.error('Product card not found for ID:', productId);
         return;
     }
-
-    // Add edit-mode class to the product card
     productCard.classList.add('edit-mode');
 
-    // Find all input fields within the product card
     const inputs = productCard.querySelectorAll('input');
 
-    // Check if the inputs exist and make them editable
     if (inputs.length === 0) {
         console.error('No input fields found in product card for ID:', productId);
     } else {
         inputs.forEach(input => {
             input.removeAttribute('readonly');
-            input.classList.add('editable');  // Add a class to indicate that the input is now editable
+            input.classList.add('editable');
             if (input.classList.contains('product-price-input')) {
-                // Retrieve the original price from data-original-price on the input itself
                 const originalPrice = input.getAttribute('data-original-price');
-            
-                // Set the input value to the original price from the DB without currency sign
                 input.value = originalPrice;
             }
         });
     }
 
-    // Show dropdowns
     const dropdownContainer = productCard.querySelector('.dropdown-container');
     if (dropdownContainer) {
         dropdownContainer.style.display = 'block';
     }
 
-    // Change the edit button to a save button
     const editButton = productCard.querySelector('.edit-btn');
     if (editButton) {
-        editButton.src = '/public/images/save.svg'; // Change icon to save
-        editButton.onclick = () => saveProduct(productId); // Assign save function to the button
+        editButton.src = '/public/images/save.svg';
+        editButton.onclick = () => saveProduct(productId);
     } else {
         console.error('Edit button not found in product card for ID:', productId);
     }
@@ -476,8 +576,8 @@ function editProduct(productId) {
 
 // save product
 function saveProduct(productId) {
-
-    // Select the correct product card using the productId
+    let isValid = true;
+    let errorMessage ='';
     const productCard = document.querySelector(`[data-product-id="${productId}"]`);
 
     if (!productCard) {
@@ -485,85 +585,126 @@ function saveProduct(productId) {
         return;
     }
 
-    // Get values from the inputs using the correct class selectors
     const name = productCard.querySelector('.product-name')?.value;
     const price = productCard.querySelector('.product-price')?.value;
     const description = productCard.querySelector('.product-description')?.value;
     const inventory = productCard.querySelector('.product-inventory')?.value;
 
-    // Get selected flavors
     const flavors = Array.from(productCard.querySelectorAll('.flavor-dropdown option:checked')).map(e => e.value);
-    
-    // Get selected allergans
     const allergans = Array.from(productCard.querySelectorAll('.allergan-dropdown option:checked')).map(e => e.value);
-    
-    //const flavors = Array.from(productCard.querySelectorAll('.flavor-dropdown option:checked')).map(e => e.value);
-    //const allergans = Array.from(productCard.querySelectorAll('.allergan-dropdown option:checked')).map(e => e.value);
     const sweetType = productCard.querySelector('.sweet-type-dropdown').value;
     const kosher = productCard.querySelector('.kosher-dropdown').value;
 
-    // Check if any of the values are null or undefined
-    if ([name, price, description, inventory].some(value => value === undefined || value === null || value === '')) {
-        console.error('Missing product details:', { name, price, description, inventory });
-        return;
+    if(!name) {
+        isValid = false;
+        errorMessage += 'Name is required!\n';
+    } else if(!isNaN(name)) {
+        isValid = false;
+        errorMessage += "Name can't be a number!\n";
     }
 
-    // Send updated product data to the server
-    fetch(`/personal/admin/products/${productId}/edit`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ name, price, description, inventory, flavors: JSON.stringify(flavors), allergans: JSON.stringify(allergans), sweetType, kosher }),
-    })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Make inputs readonly again after saving
-                showSuccessAlert('product-save-alert');
-                // Remove edit-mode class from the product card
-                productCard.classList.remove('edit-mode');
-                const inputs = productCard.querySelectorAll('input');
-                inputs.forEach(input => {
-                    input.setAttribute('readonly', 'readonly');
-                    input.classList.remove('editable');
-                });
-                setTimeout (() =>{
-                    window.location.reload();
-                }, 2000);
-                
+    if(!price) {
+        isValid = false;
+        errorMessage += 'Price is required!\n';
+    } else if (isNaN(price)) {
+        isValid = false;
+        errorMessage += 'Price must to be a number!\n';
+    } else if (!(price > 0 && price <= 100)) {
+        isValid = false;
+        errorMessage += 'Price need to be between 1-100!\n';
+    }
 
+    if(!inventory) {
+        isValid = false;
+        errorMessage += 'Inventory is required!\n';
+    } else if(isNaN(inventory)) {
+        isValid = false;
+        errorMessage += 'Inventory must to e a number!\n';
+    } else if (!(inventory >= 0 && inventory <=200)) {
+        isValid = false;
+        errorMessage += 'Inventory need to be between 0-200!\n';
+    }
 
-                // Hide dropdowns
-                const dropdownContainer = productCard.querySelector('.dropdown-container');
-                if (dropdownContainer) {
-                    dropdownContainer.style.display = 'none';
-                }
+    if(!description) {
+        isValid = false;
+        errorMessage += 'Description is required!\n';
+    } else if(!isNaN(description)) {
+        isValid = false;
+        errorMessage += "Description can't be a number!\n";
+    }
 
-                // Change the save button back to an edit button
-                const editButton = productCard.querySelector('.edit-btn');
-                if (editButton) {
-                    editButton.src = '/public/images/edit.svg'; // Change icon back to edit
-                    editButton.onclick = () => editProduct(productId); // Reassign the edit function
-                } else {
-                    console.error('Edit button not found in product card for ID:', productId);
-                }
+    if(!flavors) {
+        isValid = false;
+        errorMessage += "You need to choose at least one flavor!\n";
+    }
 
-            } else {
-                alert('Failed to update product');
-            }
+    if(!allergans) {
+        isValid = false;
+        errorMessage += "You need to choose at least one allergans!\n";
+    }
+
+    if(!sweetType) {
+        isValid = false;
+        errorMessage += "You need to choose sweet type!\n";
+    }
+
+    if(!kosher) {
+        isValid = false;
+        errorMessage += "You need to decide if the product kosher or not!\n";
+    }
+
+    if(isValid) {
+        fetch(`/personal/admin/products/${productId}/edit`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ name, price, description, inventory, flavors: JSON.stringify(flavors), allergans: JSON.stringify(allergans), sweetType, kosher }),
         })
-        .catch(error => {
-            console.error('Error updating product:', error);
-            alert('An error occurred while updating the product. Please try again.');
-        });
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showSuccessAlert('product-save-alert');
+                    productCard.classList.remove('edit-mode');
+                    const inputs = productCard.querySelectorAll('input');
+                    inputs.forEach(input => {
+                        input.setAttribute('readonly', 'readonly');
+                        input.classList.remove('editable');
+                    });
+                    setTimeout (() =>{
+                        window.location.reload();
+                    }, 2000);
+                        
+                    const dropdownContainer = productCard.querySelector('.dropdown-container');
+                    if (dropdownContainer) {
+                        dropdownContainer.style.display = 'none';
+                    }
+    
+                    const editButton = productCard.querySelector('.edit-btn');
+                    if (editButton) {
+                        editButton.src = '/public/images/edit.svg';
+                        editButton.onclick = () => editProduct(productId);
+                    } else {
+                        console.error('Edit button not found in product card for ID:', productId);
+                    }
+    
+                } else {
+                    alert('Failed to update product');
+                }
+            })
+            .catch(error => {
+                console.error('Error updating product:', error);
+                alert('An error occurred while updating the product. Please try again.');
+            });
+    } else {
+        showErrorAlert(errorMessage);
+    }
 }
 
 
 //---------------
-// Add Products  |
+// Add Product   |
 //---------------
-// JavaScript function to update the live preview of the product details
 
 document.addEventListener('DOMContentLoaded', () => {
     const nameInput = document.getElementById('name');
@@ -578,35 +719,30 @@ document.addEventListener('DOMContentLoaded', () => {
     const previewDescription = document.getElementById('previewDescription');
     const previewImage = document.getElementById('previewImage');
 
-    // Update the name in the preview card
     if (nameInput) {
         nameInput.addEventListener('input', () => {
             previewName.textContent = nameInput.value || 'Product Name';
         });
     }
 
-    // Update the price in the preview card
     if (priceInput) {
         priceInput.addEventListener('input', () => {
             previewPrice.textContent = priceInput.value ? `${priceInput.value}₪` : 'Price: $0';
         });
     }
 
-    // Update the inventory in the preview card
     if (inventoryInput) {
         inventoryInput.addEventListener('input', () => {
             previewInventory.textContent = inventoryInput.value ? `${inventoryInput.value} items` : 'Inventory: 0 items';
         });
     }
 
-    // Update the description in the preview card
     if (descriptionInput) {
         descriptionInput.addEventListener('input', () => {
             previewDescription.textContent = descriptionInput.value || 'Description';
         });
     }
 
-    // Update the image in the preview card
     if (fileInput) {
         fileInput.addEventListener('change', () => {
             const file = fileInput.files[0];
@@ -623,7 +759,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-//add the flavors array
 let selectedFlavors = [];
 
 document.getElementById('FlavorDropdown').addEventListener('change', function() {
@@ -637,7 +772,7 @@ document.getElementById('FlavorDropdown').addEventListener('change', function() 
 
 function renderSelectedFlavors() {
     const selectedFlavorsDiv = document.getElementById('selectedFlavors');
-    selectedFlavorsDiv.innerHTML = ''; // Clear the div before rendering
+    selectedFlavorsDiv.innerHTML = '';
     
     selectedFlavors.forEach((flavor, index) => {
         const flavorSpan = document.createElement('span');
@@ -661,7 +796,6 @@ function removeFlavor(index) {
     renderSelectedFlavors();
 }
 
-//add the allergans array
 let selectedAllergans = [];
 
 document.getElementById('AllerganDropdown').addEventListener('change', function() {
@@ -675,7 +809,7 @@ document.getElementById('AllerganDropdown').addEventListener('change', function(
 
 function renderSelectedAllergans() {
     const selectedAllergansDiv = document.getElementById('selectedAllergans');
-    selectedAllergansDiv.innerHTML = ''; // Clear the div before rendering
+    selectedAllergansDiv.innerHTML = '';
     
     selectedAllergans.forEach((allergan, index) => {
         const allerganSpan = document.createElement('span');
@@ -699,7 +833,6 @@ function removeAllergan(index) {
     renderSelectedAllergans();
 }
 
-//add the sweet type
 let selectedSweetType = "";
 
 document.getElementById('SweetTypeDropdown').addEventListener('change', function() {
@@ -707,13 +840,13 @@ document.getElementById('SweetTypeDropdown').addEventListener('change', function
 
     if (selectedValue !== "") {
         selectedSweetType = selectedValue;
-        renderSelectedSweetType(); // Display the selected sweet type
+        renderSelectedSweetType();
     }
 });
 
 function renderSelectedSweetType() {
     const selectedSweetTypeDiv = document.getElementById('selectedSweetType');
-    selectedSweetTypeDiv.innerHTML = ''; // Clear the div before rendering
+    selectedSweetTypeDiv.innerHTML = '';
     
     const sweetTypeSpan = document.createElement('span');
     sweetTypeSpan.textContent = selectedSweetType;
@@ -722,7 +855,6 @@ function renderSelectedSweetType() {
     selectedSweetTypeDiv.appendChild(sweetTypeSpan);
 }
 
-//add if kosher
 let selectedKosher = "";
 
 document.getElementById('KosherDropdown').addEventListener('change', function() {
@@ -730,13 +862,13 @@ document.getElementById('KosherDropdown').addEventListener('change', function() 
 
     if (selectedValue !== "") {
         selectedKosher = selectedValue;
-        renderSelectedKosher(); // Display the selected kosher
+        renderSelectedKosher();
     }
 });
 
 function renderSelectedKosher() {
     const selectedKosherDiv = document.getElementById('selectedKosher');
-    selectedKosherDiv.innerHTML = ''; // Clear the div before rendering
+    selectedKosherDiv.innerHTML = '';
     
     const kosherSpan = document.createElement('span');
     kosherSpan.textContent = selectedKosher;
@@ -745,10 +877,82 @@ function renderSelectedKosher() {
     selectedKosherDiv.appendChild(kosherSpan);
 }
 
-async function submitProduct(event) {
-    event.preventDefault(); // Prevent default form submission behavior
+// Function of validate the add product form and sent the new product to the server.
+async function submitProduct() {
+    let isValid = true;
+    let errorMessage = '';
 
-    const form = document.getElementById('productForm');
+    const name = document.getElementById('name').value;
+    const price = document.getElementById('price').value;
+    const inventory = document.getElementById('inventory').value;
+    const description = document.getElementById('description').value;
+    const flavors = document.getElementById('FlavorDropdown').value;
+    const allergans = document.getElementById('AllerganDropdown').value;
+    const sweetType = document.getElementById('SweetTypeDropdown').value;
+    const kosher = document.getElementById('KosherDropdown').value;
+
+    if(!name) {
+        isValid = false;
+        errorMessage += 'Name is required!\n';
+    } else if(!isNaN(name)) {
+        isValid = false;
+        errorMessage += "Name can't be a number!\n";
+    }
+
+    if(!price) {
+        isValid = false;
+        errorMessage += 'Price is required!\n';
+    } else if (isNaN(price)) {
+        isValid = false;
+        errorMessage += 'Price must to be a number!\n';
+    } else if (!(price > 0 && price <= 100)) {
+        isValid = false;
+        errorMessage += 'Price need to be between 1-100!\n';
+    }
+
+    if(!inventory) {
+        isValid = false;
+        errorMessage += 'Inventory is required!\n';
+    } else if(isNaN(inventory)) {
+        isValid = false;
+        errorMessage += 'Inventory must to e a number!\n';
+    } else if (!(inventory >= 0 && inventory <=200)) {
+        isValid = false;
+        errorMessage += 'Inventory need to be between 0-200!\n';
+    }
+
+    if(!description) {
+        isValid = false;
+        errorMessage += 'Description is required!\n';
+    } else if(!isNaN(description)) {
+        isValid = false;
+        errorMessage += "Description can't be a number!\n";
+    }
+
+    if(!flavors) {
+        isValid = false;
+        errorMessage += "You need to choose at least one flavor!\n";
+    }
+
+    if(!allergans) {
+        isValid = false;
+        errorMessage += "You need to choose at least one allergans!\n";
+    }
+
+    if(!sweetType) {
+        isValid = false;
+        errorMessage += "You need to choose sweet type!\n";
+    }
+
+    if(!kosher) {
+        isValid = false;
+        errorMessage += "You need to decide if the product kosher or not!\n";
+    }
+
+    if(!isValid) {
+        showErrorAlert(errorMessage);
+    } else  {
+        const form = document.getElementById('productForm');
     const formData = new FormData(form); // Get form data, including the file
 
     // Add selected flavors to the form data
@@ -792,9 +996,11 @@ async function submitProduct(event) {
         alert('Error: ' + error.message);
         submitButton.disabled = false; // Re-enable the submit button on error
     }
+    }
+    
 }
 
-// Attach submit event listener to the form
+// Event listener of add product
 document.addEventListener('DOMContentLoaded', () => {
     const productForm = document.getElementById('productForm');
     if (productForm) {
@@ -828,6 +1034,8 @@ function toggleEditModeStore(storeId) {
 }
 
 function saveStore(storeId) {
+
+
     const storeRow = document.querySelector(`tr[data-id="${storeId}"]`);
     const editButton = storeRow.querySelector('.edit-btn-store');
     const saveButton = storeRow.querySelector('.save-btn-store');
@@ -874,55 +1082,89 @@ function saveStore(storeId) {
 }
 
 async function submitStore() {
-    // Get form data
-    let name = document.getElementById('name').value;
-    let address = document.getElementById('address').value;
-    let coordinates = document.getElementById('coordinates').value
-                        .split(',')
-                        .map(coord => parseFloat(coord.trim()));
-    console.log(coordinates)
-    let storeId = new Date().getTime().toString();
+    const name = document.getElementById('name').value;
+    const city = document.getElementById('city').value;
+    const street = document.getElementById('street').value;
+    const number = document.getElementById('number').value;
+    const latitude = document.getElementById('latitude').value.trim();
+    const longtitude = document.getElementById('longitude').value.trim();
 
-    // Construct the store object
-    let store = {
-        name: name,
-        address: address,
-        coordinates: coordinates,
-        storeId: storeId
-    };
+    let isValid = true;
+    let errorMessage ='';
 
-    // Disable submit button to prevent duplicate submissions
-    const submitButton = document.getElementById('submitButton');
-    submitButton.disabled = true;
-
-    // Prepare fetch options
-    const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams(store),
-        credentials: 'same-origin'
-    };
-
-    try {
-        // Make fetch request
-        const response = await fetch('/personal/admin/addStores', requestOptions);
-
-        if (response.ok) {
-            // If store creation succeeded, redirect to stores page
-            showSuccessAlert('save-store-alert'); // Show success alert
-            setTimeout(() => {
-                window.location.href = '/personal/admin/stores';
-            },2000);
-            
-        } else {
-            // Log error
-            console.error(`Error ${response.status}: ${response.statusText}`);
-        }
-    } catch (error) {
-        console.log('Error:', error);
-        alert('Error: ' + error);
-        submitButton.disabled = false;  // Enable the button again
+    if(!name) {
+        isValid = false;
+        errorMessage += 'Name is required!\n';
+    } else if (!isNaN(name)) {
+        isValid = false;
+        errorMessage += "Name can't be a number!\n";
     }
+
+    if(!city || !street || !number) {
+        isValid = false;
+        errorMessage += 'Address is required!\n';
+    }
+
+    const coordinatePatern = /^(\+|-)?((([1-8]?[0-9])(\.\d+)?)|(90(\.0+)?))$/;
+    if(!latitude || !longtitude) {
+        isValid = false;
+        errorMessage += 'Coordinates are required!\n';
+    } else if(!coordinatePatern.test(latitude) || !coordinatePatern.test(longtitude)) {
+        isValid = false;
+        errorMessage += 'The coordinate you enter are invalid! (ex 34.0000,34.0000)\n';
+    }
+
+    if(isValid) {
+        // Get form data
+        let address = city + ',' + street + ',' + number;
+        let coordinates = [latitude, longtitude];
+        console.log(coordinates)
+        let storeId = new Date().getTime().toString();
+
+        // Construct the store object
+        let store = {
+            name: name,
+            address: address,
+            coordinates: coordinates,
+            storeId: storeId
+        };
+
+        // Disable submit button to prevent duplicate submissions
+        const submitButton = document.getElementById('submitButton');
+        submitButton.disabled = true;
+
+        // Prepare fetch options
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams(store),
+            credentials: 'same-origin'
+        };
+
+        try {
+            // Make fetch request
+            const response = await fetch('/personal/admin/addStores', requestOptions);
+
+            if (response.ok) {
+                // If store creation succeeded, redirect to stores page
+                showSuccessAlert('save-store-alert'); // Show success alert
+                setTimeout(() => {
+                    window.location.href = '/personal/admin/stores';
+                },2000);
+                
+            } else {
+                // Log error
+                console.error(`Error ${response.status}: ${response.statusText}`);
+            }
+        } catch (error) {
+            console.log('Error:', error);
+            alert('Error: ' + error);
+            submitButton.disabled = false;  // Enable the button again
+        }
+    } else {
+        showErrorAlert(errorMessage);
+    }
+    
 }
 
 // Delete store

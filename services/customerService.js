@@ -78,6 +78,10 @@ async function updateCustomerCart(customerId, updateCart) {
     }
 }
 
+async function countDocuments(query) {
+    return await Customer.countDocuments(query);  // Use Mongoose's countDocuments
+}
+
 
 module.exports = {
     getAllCustomers,
@@ -86,6 +90,7 @@ module.exports = {
     getCustomerById,
     updateCustomerDetails,
     getCustomerCart,
+    countDocuments,
     updateCustomerCart
   };
   

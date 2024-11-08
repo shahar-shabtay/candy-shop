@@ -229,6 +229,23 @@ async function getKosherData(req, res) {
     }
 }
 
+async function getAdminData(req, res) {
+    try {
+        const adminCount = await customerService.countDocuments({ role: "admin" });
+        const nonAdminCount = await customerService.countDocuments({ role: "user" });
+
+        // Return the counts as a JSON response
+        res.status(200).json({
+            Admin: adminCount,
+            nonAdmin: nonAdminCount
+        });
+    } catch (error) {
+        console.error("Error fetching Admin data:", error.message);
+        res.status(500).json({ error: "Internal server error", details: error.message });
+    }
+}
+
+
 module.exports = {
 	getAllProducts,
 	editProducts,
@@ -238,5 +255,6 @@ module.exports = {
 	removeFavoriteProduct,
     getKosherData,
 	addProduct,
-    getProductDetail
+    getProductDetail,
+    getAdminData
 };

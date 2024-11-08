@@ -9,8 +9,9 @@ const { isAuthenticated } = require('../controllers/loginController.js');
 // Get 
 router.get('/', isAuthenticated, productsController.getAllProducts);
 
-// Get kosher products
+// Get for statistics
 router.get('/kosherData', productsController.getKosherData);
+router.get('/adminData', productsController.getAdminData);
 
 router.get('/:productId',isAuthenticated, productsController.getProductDetail);
 

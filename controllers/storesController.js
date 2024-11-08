@@ -40,6 +40,7 @@ async function addStore (req, res) {
 
 async function deleteStore (req, res) {
     const storeId = req.params.storeId;
+    console.log(storeId);
   
     storesService.deleteStoreById(storeId)
       .then(() => {

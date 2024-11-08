@@ -97,17 +97,17 @@ function decrypt(ciphertext) {
     return bytes.toString(crypto.enc.Utf8);
 }
 
-// async function verifyPassword (customerId, currentPassword) {
-//     const customer = await Customer.findOne({ customerId: customerId }).select('password');
-//     const dbPass = customer ? customer.password : null;
-//     const dbPassDec  = decrypt(dbPass);
-//     console.log('customer service ' + dbPassDec);
-//     if (!dbPass) {
-//         // Handle the case where the customer is not found or the password is not retrieved
-//         throw new Error('Customer not found or password not retrieved');
-//     }
-//     return (currentPassword === dbPassDec);
-// }
+async function verifyPassword (customerId, currentPassword) {
+    const customer = await Customer.findOne({ customerId: customerId }).select('password');
+    const dbPass = customer ? customer.password : null;
+    const dbPassDec  = decrypt(dbPass);
+    console.log('customer service ' + dbPassDec);
+    if (!dbPass) {
+        // Handle the case where the customer is not found or the password is not retrieved
+        throw new Error('Customer not found or password not retrieved');
+    }
+    return (currentPassword === dbPassDec);
+}
 async function updatePassword(customerId, newPassword) {
     try {
         console.log(newPassword);
@@ -129,6 +129,7 @@ module.exports = {
     getCustomerCart,
     updateCustomerCart,
     getCustomerPassword,
+    verifyPassword,
     updatePassword
   };
   

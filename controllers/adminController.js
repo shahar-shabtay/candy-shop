@@ -96,10 +96,15 @@ async function updateCustomerDetails(req, res) {
 
 // Update customer Password
 async function updateUserPass(req, res){
-    const {newPass} = req.body;
+    const {currentPass, newPass} = req.body;
     const customerId = req.session.user.customerId;
 
     try {
+        const isPasswordCorrect = await customerService.verifyPassword(customerId, currentPass);
+        console.log(isPasswordCorrect);
+        if (!isPasswordCorrect) {
+            return res.status(400).json({ success: false, message: 'Current password is incorrect.' });
+        }
 
         await customerService.updatePassword(customerId, newPass);
         res.json({ success: true, message: 'Password changed successfully.' });

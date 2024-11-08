@@ -64,11 +64,11 @@ function togglePasswordVisibility(inputId, icon) {
     }
 }
 async function changePassword() {
-    // const currentPass = document.getElementById('current-password').value;
+    const currentPass = document.getElementById('current-password').value;
     const newPass = document.getElementById('new-password').value;
 
     // Validation
-    if (!newPass) {
+    if (!currentPass || !newPass) {
         showErrorAlert("Please fill in both fields.");
         return;
     }
@@ -85,7 +85,7 @@ async function changePassword() {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({newPass })
+            body: JSON.stringify({ currentPass, newPass })
         });
 
         const result = await response.json();

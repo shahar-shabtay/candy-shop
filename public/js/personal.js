@@ -90,14 +90,14 @@ async function changePassword() {
 
         const result = await response.json();
         if (result.success) {
-            alert("Password changed successfully!");
+            showSuccessAlert("change-pass");
             closeModal();
         } else {
-            alert(result.message || "Failed to change password.");
+            showErrorAlert("Failed to change password.");
         }
     } catch (error) {
         console.error('Error changing password:', error);
-        alert("An error occurred while changing the password.");
+        showErrorAlert("An error occurred while changing the password.");
     }
 }
 

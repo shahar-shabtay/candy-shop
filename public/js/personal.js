@@ -51,15 +51,54 @@ function showErrorAlert(message) {
 
 // My Deatails  
 
-const togglePassword = document.querySelector('#togglePassword');
-const password = document.querySelector('#password');
-if (togglePassword){
-    togglePassword.addEventListener('click', function (e) {
-        const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
-        password.setAttribute('type', type);
-        this.classList.toggle('fa-eye');
-        this.classList.toggle('fa-eye-slash');
-    });
+function togglePasswordVisibility(inputId, icon) {
+    const input = document.getElementById(inputId);
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+    } else {
+        input.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+    }
+}
+async function changePassword() {
+    // const currentPass = document.getElementById('current-password').value;
+    const newPass = document.getElementById('new-password').value;
+
+    // Validation
+    if (!newPass) {
+        showErrorAlert("Please fill in both fields.");
+        return;
+    }
+
+    if (newPass.length < 6) {
+        showErrorAlert("The new password must be at least 6 characters.");
+        return;
+    }
+
+    try {
+        // Send data to the server
+        const response = await fetch('/personal/myAccount/updatePass', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({newPass })
+        });
+
+        const result = await response.json();
+        if (result.success) {
+            alert("Password changed successfully!");
+            closeModal();
+        } else {
+            alert(result.message || "Failed to change password.");
+        }
+    } catch (error) {
+        console.error('Error changing password:', error);
+        alert("An error occurred while changing the password.");
+    }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -72,7 +111,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const email = document.getElementById('email').value;
         const phone = document.getElementById('phone').value;
         const birthYear = parseInt(document.getElementById('year').value, 10);
-        const password = document.getElementById('password').value;
         const city = document.getElementById('city').value;
         const street = document.getElementById('street').value;
         const addNumber = document.getElementById('number').value;
@@ -81,7 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let errorMessage = '';
 
         // Validation - all required, string get string, number get number.
-        if(!password || !email || !name || !phone || !city || !street || !number) {
+        if(!email || !name || !phone || !city || !street || !number) {
             isValid = false;
             errorMessage += 'All fields are required, please fill all!.\n';
         }
@@ -109,12 +147,6 @@ document.addEventListener('DOMContentLoaded', () => {
             errorMessage += 'You are too yound, you need to be at least 10.\n';
         }
 
-        // Password validation (minimum 6 characters, English letters and numbers only)
-        const passwordPattern = /^[A-Za-z0-9]{6,}$/;
-        if (password && !passwordPattern.test(password)) {
-            isValid = false;
-            errorMessage += 'Password must be at least 6 characters and contain only English letters or numbers.\n';
-        }
 
         if (isValid) {
             setTimeout(() => {
@@ -131,6 +163,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
+
+document.addEventListener('DOMContentLoaded', () => {
+    const openPasswordModalButton = document.getElementById('openPasswordModal');
+    const passwordModal = document.getElementById('passwordModal');
+
+    // פתיחת ה-popup כאשר לוחצים על הכפתור
+    openPasswordModalButton.addEventListener('click', () => {
+        passwordModal.style.display = 'block';
+    });
+
+    // סגירת ה-popup כאשר לוחצים על ה-X בתוך ה-popup
+    function closeModal() {
+        passwordModal.style.display = 'none';
+    }
+
+    // סגירת ה-popup כאשר לוחצים מחוץ ל-popup
+    window.addEventListener('click', (event) => {
+        if (event.target === passwordModal) {
+            passwordModal.style.display = 'none';
+        }
+    });
+
+    // הפונקציה לסגירת ה-popup כדי שנוכל לקרוא לה גם מה-HTML
+    window.closeModal = closeModal;
+});
 //--------------
 // My Favorite  |
 //--------------

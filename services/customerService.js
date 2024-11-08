@@ -1,4 +1,8 @@
 const Customer = require('../models/customer');
+const crypto = require("crypto-js");
+require('dotenv').config()
+
+const SECRET_KEY = process.env.SECRET_KEY; 
 
 // Function to get all customers
 async function getAllCustomers() {
@@ -78,7 +82,44 @@ async function updateCustomerCart(customerId, updateCart) {
     }
 }
 
+async function getCustomerPassword(customerId) {
+    try {
+        const customer = await Customer.findOne({ customerId: customerId }).select('password');
+        return customer ? customer.password : null;
+    } catch (err) {
+        console.error('Error fetching customer password:', err);
+        throw err;
+    }
+}
 
+function decrypt(ciphertext) {
+    const bytes  = crypto.AES.decrypt(ciphertext, SECRET_KEY);
+    return bytes.toString(crypto.enc.Utf8);
+}
+
+// async function verifyPassword (customerId, currentPassword) {
+//     const customer = await Customer.findOne({ customerId: customerId }).select('password');
+//     const dbPass = customer ? customer.password : null;
+//     const dbPassDec  = decrypt(dbPass);
+//     console.log('customer service ' + dbPassDec);
+//     if (!dbPass) {
+//         // Handle the case where the customer is not found or the password is not retrieved
+//         throw new Error('Customer not found or password not retrieved');
+//     }
+//     return (currentPassword === dbPassDec);
+// }
+async function updatePassword(customerId, newPassword) {
+    try {
+        console.log(newPassword);
+        const newPasswordHash = crypto.AES.encrypt(newPassword, SECRET_KEY).toString();
+        console.log(newPasswordHash);
+        return await Customer.findOneAndUpdate({ customerId: customerId }, { $set: { password: newPasswordHash }}, {new: true}).exec();
+
+      } catch(err) {
+        console.error(err);
+    }
+}
+    
 module.exports = {
     getAllCustomers,
     getUserRoleByCustomerId,
@@ -86,6 +127,8 @@ module.exports = {
     getCustomerById,
     updateCustomerDetails,
     getCustomerCart,
-    updateCustomerCart
+    updateCustomerCart,
+    getCustomerPassword,
+    updatePassword
   };
   

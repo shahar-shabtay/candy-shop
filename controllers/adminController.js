@@ -61,14 +61,15 @@ async function renderAccountPage(req, res) {
 async function updateCustomerDetails(req, res) {
     try {
         const customerId = req.session.user.customerId;
+        const password = await customerService.getCustomerPassword(customerId);
+        console.log(password);
         const currency = req.session.currency;
         const { 
             name, 
             email, 
             birth_day, birth_month, birth_year, 
             phone, 
-            street, number, city, 
-            password
+            street, number, city,
         } = req.body;
         const birthdate = new Date(`${birth_year}-${birth_month}-${birth_day}`);    
         const updateUser = {
@@ -80,8 +81,9 @@ async function updateCustomerDetails(req, res) {
             address: {
                 street, number, city
             },
-            password
+            password: password
         };
+        console.log(updateUser);
         const updateCustomer = await customerService.updateCustomerDetails(customerId, updateUser);
         if (updateCustomer) {
             req.session.user = {...req.session.user, ...updateUser};
@@ -92,6 +94,19 @@ async function updateCustomerDetails(req, res) {
     }
 }
 
+// Update customer Password
+async function updateUserPass(req, res){
+    const {newPass} = req.body;
+    const customerId = req.session.user.customerId;
+
+    try {
+
+        await customerService.updatePassword(customerId, newPass);
+        res.json({ success: true, message: 'Password changed successfully.' });
+    } catch(err) {
+        console.error(err);
+    }
+}
 
 // Get all about - orders / favorite / customers / products
 async function getAllCustomers(req, res) {
@@ -221,5 +236,6 @@ module.exports = {
     addProductsPage,
     postToFacebook,
     adminUpdateCustomerDetails,
-    addStoresPage
+    addStoresPage,
+    updateUserPass
 };

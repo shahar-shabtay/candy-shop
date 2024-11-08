@@ -30,6 +30,7 @@ router.put('/admin/stores/update/:storeId', storesController.updateStoreDetails)
 
 // post
 router.post('/myAccount/update', adminController.updateCustomerDetails);
+router.post('/myAccount/updatePass', adminController.updateUserPass);
 router.post('/myAccount/favorite/remove', productsController.removeFavoriteProduct);
 router.post('/admin/orders/:orderId/remove', orderController.deleteOrder);
 router.post('/admin/products/:productId/edit', productsController.editProducts);

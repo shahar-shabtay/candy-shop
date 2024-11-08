@@ -1117,12 +1117,13 @@ async function submitStore() {
     const street = document.getElementById('street').value;
     const number = document.getElementById('number').value;
     const latitude = document.getElementById('latitude').value.trim();
-    const longtitude = document.getElementById('longitude').value.trim();
+    const longitude = document.getElementById('longitude').value.trim();
 
     let isValid = true;
-    let errorMessage ='';
+    let errorMessage = '';
 
-    if(!name) {
+    // Validate the input fields
+    if (!name) {
         isValid = false;
         errorMessage += 'Name is required!\n';
     } else if (!isNaN(name)) {
@@ -1130,71 +1131,74 @@ async function submitStore() {
         errorMessage += "Name can't be a number!\n";
     }
 
-    if(!city || !street || !number) {
+    if (!city || !street || !number) {
         isValid = false;
         errorMessage += 'Address is required!\n';
     }
 
-    const coordinatePatern = /^(\+|-)?((([1-8]?[0-9])(\.\d+)?)|(90(\.0+)?))$/;
-    if(!latitude || !longtitude) {
+    const coordinatePattern = /^(\+|-)?((([1-8]?[0-9])(\.\d+)?)|(90(\.0+)?))$/;
+    if (!latitude || !longitude) {
         isValid = false;
         errorMessage += 'Coordinates are required!\n';
-    } else if(!coordinatePatern.test(latitude) || !coordinatePatern.test(longtitude)) {
+    } else if (!coordinatePattern.test(latitude) || !coordinatePattern.test(longitude)) {
         isValid = false;
-        errorMessage += 'The coordinate you enter are invalid! (ex 34.0000,34.0000)\n';
+        errorMessage += 'Invalid coordinates! (example: 34.0000, 34.0000)\n';
     }
 
-    if(isValid) {
-        // Get form data
-        let address = city + ',' + street + ',' + number;
-        let coordinates = [latitude, longtitude];
-        console.log(coordinates)
+    if (isValid) {
+        // Construct the store data
+        let address = {
+            city: city,
+            street: street,
+            number: number,
+        };
+        let coordinates = [parseFloat(latitude), parseFloat(longitude)];
         let storeId = new Date().getTime().toString();
 
-        // Construct the store object
         let store = {
             name: name,
             address: address,
             coordinates: coordinates,
-            storeId: storeId
+            storeId: storeId,
         };
 
         // Disable submit button to prevent duplicate submissions
         const submitButton = document.getElementById('submitButton');
         submitButton.disabled = true;
 
-        // Prepare fetch options
+        // Define request options
         const requestOptions = {
             method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: new URLSearchParams(store),
-            credentials: 'same-origin'
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(store),
         };
 
         try {
-            // Make fetch request
+            // Send store data to the server
             const response = await fetch('/personal/admin/addStores', requestOptions);
 
             if (response.ok) {
-                // If store creation succeeded, redirect to stores page
-                showSuccessAlert('save-store-alert'); // Show success alert
+                // Show success alert and redirect to the stores page
+                showSuccessAlert('Store saved successfully!');
                 setTimeout(() => {
                     window.location.href = '/personal/admin/stores';
-                },2000);
-                
+                }, 2000);
             } else {
-                // Log error
+                // Log any server error response
                 console.error(`Error ${response.status}: ${response.statusText}`);
+                showErrorAlert('Failed to save the store. Please try again.');
             }
         } catch (error) {
-            console.log('Error:', error);
-            alert('Error: ' + error);
-            submitButton.disabled = false;  // Enable the button again
+            console.error('Error:', error);
+            showErrorAlert('An error occurred while saving the store. Please try again.');
+            submitButton.disabled = false; // Enable the button again
         }
     } else {
+        // Show error messages if validation failed
         showErrorAlert(errorMessage);
     }
-    
 }
 
 // Delete store

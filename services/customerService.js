@@ -119,6 +119,10 @@ async function updatePassword(customerId, newPassword) {
         console.error(err);
     }
 }
+
+async function countDocuments(query) {
+    return await Customer.countDocuments(query);  // Use Mongoose's countDocuments
+}
     
 module.exports = {
     getAllCustomers,
@@ -130,6 +134,7 @@ module.exports = {
     updateCustomerCart,
     getCustomerPassword,
     verifyPassword,
-    updatePassword
+    updatePassword,
+    countDocuments
   };
   

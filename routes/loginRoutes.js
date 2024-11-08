@@ -6,7 +6,7 @@ const loginController = require('../controllers/loginController'); // Adjust the
 router.get('/', function(req, res) {
   res.render('login', { error: null });
 });
-router.get('/logout',loginController.logout);
+//router.get('/logout',loginController.logout);
 
 
 // Post 

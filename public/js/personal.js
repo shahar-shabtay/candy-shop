@@ -90,14 +90,14 @@ async function changePassword() {
 
         const result = await response.json();
         if (result.success) {
-            alert("Password changed successfully!");
+            showSuccessAlert("change-pass");
             closeModal();
         } else {
-            alert(result.message || "Failed to change password.");
+            showErrorAlert("Failed to change password.");
         }
     } catch (error) {
         console.error('Error changing password:', error);
-        alert("An error occurred while changing the password.");
+        showErrorAlert("An error occurred while changing the password.");
     }
 }
 
@@ -238,8 +238,8 @@ async function removeFavorite(productId) {
 //--------------
 
 // See order details - work
-async function showCustOrder() {
-    const orderId = document.getElementById('see-order').getAttribute('data-order-id');
+async function showCustOrder(element) {
+    const orderId = element.getAttribute('data-order-id');
     window.location.href = `/personal/myAccount/orders/${orderId}`;
 }
 
@@ -471,8 +471,8 @@ document.querySelectorAll('.remove').forEach(icon => {
 });
 
 // See order details - works
-async function seeOrder() {
-    const orderId = document.getElementById('see-order').getAttribute('data-order-id');
+async function seeOrder(element) {
+    const orderId = element.getAttribute('data-order-id');
     window.location.href=`/personal/admin/orders/${orderId}`;
 }
 

@@ -53,13 +53,14 @@
                                             </td>
                                             <td><%= order.status %></td>
                                             <td class="action-buttons">
-                                                <img id="see-order" class="order-actions see-order-btn see-order2-btn" src="/public/images/seeOrder.svg" data-order-id="<%= order.orderId %>" onclick="showCustOrder()">
+                                                <img id="see-order" class="order-actions see-order-btn see-order2-btn" src="/public/images/seeOrder.svg" data-order-id="<%= order.orderId %>" onclick="showCustOrder(this)">
                                             </td>
                                         </tr>
                                     <% }) %>
                                 </tbody>
                             </table>
                         </div>
+                        <div id="bthn" lang="en"></div>
                     </div>
                 </div>
             </div>

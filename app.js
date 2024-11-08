@@ -11,6 +11,7 @@ const session = require('express-session');
 // Routes
 const productsRoutes = require('./routes/productsRoutes.js');
 const loginRoutes = require('./routes/loginRoutes.js');
+const logoutRoutes = require('./routes/logoutRoutes.js')
 const registerRoutes = require('./routes/registerRoutes.js');
 const adminRoute = require('./routes/adminRoute.js');
 const nearMeRoutes = require('./routes/nearMeRoutes');
@@ -54,7 +55,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.use('/public', express.static(path.join(__dirname, 'public')));
 
 // Use routes
-app.use('/logout', loginRoutes);
+app.use('/logout', logoutRoutes);
 app.use('/products', productsRoutes);
 app.use('/register', registerRoutes);
 app.use('/personal',adminRoute);

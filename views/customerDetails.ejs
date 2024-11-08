@@ -31,26 +31,26 @@
                                     <div class="form-column">
                                         <div class="form-group">
                                             <label for="name">Name</label>
-                                            <input type="text" id="name" name="name" value="<%= user.name %>" required>
+                                            <input type="text" id="name" name="name" value="<%= user.name %>">
                                         </div>
                                         <div class="form-group">
                                             <label for="email">Email</label>
-                                            <input type="email" id="email" name="email" value="<%= user.email %>" required>
+                                            <input type="email" id="email" name="email" value="<%= user.email %>">
                                         </div>
                                         <div class="form-group">
                                             <label for="birthdate">Birthday</label>
                                             <div class="birthday-container">
-                                                <select id="day" name="birth_day" required class="small-input">
+                                                <select id="day" name="birth_day" class="small-input">
                                                     <% for (let i = 1; i <= 30; i++) { %>
                                                         <option value="<%= i %>" <%= user.birthdate && new Date(user.birthdate).getDate() === i ? 'selected' : '' %>><%= i %></option>
                                                     <% } %>
                                                 </select>
-                                                <select id="month" name="birth_month" required class="small-input">
+                                                <select id="month" name="birth_month" class="small-input">
                                                     <% for (let i = 1; i <= 12; i++) { %>
                                                         <option value="<%= i %>" <%= user.birthdate && (new Date(user.birthdate).getMonth() + 1) === i ? 'selected' : '' %>><%= i %></option>
                                                     <% } %>
                                                 </select>
-                                                <select id="year" name="birth_year" required>
+                                                <select id="year" name="birth_year">
                                                     <% for (let i = 1990; i <= 2024; i++) { %>
                                                         <option value="<%= i %>" <%= user.birthdate && new Date(user.birthdate).getFullYear() === i ? 'selected' : '' %>><%= i %></option>
                                                     <% } %>
@@ -62,22 +62,35 @@
                                     <div class="form-column">
                                         <div class="form-group">
                                             <label for="phone">Phone Number</label>
-                                            <input type="tel" id="phone" name="phone" value="<%= user.phone %>" pattern="[0-9]{3}-[0-9]{7}" maxlength="10" required>
+                                            <input type="tel" id="phone" name="phone" value="<%= user.phone %>" pattern="[0-9]{3}-[0-9]{7}" maxlength="10" >
                                         </div>
                                         <div class="form-group">
                                             <label for="address">Address:</label>
                                             <div class="address-container">
-                                                <input type="text" id="street" name="street" value="<%= user.address ? user.address.street : '' %>" required placeholder="Street">
-                                                <input type="number" id="number" name="number" value="<%= user.address ? user.address.number : '' %>" required placeholder="Number" class="small-input">
-                                                <input type="text" id="city" name="city" value="<%= user.address ? user.address.city : '' %>" required placeholder="City">
+                                                <input type="text" id="street" name="street" value="<%= user.address ? user.address.street : '' %>" placeholder="Street">
+                                                <input type="number" id="number" name="number" value="<%= user.address ? user.address.number : '' %>" placeholder="Number" class="small-input">
+                                                <input type="text" id="city" name="city" value="<%= user.address ? user.address.city : '' %>" placeholder="City">
                                             </div>
                                         </div>
                                         
                                         <div class="form-group">
                                             <label for="password">Password</label>
-                                            <div class="password-container">
-                                                <input type="password" id="password" name="password" value="<%= user.password %>" required>
-                                                <i class="fas fa-eye" id="togglePassword"></i>
+                                            <!-- Popup לחלון שינוי סיסמא -->
+                                            <button type="button" class="change-pass" id="openPasswordModal">Change Password</button>
+
+                                            <div class="modal-overlay" id="passwordModal" style="display: none;">
+                                                <div class="password-modal">
+                                                    <h3>Change Password <span class="close-btn" onclick="closeModal()">&times;</span></h3>
+                                                    <div class="password-field">
+                                                        <input type="password" id="current-password" name="currentPass" placeholder="Current Password">
+                                                        <i class="fas fa-eye toggle-password" onclick="togglePasswordVisibility('current-password', this)"></i>
+                                                    </div>
+                                                    <div class="password-field">
+                                                        <input type="password" id="new-password" name="newPass" placeholder="New Password">
+                                                        <i class="fas fa-eye toggle-password" onclick="togglePasswordVisibility('new-password', this)"></i>
+                                                    </div>
+                                                    <button class="change-password-btn" onclick="changePassword()">Change Password</button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

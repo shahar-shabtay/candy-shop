@@ -24,8 +24,18 @@ async function loginUser(req, res) {
 }
 
 async function logout(req, res) {
-  req.session.destroy(() => {
-    res.render('login', {error: false});
+  // Clear the 'session' cookie
+  res.clearCookie('connect.sid');  // Use the cookie name here
+  
+  // Optionally destroy the session as well
+  req.session.destroy((err) => {
+    if (err) {
+      console.log("Error destroying session:", err);
+      res.render('403');
+
+    }
+    res.redirect('/'); // Redirect to login page after logging out
+
   });
 }
 

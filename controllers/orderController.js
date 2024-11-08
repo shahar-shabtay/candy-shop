@@ -45,6 +45,7 @@ async function getCustomerOrders (req, res) {
                 order.createdAtFormatted = 'N/A';
             }
         });
+        res.render('customerOrders', {orders, user, currency, rates});
     } catch (err) {
         res.status(500).send('Error fetching orders');
     }
@@ -66,51 +67,47 @@ async function getCustomerOrderDetailsById (req, res) {
         if (!customer) {
             return res.status(404).json({ message: 'Customer not found' });
         }   
-      // Prepare an array to hold products with full details
-      const fullProductDetails = await Promise.all(order.products.map(async (product) => {
-          // Fetch product details
-          const productDetails = await productService.getProductById(product.productId);
-          
-          if (!productDetails) {
-              console.warn(`Product with ID ${product.productId} not found`);
-              return {
-                  name: 'We dont have this product right now', // Provide a fallback name for missing products
-                  price: 0, // Set a default price if product is not found
-                  quantity: product.quantity, // Get quantity from the order document
-                  image: '/public/images/logo.svg', // Default image if the product is missing
-              };
-          }
-          
-          return {
-              name: productDetails.name, // Get product name from product collection
-              price: productDetails.price, // Get product price from product collection
-              quantity: product.quantity, // Get quantity from the order document
-              image: productDetails.imageUrl, // Get product image
-          };
-      }));
-  
-      // Retrieve user from the session
-      
-      
-      // Pass the data to the view
-      res.render('customerOrderDetails', {
-            orderDetails: {
-                orderId: order.orderId,
-                customerId: order.customerId,
-                orderDate: order.orderDate,
-                totalPrice: order.totalPrice,
-                status: order.status,
-                address: order.address,
-                products: fullProductDetails,
-            },
-          user: user, 
-          currency: currency,
-          rates: rates,
-      });
-  } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: 'Server error' });
-  }
+        // Prepare an array to hold products with full details
+        const fullProductDetails = await Promise.all(order.products.map(async (product) => {
+            // Fetch product details
+        const productDetails = await productService.getProductById(product.productId);
+            
+        if (!productDetails) {
+            console.warn(`Product with ID ${product.productId} not found`);
+            return {
+                name: 'We dont have this product right now', // Provide a fallback name for missing products
+                price: 0, // Set a default price if product is not found
+                quantity: product.quantity, // Get quantity from the order document
+                image: '/public/images/logo.svg', // Default image if the product is missing
+            };
+        }
+            
+        return {
+            name: productDetails.name, // Get product name from product collection
+            price: productDetails.price, // Get product price from product collection
+            quantity: product.quantity, // Get quantity from the order document
+            image: productDetails.imageUrl, // Get product image
+        };
+    }));
+
+
+    res.render('customerOrderDetails', {
+        orderDetails: {
+            orderId: order.orderId,
+            customerId: order.customerId,
+            orderDate: order.orderDate,
+            totalPrice: order.totalPrice,
+            status: order.status,
+            address: order.address,
+            products: fullProductDetails,
+        },
+        user: user, 
+        currency: currency,
+        rates: rates,
+    }); } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
 }
 
 async function getOrderDetailsById (req, res) {

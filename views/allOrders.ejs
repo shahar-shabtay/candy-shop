@@ -65,7 +65,7 @@
                                                     </select>
                                                 </td>
                                                 <td class="action-buttons">
-                                                    <img class="order-actions see-order-btn see-order1-btn" src="/public/images/seeOrder.svg" data-order-id="<%= order.orderId %>">
+                                                    <img id="see-order" class="order-actions see-order-btn see-order1-btn" src="/public/images/seeOrder.svg" data-order-id="<%= order.orderId %>" onClick="seeOrder()">
                                                     <img id="editStatusButton-<%= order.orderId %>" class="order-actions edit-btn-cust" src="/public/images/editOrder.svg" data-order-id="<%= order.orderId %>" onclick="enableStatusEdit('<%= order.orderId %>')">
                                                     <img id="saveStatusButton-<%= order.orderId %>" class="order-actions save-btn-cust" src="/public/images/save.svg" data-order-id="<%= order.orderId %>" onclick="updateOrderStatus('<%= order.orderId %>')" style="display:none;">
                                                     <img class="order-actions remove" src="/public/images/cancelOrder.svg" data-order-id="<%= order.orderId %>">

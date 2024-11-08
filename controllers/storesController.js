@@ -16,20 +16,9 @@ async function getStores(req, res) {
 async function updateStoreDetails(req, res) {
     try {
         const storeId = req.params.storeId; // Get storeId from the route parameters
-        const { 
-            name, 
-            address, 
-            coordinates 
-        } = req.body;
-        
-        const updateStore = {
-            storeId, 
-            name, 
-            address, 
-            coordinates
-        };
+        const storeData = req.body;
 
-        const updatedStore = await storesService.updateStoreDetails(storeId, updateStore);
+        const updatedStore = await storesService.updateStoreDetails(storeId, storeData);
 
         if (updatedStore) {
             res.json({ success: true, message: 'Store updated successfully' });
@@ -43,9 +32,6 @@ async function updateStoreDetails(req, res) {
 
 async function addStore (req, res) {
     const storeData = req.body;
-    let receivedCoordinates = req.body.coordinates;    // This will be a string "123,123"
-    let coordinatesArray = receivedCoordinates.split(',').map(Number); // This will be an array [123, 123]
-    storeData.coordinates = coordinatesArray;
 
     storesService.createStore(storeData)
         .then(store => res.status(200).json({ message: 'Store successfully added', data: store }))
@@ -54,6 +40,7 @@ async function addStore (req, res) {
 
 async function deleteStore (req, res) {
     const storeId = req.params.storeId;
+    console.log(storeId);
   
     storesService.deleteStoreById(storeId)
       .then(() => {

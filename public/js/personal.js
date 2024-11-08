@@ -1,5 +1,3 @@
-const e = require("express");
-
 function showSuccessAlert(id) {
     const successAlert = document.getElementById(id);
     if (successAlert) {
@@ -12,7 +10,6 @@ function showSuccessAlert(id) {
         }, 3000);
     }
 }
-
 
 function showErrorAlert(message) {
     const alertDiv = document.createElement('div');
@@ -52,94 +49,105 @@ function showErrorAlert(message) {
 // My Account      *
 // *****************   
 
-//--------------
-// My Deatails  |
-//--------------
+// My Deatails  
 
-// make the password readable and ubreadable
-const togglePassword = document.querySelector('#togglePassword');
-const password = document.querySelector('#password');
-if (togglePassword){
-    togglePassword.addEventListener('click', function (e) {
-        // Toggle the type attribute
-        const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
-        password.setAttribute('type', type);
+function togglePasswordVisibility(inputId, icon) {
+    const input = document.getElementById(inputId);
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+    } else {
+        input.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+    }
+}
+async function changePassword() {
+    const currentPass = document.getElementById('current-password').value;
+    const newPass = document.getElementById('new-password').value;
 
-        // Toggle the eye / eye-slash icon
-        this.classList.toggle('fa-eye');
-        this.classList.toggle('fa-eye-slash');
-    });
+    // Validation
+    if (!currentPass || !newPass) {
+        showErrorAlert("Please fill in both fields.");
+        return;
+    }
+
+    if (newPass.length < 6) {
+        showErrorAlert("The new password must be at least 6 characters.");
+        return;
+    }
+
+    try {
+        // Send data to the server
+        const response = await fetch('/personal/myAccount/updatePass', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ currentPass, newPass })
+        });
+
+        const result = await response.json();
+        if (result.success) {
+            alert("Password changed successfully!");
+            closeModal();
+        } else {
+            alert(result.message || "Failed to change password.");
+        }
+    } catch (error) {
+        console.error('Error changing password:', error);
+        alert("An error occurred while changing the password.");
+    }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
     const submitButton = document.getElementById('submitButton');
 
     submitButton.addEventListener('click', function(event) {
-        event.preventDefault(); // Prevent default form submission
+        event.preventDefault();
 
-        // Get form values
         const name = document.getElementById('name').value;
         const email = document.getElementById('email').value;
         const phone = document.getElementById('phone').value;
         const birthYear = parseInt(document.getElementById('year').value, 10);
-        const password = document.getElementById('password').value;
         const city = document.getElementById('city').value;
         const street = document.getElementById('street').value;
         const addNumber = document.getElementById('number').value;
 
-        // Validation flags and error message
         let isValid = true;
         let errorMessage = '';
-        if(!password) {
+
+        // Validation - all required, string get string, number get number.
+        if(!email || !name || !phone || !city || !street || !number) {
             isValid = false;
-            errorMessage += 'Password is required.\n';
+            errorMessage += 'All fields are required, please fill all!.\n';
         }
 
-        if(!name) {
-            isValid = false;
-            errorMessage += "Name is required!\n";
-        } else if(!isNaN(name)) {
+        if(!isNaN(name)) {
             isValid = false;
             errorMessage += "Name can't be number!\n";
         }
 
-        // Email validation
+        // Validation inputs by pattern
         const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if(!email) {
-            isValid = false;
-            errorMessage += 'Email is required.\n';
-        } else if (!emailPattern.test(email)) {
+        if (email && !emailPattern.test(email)) {
             isValid = false;
             errorMessage += 'Invalid email format.\n';
         }
 
-        // Phone number validation (assuming format: 050/055/054/058/053/052 + 7 digits)
         const phonePattern = /^(050|055|054|058|053|052)\d{7}$/;
-        if(!phone) {
-            isValid = false;
-            errorMessage += 'Phone is required.\n';
-        } else if (!phonePattern.test(phone)) {
+        if (phone && !phonePattern.test(phone)) {
             isValid = false;
             errorMessage += 'Phone number must start with 050, 055, 054, 058, 053, or 052, followed by 7 digits.\n';
         }
 
-        // Birth year validation (must be 2014 or earlier)
         if (birthYear > 2014 || isNaN(birthYear)) {
             isValid = false;
             errorMessage += 'You are too yound, you need to be at least 10.\n';
         }
 
-        // Password validation (minimum 6 characters, English letters and numbers only)
-        const passwordPattern = /^[A-Za-z0-9]{6,}$/;
-        if (!passwordPattern.test(password)) {
-            isValid = false;
-            errorMessage += 'Password must be at least 6 characters and contain only English letters or numbers.\n';
-        }
 
-        if(!city || !addNumber || !street) {
-            isValid = false;
-            errorMessage += "Please enter address!\n";
-        }
         if (isValid) {
             setTimeout(() => {
                 if(document.getElementById('updateForm')){
@@ -148,43 +156,43 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             },3000);
         } else {
-            // Show error alert if validation fails
-            showAlert(errorMessage);
+            showErrorAlert(errorMessage);
         }
     });
 });
 
-// Function to show custom alert
-function showAlert(message) {
-    const alertDiv = document.createElement('div');
-    alertDiv.className = 'jump-alert';
-    alertDiv.innerHTML = `
-        <span class="close-alert">&times;</span>
-        ${message.replace(/\n/g, '<br>')}
-    `;
 
-    // Append the alert div to the body
-    document.body.appendChild(alertDiv);
 
-    // Close button functionality
-    const closeButton = alertDiv.querySelector('.close-alert');
-    closeButton.addEventListener('click', () => {
-        alertDiv.classList.add('fade-out');
+
+document.addEventListener('DOMContentLoaded', () => {
+    const openPasswordModalButton = document.getElementById('openPasswordModal');
+    const passwordModal = document.getElementById('passwordModal');
+
+    // פתיחת ה-popup כאשר לוחצים על הכפתור
+    openPasswordModalButton.addEventListener('click', () => {
+        passwordModal.style.display = 'block';
     });
 
-    // Remove the alert after fade-out transition
-    alertDiv.addEventListener('transitionend', () => {
-        if (alertDiv.classList.contains('fade-out')) {
-            alertDiv.remove();
+    // סגירת ה-popup כאשר לוחצים על ה-X בתוך ה-popup
+    function closeModal() {
+        passwordModal.style.display = 'none';
+    }
+
+    // סגירת ה-popup כאשר לוחצים מחוץ ל-popup
+    window.addEventListener('click', (event) => {
+        if (event.target === passwordModal) {
+            passwordModal.style.display = 'none';
         }
     });
-}
 
+    // הפונקציה לסגירת ה-popup כדי שנוכל לקרוא לה גם מה-HTML
+    window.closeModal = closeModal;
+});
 //--------------
 // My Favorite  |
 //--------------
 
-// Add Product To Favorite
+// Add Product To Favorite - work
 function addToFavorites(productId) {
     fetch('/products/addFav', {
         method: 'POST',
@@ -203,7 +211,7 @@ function addToFavorites(productId) {
     })
 }
 
-// Remove Product From Favorite
+// Remove Product From Favorite - work
 async function removeFavorite(productId) {
     try {
         const response = await fetch('/personal/myAccount/favorite/remove', {
@@ -214,15 +222,14 @@ async function removeFavorite(productId) {
             body: JSON.stringify({ productId: productId }),
         });
 
-        const result = await response.json();
         if (response.ok) {
-            // Find the closest product card element and remove it
+            showSuccessAlert('remove-favorite-alert');
             const productCard = document.querySelector(`[data-product-id="${productId}"]`).closest('.product-card');
             productCard.remove();
-            showSuccessAlert('favorite-alert');
         }
     } catch (error) {
-        console.error('Error removing favorite:', error);
+        console.error('Error:', error);
+        showErrorAlert('An error occurred while removing the product to favorits.')
     }
 }
 
@@ -230,26 +237,18 @@ async function removeFavorite(productId) {
 // My Orders    |
 //--------------
 
-// fetch order id for details
-document.querySelectorAll('.see-order2-btn').forEach(button => {
-    button.addEventListener('click', function () {
-      const orderId = this.getAttribute('data-order-id');
-  
-      // Redirect the user to the order details page
-      window.location.href = `/personal/myAccount/orders/${orderId}`;
-    });
-});
-  
+// See order details - work
+async function showCustOrder() {
+    const orderId = document.getElementById('see-order').getAttribute('data-order-id');
+    window.location.href = `/personal/myAccount/orders/${orderId}`;
+}
 
-// Dynamic status bar logic
 const statusBar = document.getElementById('statusBar');
 const statusText = document.getElementById('statusText');
 const statusEl = document.getElementById('status');
 if (statusEl){
     const status = statusEl.innerText;
     let progress = 0;
-
-    // Remove any existing status classes before adding new ones
     if(statusBar) {
         statusBar.classList.remove('status-pending', 'status-processing', 'status-shipped', 'status-delivered');
     }
@@ -275,8 +274,6 @@ if (statusEl){
             progress = 0;
     }
 
-
-    // Set the width of the progress bar based on the progress percentage
     if(statusBar) {
         statusBar.style.width = progress + "%";
     }
@@ -297,11 +294,9 @@ function toggleEditMode(customerId) {
     const editButton = customerRow.querySelector('.edit-btn-cust');
     const saveButton = customerRow.querySelector('.save-btn-cust');
 
-    // Toggle visibility: Hide edit button, show save button
     editButton.style.display = 'none';
     saveButton.style.display = 'inline-block';
 
-    // Enable inputs
     const inputs = customerRow.querySelectorAll('.customer-input');
     inputs.forEach(input => {
         if (input.tagName === 'SELECT') {
@@ -312,11 +307,9 @@ function toggleEditMode(customerId) {
         input.classList.add('editable');
     });
 
-    // Add background color to row in edit mode
     customerRow.classList.add('edit-mode');
 }
 
-// Save new customer details
 function saveCustomer(customerId) {
     let isValid = true;
     let errorMessage = '';
@@ -329,19 +322,16 @@ function saveCustomer(customerId) {
     const city = document.getElementById('city').value;
     const street =  document.getElementById('street').value;
 
-    if (!name) {
+    if (!name || !email || !phone || !addNumber || !city || !street) {
         isValid = false;
-        errorMessage += 'Name is required!\n';
+        errorMessage += 'All fields are required, please fill all!.\n';
     } else if(!isNaN(name)) {
         isValid = false;
         errorMessage += "Name can't be a number!\n";
     }
 
     const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    if (!email) {
-        isValid = false;
-        errorMessage += 'Email is required!\n';
-    } else if(!emailPattern.test(email)) {
+    if(email && !emailPattern.test(email)) {
         isValid = false;
         errorMessage += "Please enter a valid email!\n";
     }
@@ -352,17 +342,9 @@ function saveCustomer(customerId) {
     }
 
     const phonePattern = /^(052|050|053|054|055|058)\d{7}$/;
-    if(!phone) {
-        isValid = false;
-        errorMessage += "Phone is required!\n";
-    } else if(!phonePattern.test(phone)) {
+    if(phone && !phonePattern.test(phone)) {
         isValid = false;
         errorMessage += "Please enter a valid phone!\n";
-    }
-
-    if(!city || !street || !addNumber) {
-        isValid = false;
-        errorMessage += "Please enter address!\n";
     }
 
     if(isValid) {
@@ -370,11 +352,9 @@ function saveCustomer(customerId) {
         const editButton = customerRow.querySelector('.edit-btn-cust');
         const saveButton = customerRow.querySelector('.save-btn-cust');
 
-        // Toggle visibility: Show edit button, hide save button
         editButton.style.display = 'inline-block';
         saveButton.style.display = 'none';
 
-        // Collect data and disable inputs
         const inputs = customerRow.querySelectorAll('.customer-input');
         const customerData = {};
         inputs.forEach(input => {
@@ -402,11 +382,14 @@ function saveCustomer(customerId) {
                 // Remove background color when exiting edit mode
                 customerRow.classList.remove('edit-mode');
             } else {
-                console.error('Error updating customer:', data.message);
+                console.error('Error:', data.message);
+                showErrorAlert('An error occurred while saving the customer details.')
+
             }
         })
         .catch(error => {
-            console.error('Error with the server request:', error);
+            console.error('Error:', error);
+            showErrorAlert('An error occurred while saving the customer details.')
         });
     } else {
         showErrorAlert(errorMessage);
@@ -423,15 +406,12 @@ function enableStatusEdit(orderId) {
     const saveButton = document.getElementById(`saveStatusButton-${orderId}`);
     const editButton = document.getElementById(`editStatusButton-${orderId}`);
 
-    // Enable the <select> dropdown
     statusSelect.disabled = false;
 
-    // Show the Save button, hide the Edit button
     saveButton.style.display = 'inline-block';
     editButton.style.display = 'none';
 }
 
-// Save the new order status
 function updateOrderStatus(orderId) {
     const selectedStatus = document.getElementById(`orderStatus-${orderId}`).value;
     // Make a PUT request to update the order status
@@ -454,7 +434,7 @@ function updateOrderStatus(orderId) {
             document.getElementById(`saveStatusButton-${orderId}`).style.display = 'none';
             document.getElementById(`editStatusButton-${orderId}`).style.display = 'inline-block';
         } else {
-            alert('Failed to update status');
+            showErrorAlert('Failed to update status.')
         }
     })
 }
@@ -485,19 +465,17 @@ document.querySelectorAll('.remove').forEach(icon => {
             }
         } catch (error) {
             console.error('Error removing order:', error);
-            alert('Failed to remove order');
+            showErrorAlert('Failed to remove order.')
         }
     });
 });
 
-document.querySelectorAll('.see-order1-btn').forEach(button => {
-    button.addEventListener('click', function () {
-      const orderId = this.getAttribute('data-order-id');
-  
-      // Redirect the user to the order details page
-      window.location.href = `/personal/admin/orders/${orderId}`;
-    });
-});
+// See order details - works
+async function seeOrder() {
+    const orderId = document.getElementById('see-order').getAttribute('data-order-id');
+    window.location.href=`/personal/admin/orders/${orderId}`;
+}
+
 
 //---------------
 // All Products  |
@@ -531,7 +509,8 @@ function deleteProduct(productId) {
         }
     })
     .catch(error => {
-        alert('Error deleting product: ' + error.message);
+        showErrorAlert('Error deleting product: ');
+
     });
 }
 
@@ -541,6 +520,7 @@ function editProduct(productId) {
 
     if (!productCard) {
         console.error('Product card not found for ID:', productId);
+        showErrorAlert('Product card not found');
         return;
     }
     productCard.classList.add('edit-mode');
@@ -549,6 +529,7 @@ function editProduct(productId) {
 
     if (inputs.length === 0) {
         console.error('No input fields found in product card for ID:', productId);
+        showErrorAlert('No input fields found in product card');
     } else {
         inputs.forEach(input => {
             input.removeAttribute('readonly');
@@ -571,6 +552,7 @@ function editProduct(productId) {
         editButton.onclick = () => saveProduct(productId);
     } else {
         console.error('Edit button not found in product card for ID:', productId);
+        showErrorAlert('Edit btn not found');
     }
 }
 
@@ -582,6 +564,7 @@ function saveProduct(productId) {
 
     if (!productCard) {
         console.error('Product card not found for ID:', productId);
+        showErrorAlert('Product card not found');
         return;
     }
 
@@ -595,40 +578,34 @@ function saveProduct(productId) {
     const sweetType = productCard.querySelector('.sweet-type-dropdown').value;
     const kosher = productCard.querySelector('.kosher-dropdown').value;
 
-    if(!name) {
+    if(!name || !price || !inventory || !description) {
         isValid = false;
-        errorMessage += 'Name is required!\n';
-    } else if(!isNaN(name)) {
+        errorMessage += 'All fields are required, please fill all!.\n';
+    } 
+    if(name && !isNaN(name)) {
         isValid = false;
         errorMessage += "Name can't be a number!\n";
     }
 
-    if(!price) {
-        isValid = false;
-        errorMessage += 'Price is required!\n';
-    } else if (isNaN(price)) {
+    if (price && isNaN(price)) {
         isValid = false;
         errorMessage += 'Price must to be a number!\n';
-    } else if (!(price > 0 && price <= 100)) {
+    } 
+    if (price && !(price > 0 && price <= 100)) {
         isValid = false;
         errorMessage += 'Price need to be between 1-100!\n';
     }
 
-    if(!inventory) {
-        isValid = false;
-        errorMessage += 'Inventory is required!\n';
-    } else if(isNaN(inventory)) {
+    if(inventory && isNaN(inventory)) {
         isValid = false;
         errorMessage += 'Inventory must to e a number!\n';
-    } else if (!(inventory >= 0 && inventory <=200)) {
+    }
+    if (inventory && !(inventory >= 0 && inventory <=200)) {
         isValid = false;
         errorMessage += 'Inventory need to be between 0-200!\n';
     }
 
-    if(!description) {
-        isValid = false;
-        errorMessage += 'Description is required!\n';
-    } else if(!isNaN(description)) {
+    if(description && !isNaN(description)) {
         isValid = false;
         errorMessage += "Description can't be a number!\n";
     }
@@ -689,12 +666,12 @@ function saveProduct(productId) {
                     }
     
                 } else {
-                    alert('Failed to update product');
+                    showErrorAlert('Failed to update product');
                 }
             })
             .catch(error => {
                 console.error('Error updating product:', error);
-                alert('An error occurred while updating the product. Please try again.');
+                showErrorAlert('An error occurred while updating the product. Please try again.');
             });
     } else {
         showErrorAlert(errorMessage);
@@ -707,6 +684,8 @@ function saveProduct(productId) {
 //---------------
 
 document.addEventListener('DOMContentLoaded', () => {
+    console.log("Preview script loaded");
+
     const nameInput = document.getElementById('name');
     const priceInput = document.getElementById('price');
     const inventoryInput = document.getElementById('inventory');
@@ -891,40 +870,34 @@ async function submitProduct() {
     const sweetType = document.getElementById('SweetTypeDropdown').value;
     const kosher = document.getElementById('KosherDropdown').value;
 
-    if(!name) {
+    if(!name || !price || !inventory || !description) {
         isValid = false;
-        errorMessage += 'Name is required!\n';
-    } else if(!isNaN(name)) {
+        errorMessage += 'All fields are required, please fill all!.\n';
+    } 
+    if(name && !isNaN(name)) {
         isValid = false;
         errorMessage += "Name can't be a number!\n";
     }
 
-    if(!price) {
-        isValid = false;
-        errorMessage += 'Price is required!\n';
-    } else if (isNaN(price)) {
+    if (price && isNaN(price)) {
         isValid = false;
         errorMessage += 'Price must to be a number!\n';
-    } else if (!(price > 0 && price <= 100)) {
+    } 
+    if (price && !(price > 0 && price <= 100)) {
         isValid = false;
         errorMessage += 'Price need to be between 1-100!\n';
     }
 
-    if(!inventory) {
-        isValid = false;
-        errorMessage += 'Inventory is required!\n';
-    } else if(isNaN(inventory)) {
+    if(inventory && isNaN(inventory)) {
         isValid = false;
         errorMessage += 'Inventory must to e a number!\n';
-    } else if (!(inventory >= 0 && inventory <=200)) {
+    }
+    if (inventory && !(inventory >= 0 && inventory <=200)) {
         isValid = false;
         errorMessage += 'Inventory need to be between 0-200!\n';
     }
 
-    if(!description) {
-        isValid = false;
-        errorMessage += 'Description is required!\n';
-    } else if(!isNaN(description)) {
+    if(description && !isNaN(description)) {
         isValid = false;
         errorMessage += "Description can't be a number!\n";
     }
@@ -953,49 +926,41 @@ async function submitProduct() {
         showErrorAlert(errorMessage);
     } else  {
         const form = document.getElementById('productForm');
-    const formData = new FormData(form); // Get form data, including the file
+        const formData = new FormData(form);
 
-    // Add selected flavors to the form data
-    formData.append('flavors', JSON.stringify(selectedFlavors));
+        formData.append('flavors', JSON.stringify(selectedFlavors));
+        formData.append('allergans', JSON.stringify(selectedAllergans));
+        formData.append('sweetType', selectedSweetType);
+        formData.append('kosher', selectedKosher);
 
-    // Add selected allergans to the form data
-    formData.append('allergans', JSON.stringify(selectedAllergans));
+        const submitButton = document.getElementById('submitButton');
+        submitButton.disabled = true;
 
-    // Add selected sweet type to the form data
-    formData.append('sweetType', selectedSweetType);
+        try {
+            const response = await fetch('/personal/admin/addProducts', {
+                method: 'POST',
+                body: formData, // Send the form data
+            });
 
-    // Add selected kosher to the form data
-    formData.append('kosher', selectedKosher);
-
-    // Disable the submit button to prevent multiple submissions
-    const submitButton = document.getElementById('submitButton');
-    submitButton.disabled = true;
-
-    try {
-        const response = await fetch('/personal/admin/addProducts', {
-            method: 'POST',
-            body: formData, // Send the form data
-        });
-
-        if (response.ok) {
-            const data = await response.json();
-            if (data.success) {
-                showSuccessAlert('success-alert'); // Show success alert
-                setTimeout(() => {
-                    window.location.href = '/personal/admin/products'; // Redirect after 2 seconds
-                }, 2000);
+            if (response.ok) {
+                const data = await response.json();
+                if (data.success) {
+                    showSuccessAlert('success-alert'); // Show success alert
+                    setTimeout(() => {
+                        window.location.href = '/personal/admin/products'; // Redirect after 2 seconds
+                    }, 2000);
+                } else {
+                    showErrorAlert('An error occurred while adding the product.');
+                    submitButton.disabled = false; // Re-enable submit button if there's an error
+                }
             } else {
-                showErrorAlert();
-                submitButton.disabled = false; // Re-enable submit button if there's an error
+                throw new Error('Error submitting the product');
             }
-        } else {
-            throw new Error('Error submitting the product');
+        } catch (error) {
+            console.error('Error submitting product:', error);
+            showErrorAlert('An error occurred while adding the product.')
+            submitButton.disabled = false; // Re-enable the submit button on error
         }
-    } catch (error) {
-        console.error('Error submitting product:', error);
-        alert('Error: ' + error.message);
-        submitButton.disabled = false; // Re-enable the submit button on error
-    }
     }
     
 }
@@ -1018,68 +983,107 @@ function toggleEditModeStore(storeId) {
     const editButton = storeRow.querySelector('.edit-btn-store');
     const saveButton = storeRow.querySelector('.save-btn-store');
 
-    // Toggle visibility: Hide edit button, show save button
     editButton.style.display = 'none';
     saveButton.style.display = 'inline-block';
 
-    // Enable inputs
     const inputs = storeRow.querySelectorAll('.store-input');
     inputs.forEach(input => {
         input.removeAttribute('readonly');
         input.classList.add('editable');
     });
 
-    // Add background color to row in edit mode
     storeRow.classList.add('edit-mode');
 }
 
 function saveStore(storeId) {
-
-
     const storeRow = document.querySelector(`tr[data-id="${storeId}"]`);
     const editButton = storeRow.querySelector('.edit-btn-store');
     const saveButton = storeRow.querySelector('.save-btn-store');
 
-    // Toggle visibility: Show edit button, hide save button
-    editButton.style.display = 'inline-block';
-    saveButton.style.display = 'none';
+    const name = storeRow.querySelector('.name').value;
+    const city = storeRow.querySelector('.city').value;
+    const street = storeRow.querySelector('.street').value;
+    const number = storeRow.querySelector('.number').value;
+    const latitude = storeRow.querySelector('.latitude').value.trim();
+    const longitude = storeRow.querySelector('.longitude').value.trim();
 
-    const inputs = storeRow.querySelectorAll('.store-input');
-    const storeData = {};
+    let isValid = true;
+    let errorMessage = '';
 
-    inputs.forEach(input => {
-        if (input.name === 'coordinates') {
-            storeData[input.name] = input.value.split(',').map(Number);
-        } else {
-            storeData[input.name] = input.value;
-        }
-        input.setAttribute('readonly', 'true');
-        input.classList.remove('editable');
-    });
+    if(!name) {
+        isValid = false;
+        errorMessage += 'Name is required\n';
+    } else if(!isNaN(name)) {
+        isValid = false;
+        errorMessage += "Name can't be a number!\n";
+    }
 
-    fetch(`/personal/admin/stores/update/${storeId}`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(storeData),
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            showSuccessAlert('save-store-alert');
-            setTimeout(() =>{
-                storeRow.classList.remove('edit-mode');
-            },2000);
-            
-        } else {
-            console.error('Error updating store:', data.message);
-        }
-    })
-    .catch(error => {
-        console.error('Error with the server request:', error);
-    });
+    if(!city || !street || !number) {
+        isValid = false;
+        errorMessage += 'City, Street and Number are required!\n';
+    } if (!isNaN(city) || !isNaN(street) || isNaN(number)) {
+        isValid = false;
+        errorMessage += "City and Street - String, Number - number!\n";
+    }
+
+    const coordinatePatern = /^(\+|-)?((([1-8]?[0-9])(\.\d+)?)|(90(\.0+)?))$/;
+    if(!latitude || !longitude) {
+        isValid = false;
+        errorMessage += 'Coordinates are required!\n';
+    } else if(!coordinatePatern.test(latitude) || !coordinatePatern.test(longitude)) {
+        isValid = false;
+        errorMessage += 'The coordinate you enter are invalid! (ex 34.0000,34.0000)\n';
+    }
+
+    if(isValid) {
+        const storeData = {
+            name: name,
+            address: {
+                city: city,
+                street: street,
+                number: number,
+            },
+            coordinates: [parseFloat(latitude), parseFloat(longitude)],
+        };
+
+        editButton.style.display = 'inline-block';
+        saveButton.style.display = 'none';
+
+        const inputs = storeRow.querySelectorAll('.store-input');
+        inputs.forEach(input => {
+            input.setAttribute('readonly', 'true');
+            input.classList.remove('editable');
+        });
+
+        fetch(`/personal/admin/stores/update/${storeId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(storeData),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showSuccessAlert('save-store-alert');
+                setTimeout(() => {
+                    storeRow.classList.remove('edit-mode');
+                }, 2000);
+            } else {
+                console.error('Error updating store:', data.message);
+                showErrorAlert('An error occurred while updating the store details.');
+            }
+        })
+        .catch(error => {
+            console.error('Error with the server request:', error);
+            showErrorAlert('An error occurred while updating the store details.');
+        });
+    } else {
+        showErrorAlert(errorMessage);
+    }
+    
 }
+
 
 async function submitStore() {
     const name = document.getElementById('name').value;
@@ -1087,12 +1091,13 @@ async function submitStore() {
     const street = document.getElementById('street').value;
     const number = document.getElementById('number').value;
     const latitude = document.getElementById('latitude').value.trim();
-    const longtitude = document.getElementById('longitude').value.trim();
+    const longitude = document.getElementById('longitude').value.trim();
 
     let isValid = true;
-    let errorMessage ='';
+    let errorMessage = '';
 
-    if(!name) {
+    // Validation - all required, string get string, number get number.
+    if (!name) {
         isValid = false;
         errorMessage += 'Name is required!\n';
     } else if (!isNaN(name)) {
@@ -1100,71 +1105,68 @@ async function submitStore() {
         errorMessage += "Name can't be a number!\n";
     }
 
-    if(!city || !street || !number) {
+    if (!city || !street || !number) {
         isValid = false;
         errorMessage += 'Address is required!\n';
     }
 
-    const coordinatePatern = /^(\+|-)?((([1-8]?[0-9])(\.\d+)?)|(90(\.0+)?))$/;
-    if(!latitude || !longtitude) {
+    // Validation inputs by pattern.
+    const coordinatePattern = /^(\+|-)?((([1-8]?[0-9])(\.\d+)?)|(90(\.0+)?))$/;
+    if (!latitude || !longitude) {
         isValid = false;
         errorMessage += 'Coordinates are required!\n';
-    } else if(!coordinatePatern.test(latitude) || !coordinatePatern.test(longtitude)) {
+    } else if (!coordinatePattern.test(latitude) || !coordinatePattern.test(longitude)) {
         isValid = false;
-        errorMessage += 'The coordinate you enter are invalid! (ex 34.0000,34.0000)\n';
+        errorMessage += 'Invalid coordinates! (example: 34.0000, 34.0000)\n';
     }
 
-    if(isValid) {
-        // Get form data
-        let address = city + ',' + street + ',' + number;
-        let coordinates = [latitude, longtitude];
-        console.log(coordinates)
+    if (isValid) {
+        let address = {
+            city: city,
+            street: street,
+            number: number,
+        };
+        let coordinates = [parseFloat(latitude), parseFloat(longitude)];
         let storeId = new Date().getTime().toString();
 
-        // Construct the store object
         let store = {
             name: name,
             address: address,
             coordinates: coordinates,
-            storeId: storeId
+            storeId: storeId,
         };
 
-        // Disable submit button to prevent duplicate submissions
         const submitButton = document.getElementById('submitButton');
         submitButton.disabled = true;
 
-        // Prepare fetch options
         const requestOptions = {
             method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: new URLSearchParams(store),
-            credentials: 'same-origin'
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(store),
         };
 
         try {
-            // Make fetch request
             const response = await fetch('/personal/admin/addStores', requestOptions);
 
             if (response.ok) {
-                // If store creation succeeded, redirect to stores page
-                showSuccessAlert('save-store-alert'); // Show success alert
+                showSuccessAlert('save-store-alert');
                 setTimeout(() => {
                     window.location.href = '/personal/admin/stores';
-                },2000);
-                
+                }, 2000);
             } else {
-                // Log error
                 console.error(`Error ${response.status}: ${response.statusText}`);
+                showErrorAlert('Failed to save the store. Please try again.');
             }
         } catch (error) {
-            console.log('Error:', error);
-            alert('Error: ' + error);
-            submitButton.disabled = false;  // Enable the button again
+            console.error('Error:', error);
+            showErrorAlert('An error occurred while saving the store. Please try again.');
+            submitButton.disabled = false; // Enable the button again
         }
     } else {
         showErrorAlert(errorMessage);
     }
-    
 }
 
 // Delete store
@@ -1188,7 +1190,7 @@ async function deleteStore(storeId) {
         }
     })
     .catch(error => {
-        alert('Error deleting store: ' + error.message);
+        showErrorAlert('An error occurred while deleting the store.');
     });
 }
 

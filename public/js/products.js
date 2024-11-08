@@ -61,30 +61,10 @@ function addToCart(button) {
     .then(response => response.json())
     .then(data => {
         if (data.message === 'Product added to cart') {
-            showSuccessAlert('prod-add-cart-alert');
+            showSuccessAlert('add-cart-alert');
         } else if (data.message === 'Product is already in the cart') {
-            showSuccessAlert('prod-exe-cart-alert');
+            showSuccessAlert('exe-cart-alert');
         }
     })
     .catch(error => console.error('Error:', error));
 }
-
-// Add Product To Favorite
-function addToFavorites(productId) {
-    fetch('/products/addFav', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ productId: productId }),
-    })
-    .then(response =>{
-        if(response.ok) {
-            showSuccessAlert('prod-add-favorite-alert');
-            if(document.querySelector(`#favorite-icon-${productId}`)){
-                document.querySelector(`#favorite-icon-${productId}`).classList.add('favorited');
-            }
-        }
-    })
-}
-

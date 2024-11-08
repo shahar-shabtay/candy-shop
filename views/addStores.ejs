@@ -76,9 +76,11 @@
                     |
                     <a href="#" class="talk-to-us" id="openTalkModal">Talk To Us</a>
                     |
-                    <a href="https://tinyurl.com/sweetly-facebook" class="facebook">Facebook</a>
+                    <a href="https://tinyurl.com/sweetly-facebook" target="_blank" class="facebook">Facebook</a>
+                    |
+                    <a href="#" class="adminStatistics" id="openAdminStatisticsModel">Admin statistics</a>
                 </div>
-
+                
                 <!-- Modal for About Us -->
                 <div id="aboutModal" class="modal">
                     <div class="modal-content">
@@ -87,7 +89,7 @@
                         <p>At Sweetly, we make finding your favorite sweets easy and enjoyable. We have the most special candies and a lot of stores waiting for you!</p>
                     </div>
                 </div>
-
+                
                 <!-- Modal for Talk To Us -->
                 <div id="talkModal" class="modal">
                     <div class="modal-content">
@@ -96,9 +98,18 @@
                         <p>You can reach us at support@candyshop.com or follow us on social media for the latest updates and tips!</p>
                     </div>
                 </div>
+                <!-- Modal for Admin Statistics -->
+                <div id="adminStatisticsModel" class="modal">
+                    <div class="modal-content">
+                        <span class="close-button">&times;</span>
+                        <h2>Users Statistics</h2>
+                        <canvas id="adminChart" width="400" height="400"></canvas>
+                    </div>
+                </div>
             </div>
-        </footer>       
+        </footer>
         <script src="/public/js/personal.js"></script>
+        <script src="/public/js/adminStatistics.js"></script>
         <script>
             console.log('Script is running');  // Add this line
             </script>

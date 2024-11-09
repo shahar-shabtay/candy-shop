@@ -946,6 +946,9 @@ async function submitProduct() {
                 const data = await response.json();
                 if (data.success) {
                     showSuccessAlert('success-alert'); // Show success alert
+                    if (data.facebookPostError) {
+                        showErrorAlert(data.facebookPostError);
+                    }
                     setTimeout(() => {
                         window.location.href = '/personal/admin/products'; // Redirect after 2 seconds
                     }, 2000);

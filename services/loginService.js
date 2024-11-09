@@ -15,7 +15,6 @@ async function loginAttempt(email, password) {
     if (user) {
         // Decrypt stored password and compare
         const decryptedPassword = decrypt(user.password);
-        console.log('login service ' +decryptedPassword);
         if(decryptedPassword === password) {
             // Password matches, return user data
             return user;

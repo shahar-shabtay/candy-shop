@@ -46,7 +46,7 @@ async function addProduct(req, res) {
                 return res.status(500).json({ success: false, message: 'Error uploading image' });
             }
 
-            const { name, price, inventory, description, category, postToFacebook, sweetType, kosher} = req.body;
+            const { name, price, inventory, description, postToFacebook, sweetType, kosher} = req.body;
             const flavorsData = req.body.flavors || '[]';
             let flavors = [];
 
@@ -84,7 +84,10 @@ async function addProduct(req, res) {
                 imageUrl
             };
 
+            const newProduct = await productsService.createProduct(productData);
+
             // PostToFacebook
+            let facebookPostError = null;
             if (postToFacebook === 'on') {
                 const productUrl = `localhost:3000/products/${productId}`;
                 try {
@@ -95,11 +98,11 @@ async function addProduct(req, res) {
                     `${productUrl}`);
                 } catch (error) {
                     console.error('Error posting to Facebook:', error);
+                    facebookPostError = 'Failed to post to Facebook.';
                 }
             }
             // Pass the data to the service to insert into the database
-            const newProduct = await productsService.createProduct(productData);
-            return res.json({ success: true, product: newProduct });
+            return res.json({ success: true, product: newProduct, facebookPostError});
         });
     } catch (error) {
         console.error('Error creating product:', error);

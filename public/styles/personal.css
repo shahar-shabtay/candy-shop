@@ -878,3 +878,8 @@ color: pink; /* Change the color */
 .admin-card button:hover {
     background-color: #f7658d;
 }
+
+.store-preview-container {
+    align-items: center;
+    justify-items: center;
+}

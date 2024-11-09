@@ -15,7 +15,7 @@ async function getStores(req, res) {
 
 async function updateStoreDetails(req, res) {
     try {
-        const storeId = req.params.storeId; // Get storeId from the route parameters
+        const storeId = req.params.storeId; 
         const storeData = req.body;
 
         const updatedStore = await storesService.updateStoreDetails(storeId, storeData);
@@ -51,7 +51,6 @@ async function deleteStore (req, res) {
       });
   }
   
-
 module.exports = {
     getStores,
     updateStoreDetails,

@@ -183,16 +183,13 @@ async function removeFavoriteProduct (req,res) {
 }
 
 async function editProducts (req,res) {
-	const { productId } = req.params; // Get product ID from URL
-    const { name, price, description, inventory } = req.body; // Get updated data from the request body
+	const { productId } = req.params; 
+    const { name, price, description, inventory } = req.body; 
 
-    try {
-        // Call the service to update the product
-		
+    try {		
         const updateData = { productId, name, price, description, inventory };
 		const updatedProduct = await productsService.saveProduct(productId, updateData);
         
-        // Respond with success
         return res.json({ success: true, product: updatedProduct });
     } catch (error) {
         console.error('Error updating product:', error);
@@ -213,7 +210,6 @@ async function getProductDetail (req, res) {
     }
 }
 
-// Async function to read kosher data from the products collection
 async function getKosherData(req, res) {
     try {
         const kosherCount = await Products.countDocuments({ kosher: "Yes" });
@@ -233,7 +229,6 @@ async function getAdminData(req, res) {
     try {
         const adminCount = await customerService.countDocuments({ role: "admin" });
         const nonAdminCount = await customerService.countDocuments({ role: "user" });
-
         // Return the counts as a JSON response
         res.status(200).json({
             Admin: adminCount,
@@ -244,7 +239,6 @@ async function getAdminData(req, res) {
         res.status(500).json({ error: "Internal server error", details: error.message });
     }
 }
-
 
 module.exports = {
 	getAllProducts,

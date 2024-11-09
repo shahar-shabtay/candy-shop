@@ -4,8 +4,6 @@ const productsController = require('../controllers/productsController.js');
 const currencyController = require('../controllers/currencyController.js');
 const { isAuthenticated } = require('../controllers/loginController.js');
 
-
-
 // Get 
 router.get('/', isAuthenticated, productsController.getAllProducts);
 

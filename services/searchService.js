@@ -70,7 +70,6 @@ async function searchFilter(query, filters) {
     }
 }
 
-
 module.exports = { 
     searchProductsByName,
     searchProductsBySweetType,

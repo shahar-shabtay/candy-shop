@@ -11,11 +11,7 @@ const updateProductQuantity = (req, productId, quantity) => {
         if (!productInCart) {
             throw new Error('Product not found in cart.');
         }
-
-        // Update the quantity
         productInCart.quantity = quantity;
-
-        // Return the updated cart
         return { success: true, cart: req.session.cart };
     } catch (error) {
         throw new Error(`Error updating product quantity: ${error.message}`);

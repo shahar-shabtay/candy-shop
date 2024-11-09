@@ -13,14 +13,12 @@ async function getAllProducts () {
 async function deleteProduct(productId) {
     try {
         // Logic to delete the product from the database
-        // Assuming you're using a MongoDB-like database
         await Products.findOneAndDelete({productId:productId});
         await Favorites.deleteMany({productId:productId});
     } catch (error) {
         throw new Error('Failed to delete product from database: ' + error.message);
     }
 }
-
 
 async function getProductById(productId) {
     try {
@@ -39,10 +37,10 @@ async function createProduct(productData) {
     try {
         // Create a new product using the Products model and the provided product data
         const product = new Products(productData);
-        return await product.save(); // Save the product to the database
+        return await product.save(); 
     } catch (err) {
         console.error('Error creating product:', err);
-        throw err; // Rethrow the error to be handled in the controller
+        throw err; 
     }
 }
 
@@ -69,7 +67,6 @@ async function updateProductInventory (productId, inventory) {
         throw Error("Error while updating product inventory");
     }
 };
-
 
 module.exports = {
     getAllProducts,

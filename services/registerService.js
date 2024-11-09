@@ -4,7 +4,6 @@ const crypto = require("crypto-js");
 
 const SECRET_KEY = process.env.SECRET_KEY; 
 
-
 function encrypt(password){
   return crypto.AES.encrypt(password, SECRET_KEY).toString();
 }
@@ -16,12 +15,11 @@ async function registerUser(userData) {
     // Encrypt the password
     const encryptedPassword = encrypt(password);
 
-    // Create a new customer instance
     const newCustomer = new Customer({
       name,
       email,
       customerId,
-      password: encryptedPassword, // Store the encrypted password
+      password: encryptedPassword, 
       birthdate,
       address,
       phone,

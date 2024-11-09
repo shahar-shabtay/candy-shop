@@ -1,10 +1,8 @@
 require('dotenv').config()
 const crypto = require("crypto-js");
-const User = require('../models/customer'); // Adjust the path as needed
+const User = require('../models/customer'); 
 
 const SECRET_KEY = process.env.SECRET_KEY; 
-
-
 
 function decrypt(ciphertext) {
   const bytes  = crypto.AES.decrypt(ciphertext, SECRET_KEY);

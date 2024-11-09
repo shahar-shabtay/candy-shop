@@ -136,28 +136,60 @@ async function checkout(req, res) {
     const user = req.session.user;
     let orderProducts = [];
     let totalPrice = 0;
+    let skippedProducts = [];
 
     try {
-        // שליפת העגלה מהדאטהבייס באמצעות ה-service
+        // Fetch cart from the database using the service
         const cart = await customerService.getCustomerCart(user.customerId);
 
-        if (cart && cart.length > 0) {
-            for (let item of cart) {
-                const product = await productsService.getProductById(item.productId);
-                if (product) {
+        if (!cart || cart.length === 0) {
+            return res.status(400).json({ success: false, message: 'Your cart is empty.' });
+        }
+
+        // Check inventory for each product
+        for (let item of cart) {
+            const product = await productsService.getProductById(item.productId);
+
+            if (product) {
+                // If inventory is 0, skip the product but continue processing other items
+                if (product.inventory === 0) {
+                    skippedProducts.push(product.name);  // Keep track of skipped products for the response message
+                    continue;
+                }
+
+                // Check if inventory is sufficient
+                if (product.inventory >= item.quantity) {
+                    // Add product to order if inventory is sufficient
                     orderProducts.push({ productId: item.productId, quantity: item.quantity });
                     totalPrice += product.price * item.quantity;
 
-                    // הפחתת המלאי של המוצר בהתאם לכמות שנרכשה
+                    // Reduce the product inventory in the database
                     product.inventory -= item.quantity;
                     await productsService.updateProductInventory(product.productId, product.inventory);
+                } else {
+                    return res.status(400).json({
+                        success: false,
+                        message: `Insufficient inventory for ${product.name}. Please adjust quantities and try again.`
+                    });
                 }
+            } else {
+                return res.status(400).json({
+                    success: false,
+                    message: `Product with ID ${item.productId} not found.`
+                });
             }
         }
 
+        // If no valid products to order, return an error response
+        if (orderProducts.length === 0) {
+            return res.status(400).json({ success: false, message: 'No products with sufficient inventory to complete the order.' });
+        }
+
+        // Format total price to two decimal places
         totalPrice = totalPrice.toFixed(2);
+
         const address = req.body.address;
-        let orderData = {
+        const orderData = {
             orderId: new Date().getTime().toString(),
             customerId: user.customerId,
             orderDate: new Date(),
@@ -167,13 +199,18 @@ async function checkout(req, res) {
             address: address,
         };
 
-        // יצירת ההזמנה
+        // Create the order
         const order = await ordersService.createOrder(orderData);
 
-        // איפוס העגלה בדאטהבייס
+        // Clear the cart in the database
         await customerService.updateCustomerCart(user.customerId, []);
 
-        res.status(201).json({ success: true, message: 'Order placed successfully.' });
+        // Prepare the success message with details of skipped products, if any
+        const successMessage = skippedProducts.length > 0
+            ? `Order placed successfully. Note: The following products were not added due to insufficient inventory: ${skippedProducts.join(', ')}.`
+            : 'Order placed successfully.';
+
+        res.status(201).json({ success: true, message: successMessage });
     } catch (error) {
         console.error("Failed to place order:", error);
         res.status(500).json({ success: false, message: 'Failed to place order.' });

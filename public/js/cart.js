@@ -10,6 +10,39 @@ function showSuccessAlert(id) {
         }, 3000);
     }
 }
+function showErrorAlert(message) {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = 'jump-alert';
+    alertDiv.innerHTML = `
+        <span class="close-alert">&times;</span>
+        ${message.replace(/\n/g, '<br>')}
+    `;
+
+    // Append the alert div to the body
+    document.body.appendChild(alertDiv);
+
+    // Calculate the duration based on the number of lines (1 second per line)
+    const lineCount = message.split('\n').length;
+    const displayDuration = lineCount * 1000; // Duration in milliseconds
+
+    // Close button functionality
+    const closeButton = alertDiv.querySelector('.close-alert');
+    closeButton.addEventListener('click', () => {
+        alertDiv.classList.add('fade-out');
+    });
+
+    // Automatically remove the alert after the calculated display duration
+    setTimeout(() => {
+        alertDiv.classList.add('fade-out');
+    }, displayDuration);
+
+    // Remove the alert after fade-out transition
+    alertDiv.addEventListener('transitionend', () => {
+        if (alertDiv.classList.contains('fade-out')) {
+            alertDiv.remove();
+        }
+    });
+}
 
 document.addEventListener('DOMContentLoaded', () => {
     recalculateTotal();
@@ -91,58 +124,58 @@ function updateTotalPrice() {
 // Checkout function
 async function checkoutCart() {
     try {
-        // Collect product information from the cart
         const cartItems = document.querySelectorAll('.cart-item');
-        const products = Array.from(cartItems).map(item => {
-            return {
-                productId: item.getAttribute('data-product-id'),
-                quantity: parseInt(item.querySelector('input[name="quantity"]').value)
-            };
-        });
+        let totalPrice = 0;
+        const products = Array.from(cartItems).reduce((filteredProducts, item) => {
+            const productId = item.getAttribute('data-product-id');
+            const quantity = parseInt(item.querySelector('input[name="quantity"]').value);
+            const inventory = parseInt(item.getAttribute('data-inventory'));
+            const price = parseFloat(item.querySelector('.cart-product-price').textContent);
 
-        // Gather address information from the form
+            if (inventory > 0 && quantity > 0) {
+                if (quantity > inventory) {
+                    showErrorAlert(`The quantity for product ID ${productId} exceeds available inventory. Please adjust the quantity.`);
+                    throw new Error(`Insufficient inventory for product ID ${productId}`);
+                }
+                totalPrice += price * quantity;
+                filteredProducts.push({ productId: productId, quantity: quantity });
+            }
+            return filteredProducts;
+        }, []);
+
+        if (totalPrice === 0 || products.length === 0) {
+            showErrorAlert('No valid products in the cart to checkout. Please add items to the cart.');
+            return;
+        }
+
         const city = document.getElementById('shipping-city').value;
         const street = document.getElementById('shipping-street').value;
         const number = document.getElementById('shipping-number').value;
 
-        // Check if any address field is empty
         if (!city || !street || !number) {
-            showAlert();
-            return; // Stop checkout if address is incomplete
+            alert('Please fill in all address fields.');
+            return;
         }
 
-        // Create the checkout data object
         const checkoutData = {
             products: products,
-            address: {
-                city: city,
-                street: street,
-                number: number
-            }
+            address: { city: city, street: street, number: number }
         };
 
-        // Send a POST request to the server to checkout
         const response = await fetch('/cart/checkout', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(checkoutData)
         });
 
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-
         const data = await response.json();
 
-        if (data.success) {
+        if (response.ok && data.success) {
             showSuccessAlert('checkout-alert');
-            // Update cart UI to indicate the cart is now empty
             document.querySelector('.cart-container').innerHTML = '<p>Your cart is empty.</p>';
             document.getElementById('total-price').textContent = '0.00';
         } else {
-            alert('Failed to place order: ' + data.message);
+            alert(`Error: ${data.message}`);
         }
     } catch (error) {
         console.error('Error during checkout:', error);

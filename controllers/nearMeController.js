@@ -3,7 +3,7 @@ const nearMeService = require('../services/nearMeService');
 async function showNearestStore(req, res) {
   const user = req.session.user;
   const currency = req.session.currency;
-  const { lat, lon } = req.query; 
+  const { lat, lon } = req.query;
   try {
     const nearestStore = await nearMeService.findNearestStore(lat, lon);
     if (nearestStore) {

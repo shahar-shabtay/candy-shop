@@ -38,7 +38,7 @@
                                     <div class="product-card" data-product-id="<%= product.productId %>">
                                         <a href="/products/<%= product.productId %>" class="product-link">
                                             <div class="product-image-container <%= product.inventory === 0 ? 'out-of-stock' : '' %>">
-                                                    <% if (product.inventory <= 5) { %>
+                                                    <% if (product.inventory <= 5 && product.inventory >=0) { %>
                                                         <span class="stock-banner"><%= product.inventory %> left</span>
                                                     <% } %>
                                                     <img src="<%= product.imageUrl %>" alt="<%= product.name %>" class="product-image">

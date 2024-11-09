@@ -1,14 +1,6 @@
 [{
   "_id": {
-    "$oid": "671be730019213cf6738ad49"
-  },
-  "productId": 3969697,
-  "customerId": "222222222",
-  "__v": 0
-},
-{
-  "_id": {
-    "$oid": "671be7d3019213cf6738ad71"
+    "$oid": "672b5b74e8ca6b2907b716d9"
   },
   "productId": 7616503,
   "customerId": "222222222",
@@ -16,17 +8,33 @@
 },
 {
   "_id": {
-    "$oid": "671bec4cccff67fcc56635c8"
+    "$oid": "672c6013f16698b05062ea9d"
   },
-  "productId": 4092363,
+  "productId": 2314872,
   "customerId": "222222222",
   "__v": 0
 },
 {
   "_id": {
-    "$oid": "671d0bf100606e492ebc4cd9"
+    "$oid": "672d0ced9be04bbe936e3f9f"
+  },
+  "productId": 3969697,
+  "customerId": "222222222",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "672e058292a7f726757d2014"
   },
   "productId": 2670143,
-  "customerId": "222222222",
+  "customerId": "394829080",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "672e05af92a7f726757d201e"
+  },
+  "productId": 2314872,
+  "customerId": "394829080",
   "__v": 0
 }]

@@ -32,7 +32,7 @@
                                     <div class="product-card">
                                         <!-- Image and Favorite button (3/6 of the card) -->
                                         <div class="product-image-container">
-                                                <% if (product.inventory <= 5) { %>
+                                                <% if (product.inventory <= 5 && product.inventory >=0) { %>
                                                     <span class="stock-banner"><%= product.inventory %> left</span>
                                                 <% } %>
                                                 <img src="<%= product.imageUrl %>" alt="<%= product.name %>" class="product-image">

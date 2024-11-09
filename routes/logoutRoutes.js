@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const loginController = require('../controllers/loginController'); // Adjust the path to your controller
-
+const loginController = require('../controllers/loginController'); 
 router.post('/',loginController.logout);
 
 module.exports = router;

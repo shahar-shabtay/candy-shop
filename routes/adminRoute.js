@@ -23,7 +23,6 @@ router.get('/admin/facebookInfo',isAuthenticated, isAdmin, adminController.getFa
 router.get('/admin/stores', isAuthenticated,isAdmin,storesController.getStores);
 router.get('/admin/addStores',isAuthenticated,isAdmin, adminController.addStoresPage);
 
-
 // put
 router.put('/admin/customers/update/:customerId', adminController.adminUpdateCustomerDetails);
 router.put('/admin/orders/status/:orderId', orderController.updateOrderStatus);
@@ -39,8 +38,5 @@ router.post('/admin/products/:productId/delete', productsController.deleteProduc
 router.post('/admin/addProducts', productsController.addProduct);
 router.post('/admin/addStores', storesController.addStore);
 router.post('/admin/stores/:storeId/delete', storesController.deleteStore);
-
-
-
 
 module.exports = router;

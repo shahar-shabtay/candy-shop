@@ -2,8 +2,8 @@ const mongoose = require("mongoose");
 const searchService = require('../services/searchService.js');
 
 async function searchProduct(req, res) {
-    const user = req.session.user; // Get user from session
-    const searchQuery = req.query.q;  // 'q' will be the query parameter from the search form
+    const user = req.session.user; 
+    const searchQuery = req.query.q;  
     const searchResults = await searchService.searchProductsByName(searchQuery);
     const currency = req.session.currency;
     const rates = req.session.rates;
@@ -12,7 +12,6 @@ async function searchProduct(req, res) {
         if (!query) {
             return res.status(400).send('Query parameter missing');
         }
-        //const products = await searchService.searchProductsByName(query);
         res.render('searchPage', { 
             user: user,
             searchQuery: searchQuery,

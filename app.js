@@ -7,7 +7,6 @@ const path = require('path');
 const app = express();
 const session = require('express-session');
 
-
 // Routes
 const productsRoutes = require('./routes/productsRoutes.js');
 const loginRoutes = require('./routes/loginRoutes.js');
@@ -17,9 +16,6 @@ const adminRoute = require('./routes/adminRoute.js');
 const nearMeRoutes = require('./routes/nearMeRoutes');
 const cartRoutes = require('./routes/cartRoutes');
 const searchRoutes = require('./routes/searchRoute.js');
-
-
-
 
 // Create session
 app.use(
@@ -37,8 +33,6 @@ mongoose.connect('mongodb://localhost:27017/candyShop', {
 })
 .then(() => console.log('MongoDB connected successfully'))
 .catch(err => console.error('MongoDB connection error:', err));
-
-
 
 // Middleware
 app.use(express.json());

@@ -3,8 +3,6 @@ const ordersService = require('../services/ordersService');
 const cartService = require('../services/cartService');
 const customerService = require('../services/customerService');
 
-
-// Adds an item to the cart
 async function addToCart(req, res) {
     const productId = req.body.productId.toString();
     const quantity = parseInt(req.body.quantity) || 1;
@@ -17,10 +15,8 @@ async function addToCart(req, res) {
         const cartItemIndex = cart.findIndex(item => item.productId.toString() === productId);
 
         if (cartItemIndex > -1) {
-            // אם המוצר כבר קיים בעגלה, שולחים תגובה מתאימה
             return res.status(200).json({ message: 'Product is already in the cart' });
         } else {
-            // מוסיפים את המוצר לעגלה
             cart.push({ productId, quantity });
             await customerService.updateCustomerCart(user.customerId, cart);
             return res.status(200).json({ message: 'Product added to cart' });
@@ -31,7 +27,6 @@ async function addToCart(req, res) {
     }
 }
 
-// Display the cart
 async function showCart (req, res) {
     try {
         const currency = req.session.currency || 'ILS';
@@ -40,7 +35,6 @@ async function showCart (req, res) {
         let cartDetails = [];
         let totalPrice = 0;
 
-        // Adding await here
         const cart = await customerService.getCustomerCart(user.customerId);
 
         if (cart) {

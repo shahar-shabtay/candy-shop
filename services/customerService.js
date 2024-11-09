@@ -4,7 +4,6 @@ require('dotenv').config()
 
 const SECRET_KEY = process.env.SECRET_KEY; 
 
-// Function to get all customers
 async function getAllCustomers() {
     try {
         const customers = await Customer.find({});
@@ -121,7 +120,7 @@ async function updatePassword(customerId, newPassword) {
 }
 
 async function countDocuments(query) {
-    return await Customer.countDocuments(query);  // Use Mongoose's countDocuments
+    return await Customer.countDocuments(query); 
 }
     
 module.exports = {

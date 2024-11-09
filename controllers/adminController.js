@@ -175,11 +175,10 @@ async function postToFacebook(name, price) {
     const url = `http://localhost:3000/products/${name.replace(/\s+/g, '').toLowerCase()}`; // Create URL based on the product name
 
     try {
-        // Use your existing Facebook service to post the message
         await facebookPostService.postMessageToFacebook(message, url);
     } catch (error) {
         console.error('Error posting to Facebook:', error);
-        throw error; // Handle errors here if needed
+        throw error; 
     }
 }
 
@@ -192,7 +191,6 @@ async function adminUpdateCustomerDetails(req, res) {
         // Create a birthdate object from the day, month, and year
         const birthdate = new Date(`${birth_year}-${birth_month}-${birth_day}`);
 
-        // Prepare the updated customer data
         const updatedCustomerData = {
             name,
             email,
@@ -229,23 +227,6 @@ async function addStoresPage(req, res) {
         res.status(500).send('Server Error (adminController - addStores)');
     }
 }
-
-// async function getAdminData(req, res) {
-//     try {
-//         const adminCount = await customerService.countDocuments({ role: "admin" });
-//         const nonAdminCount = await customerService.countDocuments({ role: "user" });
-
-//         // Return the counts as a JSON response
-//         res.status(200).json({
-//             Admin: adminCount,
-//             nonAdmin: nonAdminCount
-//         });
-//     } catch (error) {
-//         console.error("Error fetching Admin data:", error.message);
-//         res.status(500).json({ error: "Internal server error", details: error.message });
-//     }
-// }
-
 
 module.exports = {
     renderAccountPage,

@@ -21,7 +21,6 @@ const env = loadEnv();
 const ACCESS_TOKEN = env.FACEBOOK_API_KEY;
 const PAGE_ID = env.FACEBOOK_PAGE_ID; 
 
-
 // Function to get Facebook stats (followers, posts, and likes)
 function getFacebookPageInfo() {
     return new Promise((resolve, reject) => {
@@ -37,7 +36,6 @@ function getFacebookPageInfo() {
             response.on('end', () => {
                 try {
                     const parsedData = JSON.parse(data);
-
                     // Handle API error response
                     if (parsedData.error) {
                         console.error('API Error:', parsedData.error);
@@ -52,7 +50,6 @@ function getFacebookPageInfo() {
                     const posts = parsedData.posts ? parsedData.posts.data : [];
                     const postCount = posts.length;
                     const totalLikes = posts.reduce((acc, post) => acc + (post.likes ? post.likes.summary.total_count : 0), 0);
-
                     // Return stats
                     resolve({
                         followers: parsedData.followers_count,

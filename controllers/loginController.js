@@ -50,7 +50,6 @@ function isAuthenticated(req, res, next) {
 }
 
 function isAdmin(req, res, next) {
-  // Assuming `req.session.user` holds the logged-in user info and `role` defines the user's role
   if (req.session.user && req.session.user.role === 'admin') {
       return next(); // User is admin, proceed to the route
   }

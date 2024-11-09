@@ -1,10 +1,9 @@
-// controllers/nearMeController.js
 const nearMeService = require('../services/nearMeService');
 
 async function showNearestStore(req, res) {
   const user = req.session.user;
   const currency = req.session.currency;
-  const { lat, lon } = req.query; // User's current latitude and longitude
+  const { lat, lon } = req.query; 
   try {
     const nearestStore = await nearMeService.findNearestStore(lat, lon);
     if (nearestStore) {
@@ -18,7 +17,6 @@ async function showNearestStore(req, res) {
   }
 }
 
-// Get all stores from the database
 async function getStores(req, res) {
   try {
     const stores = await nearMeService.getAllStores();

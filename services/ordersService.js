@@ -1,7 +1,6 @@
 const Customer = require('../models/customer');
 const Orders = require('../models/orders');
 
-// Function to get customer orders
 async function getCustomerOrders(customerId) {
     try {
         const orders = await Orders.find({customerId: customerId});
@@ -11,7 +10,6 @@ async function getCustomerOrders(customerId) {
     }
 }
 
-// Function to get all orders
 async function getAllOrders () {
     try {
         const orders = await Orders.find({});
@@ -46,7 +44,7 @@ async function getOrderDetailsById (orderId) {
       return order;
     } catch (error) {
       console.error('Error fetching order details:', error);
-      throw error; // Handle error in the controller
+      throw error; 
     }
   };
 
@@ -82,7 +80,7 @@ async function deleteOrder(orderId) {
     return result.deletedCount > 0;
   } catch (err) {
     console.error('Error removing order:', err);
-    throw err; // Rethrow to handle in the controller
+    throw err; 
   }
 }
 
@@ -91,7 +89,6 @@ async function createOrder(orderDetails) {
   const order = new Orders(orderDetails);
   return await order.save();
 }
-
 
 module.exports = {
     getCustomerOrders,
@@ -102,4 +99,3 @@ module.exports = {
     deleteOrder,
     createOrder
   };
-  

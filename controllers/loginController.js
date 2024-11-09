@@ -40,7 +40,6 @@ async function logout(req, res) {
 
 // Middleware Functions
 function isAuthenticated(req, res, next) {
-  console.log("Checking authentication for:", req.session.user);
   if (req.session.user) { // Check if the session contains user data
       return next();
   }

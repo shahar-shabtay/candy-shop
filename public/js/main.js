@@ -216,3 +216,17 @@ document.addEventListener('DOMContentLoaded', () => {
     script.setAttribute("crossorigin", "anonymous");
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
+
+  function handleLogout() {
+    // Make an API request to the logout endpoint
+    fetch('/logout', { method: 'POST' }) // Adjust URL as needed
+        .then(response => response.json())
+        .then(data => {
+            if (data.message === 'Logout successful') {
+                // Clear localStorage and redirect to homepage
+                sessionStorage.clear();
+                window.location.href = '/';
+            }
+        })
+        .catch(error => console.error('Logout failed:', error));
+}

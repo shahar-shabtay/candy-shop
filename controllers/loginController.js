@@ -30,11 +30,9 @@ async function logout(req, res) {
   // Optionally destroy the session as well
   req.session.destroy((err) => {
     if (err) {
-      console.log("Error destroying session:", err);
-      res.render('403');
-
+      return res.status(500).send("Logout failed");
     }
-    res.redirect('/'); // Redirect to login page after logging out
+    res.status(200).json({message: 'Logout successful'});
 
   });
 }

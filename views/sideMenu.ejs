@@ -10,7 +10,7 @@
             <nav class="main-navbar">
                 <section class="navbar-left">
                     <img src="/public/images/shooping_cart.svg" class="navbar-icon" onclick="window.location.href='/cart'">
-                    <form action="/logout" method="POST" style="display: inline;">
+                    <form method="POST" style="display: inline;" onSubmit="handleLogout()">
                         <button type="submit" class="navbar-icon">
                             <img src="/public/images/logout.svg" class="navbar-icon">
                         </button>

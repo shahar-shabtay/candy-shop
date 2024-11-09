@@ -24,7 +24,7 @@ async function initMap() {
             });
 
             const infowindow = new google.maps.InfoWindow({
-                content: `<h3>${shop.name}</h3><p>${shop.address}</p>` // Shop name and address
+                content: `<h3>${shop.name}</h3><p>${shop.address.city}, ${shop.address.street}, ${shop.address.number}</p>` // Shop name and address
             });
 
             marker.addListener("click", () => {

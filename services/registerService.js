@@ -10,20 +10,13 @@ function encrypt(password){
 
 async function registerUser(userData) {
   try {
-    const { name, email, customerId, password, birthdate, address, role, phone} = userData;
-
     // Encrypt the password
-    const encryptedPassword = encrypt(password);
+    const encryptedPassword = encrypt(userData.password);
 
+    // Create a new customer with all the user data and the encrypted password
     const newCustomer = new Customer({
-      name,
-      email,
-      customerId,
-      password: encryptedPassword, 
-      birthdate,
-      address,
-      phone,
-      role
+      ...userData,               // Spread userData to pass fields directly
+      password: encryptedPassword // Override password with the encrypted version
     });
 
     // Save the customer to the database

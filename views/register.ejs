@@ -12,22 +12,22 @@
 <body>
     <div class="form-box">
         
-        <form action="/register" method="post">
+        <form method="post" onsubmit="register(event)">
             <a href="/" class="back-icon"><i class="fas fa-arrow-left"></i></a>
             <h3>Register</h3>
-            <input name="name" type="text" placeholder="Name" required>
-            <input name="email" type="email" placeholder="Email" required>
-            <input name="customerId" type="text" placeholder="ID" required maxlength="9">
-            <input class="form-control" name="phone" type="tel" placeholder="Phone Number" required maxlength="10">
-            <input name="password" type="password" placeholder="Password" required>
-            <input name="birthdate" type="date" placeholder="Birthdate" required>
-            <input name="address[town]" type="text" placeholder="Town" required>
-            <input name="address[street]" type="text" placeholder="Street" required>
-            <input name="address[homeNumber]" type="number" placeholder="Home Number" required>
+            <input id="name" name="name" type="text" placeholder="Name">
+            <input id="email" name="email" type="email" placeholder="Email">
+            <input id="customerId" name="customerId" type="text" placeholder="ID" maxlength="9">
+            <input id="phone" class="form-control" name="phone" type="tel" placeholder="Phone Number" maxlength="10">
+            <input id="password" name="password" type="password" placeholder="Password">
+            <input id="birthdate" name="birthdate" type="date" placeholder="Birthdate">
+            <input id="city" name="address[town]" type="text" placeholder="Town">
+            <input id="street" name="address[street]" type="text" placeholder="Street">
+            <input id="number" name="address[homeNumber]" type="number" placeholder="Home Number">
             <button type="submit" class="button">Register</button>
-            
         </form>
     </div>
+    <script src="/public/js/registerValidation.js"></script>
 </body>
 </html>
 

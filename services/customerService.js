@@ -122,7 +122,8 @@ async function updatePassword(customerId, newPassword) {
 async function countDocuments(query) {
     return await Customer.countDocuments(query); 
 }
-    
+
+
 module.exports = {
     getAllCustomers,
     getUserRoleByCustomerId,
@@ -135,5 +136,5 @@ module.exports = {
     verifyPassword,
     updatePassword,
     countDocuments
-  };
+};
   

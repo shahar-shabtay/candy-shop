@@ -7,25 +7,20 @@ function showErrorAlert(message) {
         ${message.replace(/\n/g, '<br>')}
     `;
 
-    // Append the alert div to the body
     document.body.appendChild(alertDiv);
 
-    // Calculate the duration based on the number of lines (1 second per line)
     const lineCount = message.split('\n').length;
-    const displayDuration = lineCount * 1000; // Duration in milliseconds
+    const displayDuration = lineCount * 1000;
 
-    // Close button functionality
     const closeButton = alertDiv.querySelector('.close-alert');
     closeButton.addEventListener('click', () => {
         alertDiv.classList.add('fade-out');
     });
 
-    // Automatically remove the alert after the calculated display duration
     setTimeout(() => {
         alertDiv.classList.add('fade-out');
     }, displayDuration);
 
-    // Remove the alert after fade-out transition
     alertDiv.addEventListener('transitionend', () => {
         if (alertDiv.classList.contains('fade-out')) {
             alertDiv.remove();
@@ -117,7 +112,6 @@ async function register(event) {
             number
         }
 
-        // Submit form data with fetch
         try {
             const response = await fetch("/register", {
                 method: "POST",

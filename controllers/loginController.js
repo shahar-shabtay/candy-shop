@@ -13,8 +13,7 @@ async function loginUser(req, res) {
       return res.redirect('/products');
     }
     else{
-      // If failed to connect - stay in login page (There is print to user from ejs)  
-      return res.render('login', { error: 'Email / Password is incorrect' }); // Re-render login page with error
+      return res.render('login', { error: 'Email / Password is incorrect' });
     }
   }
   catch (err){
@@ -23,32 +22,29 @@ async function loginUser(req, res) {
   }
 }
 
+// Function to handle logout.
 async function logout(req, res) {
-  // Clear the 'session' cookie
-  res.clearCookie('connect.sid');  // Use the cookie name here
-  
-  // Optionally destroy the session as well
-  req.session.destroy((err) => {
+  res.clearCookie('connect.sid');
+    req.session.destroy((err) => {
     if (err) {
       return res.status(500).send("Logout failed");
     }
     res.status(200).json({message: 'Logout successful'});
-
   });
 }
 
-
-// Middleware Functions
+// Middleware Functions - is authenticated.
 function isAuthenticated(req, res, next) {
-  if (req.session.user) { // Check if the session contains user data
+  if (req.session.user) { 
       return next();
   }
-  res.render('401'); // Redirect to unauthorized page if not authenticated
+  res.render('401');
 }
 
+// Middleware function - is admin.
 function isAdmin(req, res, next) {
   if (req.session.user && req.session.user.role === 'admin') {
-      return next(); // User is admin, proceed to the route
+      return next();
   }
   res.render('403');
 }

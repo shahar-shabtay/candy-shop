@@ -1,3 +1,4 @@
+// Functio of success alert of action.
 function showSuccessAlert(id) {
     const successAlert = document.getElementById(id);
     if (successAlert) {
@@ -11,6 +12,7 @@ function showSuccessAlert(id) {
     }
 }
 
+// Functio of error alert of action.
 function showErrorAlert(message) {
     const alertDiv = document.createElement('div');
     alertDiv.className = 'jump-alert';
@@ -18,26 +20,17 @@ function showErrorAlert(message) {
         <span class="close-alert">&times;</span>
         ${message.replace(/\n/g, '<br>')}
     `;
-
-    // Append the alert div to the body
     document.body.appendChild(alertDiv);
-
-    // Calculate the duration based on the number of lines (1 second per line)
     const lineCount = message.split('\n').length;
-    const displayDuration = lineCount * 1000; // Duration in milliseconds
-
-    // Close button functionality
+    const displayDuration = lineCount * 1000;
     const closeButton = alertDiv.querySelector('.close-alert');
     closeButton.addEventListener('click', () => {
         alertDiv.classList.add('fade-out');
     });
-
-    // Automatically remove the alert after the calculated display duration
     setTimeout(() => {
         alertDiv.classList.add('fade-out');
     }, displayDuration);
 
-    // Remove the alert after fade-out transition
     alertDiv.addEventListener('transitionend', () => {
         if (alertDiv.classList.contains('fade-out')) {
             alertDiv.remove();
@@ -45,12 +38,7 @@ function showErrorAlert(message) {
     });
 }
 
-// *****************
-// My Account      *
-// *****************   
-
 // My Deatails  
-
 function togglePasswordVisibility(inputId, icon) {
     const input = document.getElementById(inputId);
     if (input.type === 'password') {
@@ -63,11 +51,12 @@ function togglePasswordVisibility(inputId, icon) {
         icon.classList.add('fa-eye');
     }
 }
+
+// Functio to change user password.
 async function changePassword() {
     const currentPass = document.getElementById('current-password').value;
     const newPass = document.getElementById('new-password').value;
 
-    // Validation
     if (!currentPass || !newPass) {
         showErrorAlert("Please fill in both fields.");
         return;
@@ -79,7 +68,6 @@ async function changePassword() {
     }
 
     try {
-        // Send data to the server
         const response = await fetch('/personal/myAccount/updatePass', {
             method: 'POST',
             headers: {
@@ -118,7 +106,6 @@ document.addEventListener('DOMContentLoaded', () => {
         let isValid = true;
         let errorMessage = '';
 
-        // Validation - all required, string get string, number get number.
         if(!email || !name || !phone || !city || !street || !number) {
             isValid = false;
             errorMessage += 'All fields are required, please fill all!.\n';
@@ -129,7 +116,6 @@ document.addEventListener('DOMContentLoaded', () => {
             errorMessage += "Name can't be number!\n";
         }
 
-        // Validation inputs by pattern
         const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (email && !emailPattern.test(email)) {
             isValid = false;
@@ -162,37 +148,29 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-
-
 document.addEventListener('DOMContentLoaded', () => {
     const openPasswordModalButton = document.getElementById('openPasswordModal');
     const passwordModal = document.getElementById('passwordModal');
 
-    // פתיחת ה-popup כאשר לוחצים על הכפתור
     openPasswordModalButton.addEventListener('click', () => {
         passwordModal.style.display = 'block';
     });
 
-    // סגירת ה-popup כאשר לוחצים על ה-X בתוך ה-popup
     function closeModal() {
         passwordModal.style.display = 'none';
     }
 
-    // סגירת ה-popup כאשר לוחצים מחוץ ל-popup
     window.addEventListener('click', (event) => {
         if (event.target === passwordModal) {
             passwordModal.style.display = 'none';
         }
     });
 
-    // הפונקציה לסגירת ה-popup כדי שנוכל לקרוא לה גם מה-HTML
     window.closeModal = closeModal;
 });
-//--------------
-// My Favorite  |
-//--------------
 
-// Add Product To Favorite - work
+
+// Add Product To Favorite
 function addToFavorites(productId) {
     fetch('/products/addFav', {
         method: 'POST',
@@ -211,7 +189,7 @@ function addToFavorites(productId) {
     })
 }
 
-// Remove Product From Favorite - work
+// Remove Product From Favorite
 async function removeFavorite(productId) {
     try {
         const response = await fetch('/personal/myAccount/favorite/remove', {
@@ -233,11 +211,7 @@ async function removeFavorite(productId) {
     }
 }
 
-//--------------
-// My Orders    |
-//--------------
-
-// See order details - work
+// See order details
 async function showCustOrder(element) {
     const orderId = element.getAttribute('data-order-id');
     window.location.href = `/personal/myAccount/orders/${orderId}`;
@@ -280,15 +254,7 @@ if (statusEl){
 }
 
 
-// *****************
-// *    Admin      *
-// *****************
-
-//---------------
-// All Customers |
-//---------------
-
-// Make all inputs editable
+// Functio to chnage to edit mode in the customers table.
 function toggleEditMode(customerId) {
     const customerRow = document.querySelector(`tr[data-id="${customerId}"]`);
     const editButton = customerRow.querySelector('.edit-btn-cust');
@@ -310,6 +276,7 @@ function toggleEditMode(customerId) {
     customerRow.classList.add('edit-mode');
 }
 
+// Functio to save new customer details.
 function saveCustomer(customerId) {
     let isValid = true;
     let errorMessage = '';
@@ -378,8 +345,6 @@ function saveCustomer(customerId) {
         .then(data => {
             if (data.success) {
                 showSuccessAlert('save-alert');
-
-                // Remove background color when exiting edit mode
                 customerRow.classList.remove('edit-mode');
             } else {
                 console.error('Error:', data.message);
@@ -396,11 +361,8 @@ function saveCustomer(customerId) {
     }
     
 }
-//---------------
-// All Orders    |
-//---------------
 
-// make the order status editable
+// Functio to set order status editable.
 function enableStatusEdit(orderId) {
     const statusSelect = document.getElementById(`orderStatus-${orderId}`);
     const saveButton = document.getElementById(`saveStatusButton-${orderId}`);
@@ -412,25 +374,22 @@ function enableStatusEdit(orderId) {
     editButton.style.display = 'none';
 }
 
+// FUnctio to update order status.
 function updateOrderStatus(orderId) {
     const selectedStatus = document.getElementById(`orderStatus-${orderId}`).value;
-    // Make a PUT request to update the order status
     fetch(`/personal/admin/orders/status/${orderId}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ newStatus: selectedStatus }) // Send the updated status
+        body: JSON.stringify({ newStatus: selectedStatus })
     })
     .then(response => response.json())
     .then(data => {
         if (data.success) {
             showSuccessAlert('order-status-alert');
-            // Disable the <select> dropdown after saving
             const statusSelect = document.getElementById(`orderStatus-${orderId}`);
             statusSelect.disabled = true;
-            
-            // Reset the buttons: Hide Save, show Edit
             document.getElementById(`saveStatusButton-${orderId}`).style.display = 'none';
             document.getElementById(`editStatusButton-${orderId}`).style.display = 'inline-block';
         } else {
@@ -470,17 +429,11 @@ document.querySelectorAll('.remove').forEach(icon => {
     });
 });
 
-// See order details - works
+// See order details
 async function seeOrder(element) {
     const orderId = element.getAttribute('data-order-id');
     window.location.href=`/personal/admin/orders/${orderId}`;
 }
-
-
-//---------------
-// All Products  |
-//---------------
-
 
 // delete product
 function deleteProduct(productId) {
@@ -678,14 +631,8 @@ function saveProduct(productId) {
     }
 }
 
-
-//---------------
-// Add Product   |
-//---------------
-
+// Add Product
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("Preview script loaded");
-
     const nameInput = document.getElementById('name');
     const priceInput = document.getElementById('price');
     const inventoryInput = document.getElementById('inventory');
@@ -939,22 +886,22 @@ async function submitProduct() {
         try {
             const response = await fetch('/personal/admin/addProducts', {
                 method: 'POST',
-                body: formData, // Send the form data
+                body: formData,
             });
 
             if (response.ok) {
                 const data = await response.json();
                 if (data.success) {
-                    showSuccessAlert('success-alert'); // Show success alert
+                    showSuccessAlert('success-alert');
                     if (data.facebookPostError) {
                         showErrorAlert(data.facebookPostError);
                     }
                     setTimeout(() => {
-                        window.location.href = '/personal/admin/products'; // Redirect after 2 seconds
+                        window.location.href = '/personal/admin/products';
                     }, 2000);
                 } else {
                     showErrorAlert('An error occurred while adding the product.');
-                    submitButton.disabled = false; // Re-enable submit button if there's an error
+                    submitButton.disabled = false;
                 }
             } else {
                 throw new Error('Error submitting the product');
@@ -962,7 +909,7 @@ async function submitProduct() {
         } catch (error) {
             console.error('Error submitting product:', error);
             showErrorAlert('An error occurred while adding the product.')
-            submitButton.disabled = false; // Re-enable the submit button on error
+            submitButton.disabled = false;
         }
     }
     
@@ -977,10 +924,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-//---------------
-// All Stores    |
-//---------------
-
+// All Stores
 function toggleEditModeStore(storeId) {
     const storeRow = document.querySelector(`tr[data-id="${storeId}"]`);
     const editButton = storeRow.querySelector('.edit-btn-store');
@@ -1099,7 +1043,6 @@ async function submitStore() {
     let isValid = true;
     let errorMessage = '';
 
-    // Validation - all required, string get string, number get number.
     if (!name) {
         isValid = false;
         errorMessage += 'Name is required!\n';
@@ -1113,7 +1056,6 @@ async function submitStore() {
         errorMessage += 'Address is required!\n';
     }
 
-    // Validation inputs by pattern.
     const coordinatePattern = /^(\+|-)?((([1-8]?[0-9])(\.\d+)?)|(90(\.0+)?))$/;
     if (!latitude || !longitude) {
         isValid = false;
@@ -1165,7 +1107,7 @@ async function submitStore() {
         } catch (error) {
             console.error('Error:', error);
             showErrorAlert('An error occurred while saving the store. Please try again.');
-            submitButton.disabled = false; // Enable the button again
+            submitButton.disabled = false;
         }
     } else {
         showErrorAlert(errorMessage);
@@ -1196,6 +1138,3 @@ async function deleteStore(storeId) {
         showErrorAlert('An error occurred while deleting the store.');
     });
 }
-
-
-

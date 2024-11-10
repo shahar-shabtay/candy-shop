@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const productSchema = new mongoose.Schema({
-  productId: { type: Number, required: true }, // Assuming productId is a Number in your document
+  productId: { type: Number, required: true },
   quantity: { type: Number, required: true }
 });
 
@@ -18,8 +18,8 @@ const orderSchema = new mongoose.Schema({
   orderDate: { type: Date, required: true },
   totalPrice: { type: Number, required: true },
   status: { type: String, required: true },
-  products: [productSchema], // Array of product details
-  address: addressSchema // Embedded address schema
+  products: [productSchema],
+  address: addressSchema
 }, { versionKey: false });
 
 const Orders = mongoose.model('Orders', orderSchema);

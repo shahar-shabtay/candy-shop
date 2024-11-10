@@ -12,9 +12,9 @@ if (hamburgerMenu) {
         hamburgerMenu.classList.toggle('active');
         dropdownContent.classList.toggle('active');
         if (dropdownContent.classList.contains('active')) {
-            sideMenuVideos.style.display = 'none'; // Hide videos when menu is active
+            sideMenuVideos.style.display = 'none';
         } else {
-            sideMenuVideos.style.display = 'flex'; // Show videos when menu is inactive
+            sideMenuVideos.style.display = 'flex';
             playNextVideo();
         }
     });
@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const playPromise = currentVideo.play();
             if (playPromise !== undefined) {
                 playPromise.catch(error => {
-                    console.log("Video play error:", error);
+                    console.error("Video play error:", error);
                 });
             }
             currentVideo.onended = () => {
@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
             video.pause();
             video.style.display = 'none';
         });
-        localStorage.setItem('videoPanelLastClosed', Date.now()); // Save close time
+        localStorage.setItem('videoPanelLastClosed', Date.now());
     });
 });
 
@@ -90,7 +90,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const closeButtons = document.querySelectorAll(".close-button");
 
-    // Open About Us modal
     if (openAboutModal) {
         openAboutModal.addEventListener('click', (event) => {
             event.preventDefault();

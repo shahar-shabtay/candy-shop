@@ -32,7 +32,7 @@
                         <div id="addStore" class="content-item active">
                             <div class="container">                            
                                 <div class="store-preview-container">
-                                    <div class="admin-card">
+                                    <div class="store-card">
                                         <form id="storeForm">
                                             <!-- Store Name Row -->
                                             <div class="form-row">
@@ -53,7 +53,7 @@
                                             </div>
                                             
                                             <!-- Submit Button Row -->
-                                            <button type="button" id="submitButton" onclick="submitStore()">Submit</button>
+                                            <button type="button" class="save-store" id="submitButton" onclick="submitStore()">Submit</button>
                                         </form>
                                         <div id="save-store-alert" class="custom-alert hidden">
                                             Store Added
@@ -110,8 +110,6 @@
         </footer>
         <script src="/public/js/personal.js"></script>
         <script src="/public/js/adminStatistics.js"></script>
-        <script>
-            console.log('Script is running');  // Add this line
-            </script>
+        <script src="/public/js/adminStatistics.js"></script>
     </body>
 </html>

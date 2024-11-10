@@ -127,23 +127,6 @@
         <script src="/public/js/adminStatistics.js"></script>
         <script src="/public/js/personal.js"></script>
         <script src="/public/js/main.js"></script>
-        <script type="text/javascript">
-          // JavaScript to make the clicked menu option active and display the related content
-          const subMenuOptions = [...document.getElementsByClassName('menu-option')];
-          subMenuOptions.forEach(option => {
-              option.addEventListener('click', () => {
-                  subMenuOptions.forEach(o => o.classList.remove('active'))
-                  option.classList.add('active');
-
-                  const contentItems = [...document.getElementsByClassName('content-item')];
-                  contentItems.forEach(item => {
-                      item.style.display = "none";
-                  });
-
-                  const activeContent = document.getElementById(option.innerText.trim());
-                  activeContent.style.display = "block";
-              });
-          });
-        </script>
+        <script src="/public/js/adminStatistics.js"></script>
     </body>
 </html>

@@ -1,5 +1,6 @@
 const axios = require('axios');
 
+// Function that fetch the rate of the dolar and euro form api.
 async function setCurrency(req, res) 
 {
   const { currency } = req.body;
@@ -11,7 +12,6 @@ async function setCurrency(req, res)
   } catch (error) {
     console.error('Error fetching currency rates', error);
   }
-
   res.sendStatus(200);
 };
 

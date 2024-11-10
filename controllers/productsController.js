@@ -7,13 +7,13 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
+// Rende the products page.
 async function getAllProducts (req, res) {
 	const user = req.session.user;
 	if (!user){
 		return res.redirect('/');
 	}
 	try {
-		const email = user.email;
         const currency = req.session.currency || 'ILS';
         const rates = req.session.rates || {};
 		const products = await productsService.getAllProducts();
@@ -24,7 +24,7 @@ async function getAllProducts (req, res) {
 	}
 };
 
-
+// Function to add new product.
 async function addProduct(req, res) {
     const productId = new Date().getTime().toString();
 
@@ -101,7 +101,6 @@ async function addProduct(req, res) {
                     facebookPostError = 'Failed to post to Facebook.';
                 }
             }
-            // Pass the data to the service to insert into the database
             return res.json({ success: true, product: newProduct, facebookPostError});
         });
     } catch (error) {
@@ -110,40 +109,26 @@ async function addProduct(req, res) {
     }
 }
 
-async function showDeleteProductForm (req, res) {
-    res.render('deleteProduct', { error: null, productId: '' });
-};
-
+// Function to delete product.
 async function deleteProduct(req, res) {
     try {
         const { productId } = req.params;
-
-        // Fetch the product details to get the image name/path
         const product = await productsService.getProductById(productId);
         if (!product) {
             return res.status(404).json({ message: 'Product not found.' });
         }
 
-        // Construct the path to the product image
         const imagePath = path.join(__dirname, '../public/images/product-images', `product_${productId}.svg`);
-
-        // Log the image path for debugging
-
-        // Check if the image file exists
         if (fs.existsSync(imagePath)) {
             // Delete the product image
             fs.unlink(imagePath, (err) => {
                 if (err) {
                     console.error('Error deleting product image:', err);
-                } else {
-                    console.log('Product image deleted successfully.');
                 }
             });
         } else {
             console.warn('Product image not found at path:', imagePath);
         }
-
-        // Delete the product from the database
         await productsService.deleteProduct(productId);
 
         res.status(200).json({ message: 'Product deleted successfully.' });
@@ -153,10 +138,11 @@ async function deleteProduct(req, res) {
     }
 }
 
+// Function to save new product.
 async function addNewFavorite(req, res) {
     try {
-        const customerId = req.session.user.customerId; // Assuming customerId is stored in session
-        const productId = req.body.productId; // Get the productId from the request body
+        const customerId = req.session.user.customerId;
+        const productId = req.body.productId;
 
         await favoriteService.addNewFavorite(customerId, productId);
 
@@ -167,24 +153,26 @@ async function addNewFavorite(req, res) {
     }
 }
 
+// Funtion to remove product from favorite list.
 async function removeFavoriteProduct (req,res) {
 	try {
-		const customerId = req.session.user.customerId; // Get the customer's ID from the session
-		const productId = req.body.productId; // Get product number from the request body
+		const customerId = req.session.user.customerId;
+		const productId = req.body.productId;
 
 		const wasRemoved = await favoriteService.removeFavoriteProduct(customerId, productId);
 
 		if (wasRemoved) {
-			res.status(200).json({ message: 'Product removed from favorites' }); // Respond with success
+			res.status(200).json({ message: 'Product removed from favorites' });
 		} else {
-			res.status(404).json({ error: 'Product not found in favorites' }); // Handle case where product was not found
+			res.status(404).json({ error: 'Product not found in favorites' });
 		}
 	} catch (err) {
 		console.error('Error removing favorite product:', err);
-		res.status(500).json({ error: 'Failed to remove favorite product' }); // Handle other errors
+		res.status(500).json({ error: 'Failed to remove favorite product' });
 	}
 }
 
+// Functio to save new product details.
 async function editProducts (req,res) {
 	const { productId } = req.params; 
     const { name, price, description, inventory } = req.body; 
@@ -200,6 +188,7 @@ async function editProducts (req,res) {
     }
 }
 
+// Render product page.
 async function getProductDetail (req, res) {
     try {
         const user = req.session.user;
@@ -208,11 +197,11 @@ async function getProductDetail (req, res) {
         const product = await productsService.getProductById(req.params.productId);
         res.render('productDetail', { product: product, user:user, currency:currency, rates:rates});
     } catch (error) {
-        console.log(error);
         res.redirect('/products');
     }
 }
 
+// Functio for statistics - get kosher data.
 async function getKosherData(req, res) {
     try {
         const kosherCount = await Products.countDocuments({ kosher: "Yes" });
@@ -228,11 +217,11 @@ async function getKosherData(req, res) {
     }
 }
 
+// Function for statistics - get admin data.
 async function getAdminData(req, res) {
     try {
         const adminCount = await customerService.countDocuments({ role: "admin" });
         const nonAdminCount = await customerService.countDocuments({ role: "user" });
-        // Return the counts as a JSON response
         res.status(200).json({
             Admin: adminCount,
             nonAdmin: nonAdminCount
@@ -246,7 +235,6 @@ async function getAdminData(req, res) {
 module.exports = {
 	getAllProducts,
 	editProducts,
-	showDeleteProductForm,
 	deleteProduct,
 	addNewFavorite,
 	removeFavoriteProduct,

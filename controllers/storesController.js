@@ -8,8 +8,7 @@ async function getStores(req, res) {
         const rates = req.session.rates;
         res.render('allStores', { stores: stores , user, rates, currency});
     } catch (error) {
-        console.log(error);
-        res.redirect('/');
+        res.redirect('/products');
     }
 }
 
@@ -40,7 +39,6 @@ async function addStore (req, res) {
 
 async function deleteStore (req, res) {
     const storeId = req.params.storeId;
-    console.log(storeId);
   
     storesService.deleteStoreById(storeId)
       .then(() => {

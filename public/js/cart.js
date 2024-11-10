@@ -1,3 +1,4 @@
+// Functio to show a success alert of actions.
 function showSuccessAlert(id) {
     const successAlert = document.getElementById(id);
     if (successAlert) {
@@ -10,6 +11,8 @@ function showSuccessAlert(id) {
         }, 3000);
     }
 }
+
+// Functio to show a error alert of actions.
 function showErrorAlert(message) {
     const alertDiv = document.createElement('div');
     alertDiv.className = 'jump-alert';
@@ -17,26 +20,18 @@ function showErrorAlert(message) {
         <span class="close-alert">&times;</span>
         ${message.replace(/\n/g, '<br>')}
     `;
-
-    // Append the alert div to the body
     document.body.appendChild(alertDiv);
-
-    // Calculate the duration based on the number of lines (1 second per line)
     const lineCount = message.split('\n').length;
-    const displayDuration = lineCount * 1000; // Duration in milliseconds
-
-    // Close button functionality
+    const displayDuration = lineCount * 1000; 
     const closeButton = alertDiv.querySelector('.close-alert');
     closeButton.addEventListener('click', () => {
         alertDiv.classList.add('fade-out');
     });
 
-    // Automatically remove the alert after the calculated display duration
     setTimeout(() => {
         alertDiv.classList.add('fade-out');
     }, displayDuration);
 
-    // Remove the alert after fade-out transition
     alertDiv.addEventListener('transitionend', () => {
         if (alertDiv.classList.contains('fade-out')) {
             alertDiv.remove();
@@ -44,10 +39,10 @@ function showErrorAlert(message) {
     });
 }
 
+// Event listener for recalc the total price of the cart in case of changing the wuantity.
 document.addEventListener('DOMContentLoaded', () => {
     recalculateTotal();
 
-    // Bind update button click events to updateCart function
     const updateButtons = document.querySelectorAll('.update-button');
     updateButtons.forEach(button => {
         button.addEventListener('click', (event) => {
@@ -63,7 +58,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Function to update the quantity of a specific item and recalculate the total price
 function updateCart(itemId, newQuantity) {
-    // Send an AJAX request to the server to update the cart session
     fetch('/cart/update', {
         method: 'POST',
         headers: {
@@ -105,11 +99,10 @@ function updateTotalPrice() {
         }
     });
 
-    // עדכון הסכום הכולל עם סימן המטבע
     const totalElement = document.getElementById("total-price");
-    const selectedCurrency = document.getElementById('currency-selector') ? document.getElementById('currency-selector').value : 'ILS'; // מניח שיש dropdown לבחירת מטבע או משתמש בברירת מחדל
+    const selectedCurrency = document.getElementById('currency-selector') ? document.getElementById('currency-selector').value : 'ILS';
 
-    let currencySymbol = '₪'; // ברירת מחדל לשקל
+    let currencySymbol = '₪'; 
     if (selectedCurrency === 'USD') {
         currencySymbol = '$';
     } else if (selectedCurrency === 'EUR') {
@@ -183,37 +176,11 @@ async function checkoutCart() {
     }
 }
 
-// Function to show a custom alert
-function showAlert() {
-    const alertDiv = document.createElement('div');
-    alertDiv.className = 'jump-alert';
-    alertDiv.innerHTML = `
-        <span class="close-alert">&times;</span>
-        Please complete your address details: city, street, and number are required.
-    `;
-
-    // Append the alert div to the body
-    document.body.appendChild(alertDiv);
-
-    // Add click event for close button
-    const closeButton = alertDiv.querySelector('.close-alert');
-    closeButton.addEventListener('click', () => {
-        alertDiv.classList.add('fade-out');
-    });
-
-    // Automatically remove the alert after fade-out
-    alertDiv.addEventListener('transitionend', () => {
-        if (alertDiv.classList.contains('fade-out')) {
-            alertDiv.remove();
-        }
-    });
-}
 
 // Recalculate the total price every time the page is loaded
 function recalculateTotal() {
     let totalPrice = 0;
 
-    // Select only cart items that do not have the 'sold-out' class
     const cartItems = document.querySelectorAll('.cart-item:not(.sold-out)');
 
     cartItems.forEach(item => {

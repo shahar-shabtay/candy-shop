@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const searchService = require('../services/searchService.js');
 
+// Render the filtered page.
 async function searchProduct(req, res) {
     const user = req.session.user; 
     const searchQuery = req.query.q;  
@@ -25,6 +26,7 @@ async function searchProduct(req, res) {
     }
 }
 
+// Render the filtered page.
 async function searchBySweetType(req, res) {
     const user = req.session.user;
     const sweetType = req.params.sweetType;
@@ -45,6 +47,7 @@ async function searchBySweetType(req, res) {
     }
 }
 
+// Render the filtered page.
 async function searchByFilter(req, res) {
     const user = req.session.user;
     const searchQuery = req.query.q || '';
@@ -57,7 +60,6 @@ async function searchByFilter(req, res) {
         kosher: req.query.kosher || ''
     };
 
-    // Create a combined query string for display
     let combinedQuery = searchQuery;
 
     if (filters.flavor) {

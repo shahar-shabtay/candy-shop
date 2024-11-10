@@ -25,7 +25,6 @@ const storesLocationSchema = new Schema({
 },
 });
 
-// Validator for coordinates array
 function arrayLimit(val) {
   return val.length === 2;
 }

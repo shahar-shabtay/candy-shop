@@ -19,7 +19,6 @@ const getFavoriteProductsByCustomerId = async (customerId) => {
 
 async function addNewFavorite(customerId, productId) {
     try {
-        // Check if the product is already in the favorites list
         const favoriteExists = await Favorite.findOne({ customerId: customerId, productId: productId });
         
         if (!favoriteExists) {
@@ -35,13 +34,11 @@ async function addNewFavorite(customerId, productId) {
 
 async function removeFavoriteProduct(customerId, productId) {
     try {
-        // Remove the favorite entry
         const result = await Favorite.deleteOne({ 
             customerId: customerId,
             productId: productId 
         });
-        // Check if a favorite was removed
-        return result.deletedCount > 0; // Return true if a product was removed
+        return result.deletedCount > 0;
     } catch (err) {
         console.error('Error removing favorite product:', err);
         throw err; 

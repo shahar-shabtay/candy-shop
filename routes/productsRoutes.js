@@ -13,9 +13,6 @@ router.get('/adminData', productsController.getAdminData);
 
 router.get('/:productId',isAuthenticated, productsController.getProductDetail);
 
-// Get delete product form
-router.get('/delete', productsController.showDeleteProductForm);
-
 // Post 
 router.post('/delete', productsController.deleteProduct);
 router.post('/addFav', productsController.addNewFavorite);

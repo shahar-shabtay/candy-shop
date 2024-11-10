@@ -73,7 +73,7 @@ async function updateCustomerCart(customerId, updateCart) {
             { customerId: customerId },
             { $set: { cart: updateCart } },
             { new: true }
-        ).select('cart'); // מחזיר רק את שדה 'cart'
+        ).select('cart'); 
         
         return updatedCustomer;
     } catch(err) {
@@ -100,18 +100,14 @@ async function verifyPassword (customerId, currentPassword) {
     const customer = await Customer.findOne({ customerId: customerId }).select('password');
     const dbPass = customer ? customer.password : null;
     const dbPassDec  = decrypt(dbPass);
-    console.log('customer service ' + dbPassDec);
     if (!dbPass) {
-        // Handle the case where the customer is not found or the password is not retrieved
         throw new Error('Customer not found or password not retrieved');
     }
     return (currentPassword === dbPassDec);
 }
 async function updatePassword(customerId, newPassword) {
     try {
-        console.log(newPassword);
         const newPasswordHash = crypto.AES.encrypt(newPassword, SECRET_KEY).toString();
-        console.log(newPasswordHash);
         return await Customer.findOneAndUpdate({ customerId: customerId }, { $set: { password: newPasswordHash }}, {new: true}).exec();
 
       } catch(err) {

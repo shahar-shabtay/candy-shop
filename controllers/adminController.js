@@ -12,15 +12,14 @@ function formatAddress(address) {
     return `${address.street} ${address.number}, ${address.city}`;
 }
 
-// Render personal area - myAccount / admin
+// Render personal area - admin
 async function renderAdminPage(req, res) {
     try {
         const currency = req.session.currency;
         const rates = req.session.rates;
-        const customerId = req.session.user.customerId;  // Assume customerId is available in the session
-        const user = await customerService.getCustomerById(customerId);  // Search by customerId
-        const customers = await customerService.getAllCustomers();  // Search by customerId
-        const role = req.session.user.role;
+        const customerId = req.session.user.customerId;
+        const user = await customerService.getCustomerById(customerId);
+        const customers = await customerService.getAllCustomers();
         if (!user) {
             return res.status(404).send('Customer not found');
         }
@@ -31,13 +30,13 @@ async function renderAdminPage(req, res) {
     }
 }
 
+// Render the fasbook information page.
 async function getFacebookPageInfo(req, res) {
     try {
         const currency = req.session.currency;
         const rates = req.session.rates;
-        const user = req.session.user;  // Get the user from the session
-        const facebookData = await facebookInfoService.getFacebookPageInfo(); // Fetch Facebook stats
-        const role = user.role;
+        const user = req.session.user;
+        const facebookData = await facebookInfoService.getFacebookPageInfo();
         res.render('facebookInfo', { facebookData, user , currency, rates});
     } catch (err) {
         console.error('Error fetching Facebook page info:', err);
@@ -45,6 +44,7 @@ async function getFacebookPageInfo(req, res) {
     }
 }
 
+// Render personal area - my account
 async function renderAccountPage(req, res) {
     try {
         const user = req.session.user;
@@ -57,13 +57,11 @@ async function renderAccountPage(req, res) {
     }
 }
 
-// Manage customers / orders / product
+// Update customer details
 async function updateCustomerDetails(req, res) {
     try {
         const customerId = req.session.user.customerId;
         const password = await customerService.getCustomerPassword(customerId);
-        console.log(password);
-        const currency = req.session.currency;
         const { 
             name, 
             email, 
@@ -83,7 +81,6 @@ async function updateCustomerDetails(req, res) {
             },
             password: password
         };
-        console.log(updateUser);
         const updateCustomer = await customerService.updateCustomerDetails(customerId, updateUser);
         if (updateCustomer) {
             req.session.user = {...req.session.user, ...updateUser};
@@ -98,14 +95,11 @@ async function updateCustomerDetails(req, res) {
 async function updateUserPass(req, res){
     const {currentPass, newPass} = req.body;
     const customerId = req.session.user.customerId;
-
     try {
         const isPasswordCorrect = await customerService.verifyPassword(customerId, currentPass);
-        console.log(isPasswordCorrect);
         if (!isPasswordCorrect) {
             return res.status(400).json({ success: false, message: 'Current password is incorrect.' });
         }
-
         await customerService.updatePassword(customerId, newPass);
         res.json({ success: true, message: 'Password changed successfully.' });
     } catch(err) {
@@ -113,14 +107,14 @@ async function updateUserPass(req, res){
     }
 }
 
-// Get all about - orders / favorite / customers / products
+// Render manage custmers page.
 async function getAllCustomers(req, res) {
     try {
         const user = req.session.user;
         const currency = req.session.currency;
         const rates = req.session.rates;
-        const customers = await customerService.getAllCustomers(); // Fetch all customers from service
-        const customer = await customerService.getCustomerById(user.customerId);  // Search by customerId
+        const customers = await customerService.getAllCustomers();
+        const customer = await customerService.getCustomerById(user.customerId);
         res.render('allCustomers', { customers, customer, user, currency, rates});  
     } catch (err) {
         console.error('Error fetching customers:', err);
@@ -128,8 +122,7 @@ async function getAllCustomers(req, res) {
     }
 }
 
-// For specific customer - orders / details / favorit
-
+// Render manage product page.
 async function getAllProducts(req, res) {
     try {
         const user = req.session.user;
@@ -144,7 +137,7 @@ async function getAllProducts(req, res) {
     }
 }
 
-// For specific customer - orders / details / favorite
+// Render favorite product page.
 async function getFavoriteProducts (req, res) {
     const user = req.session.user;
     const currency = req.session.currency;
@@ -157,7 +150,7 @@ async function getFavoriteProducts (req, res) {
     }
 };
 
-// Controller to render the add product part
+// Render ass product page.
 async function addProductsPage(req, res) {
     try {
         const user = req.session.user;
@@ -170,9 +163,10 @@ async function addProductsPage(req, res) {
     }
 }
 
+// Function to post new product to facebook.
 async function postToFacebook(name, price) {
     const message = `Wow! Check out our new product: ${name}, only for ${price}!`;
-    const url = `http://localhost:3000/products/${name.replace(/\s+/g, '').toLowerCase()}`; // Create URL based on the product name
+    const url = `http://localhost:3000/products/${name.replace(/\s+/g, '').toLowerCase()}`;
 
     try {
         await facebookPostService.postMessageToFacebook(message, url);
@@ -182,13 +176,11 @@ async function postToFacebook(name, price) {
     }
 }
 
-// Manage customers / orders / product
+// Update customer details by admin.
 async function adminUpdateCustomerDetails(req, res) {
     try {
         const customerId = req.params.customerId;
         const { name, email, birth_day, birth_month, birth_year, phone, street, number, city, role } = req.body;
-
-        // Create a birthdate object from the day, month, and year
         const birthdate = new Date(`${birth_year}-${birth_month}-${birth_day}`);
 
         const updatedCustomerData = {
@@ -203,7 +195,6 @@ async function adminUpdateCustomerDetails(req, res) {
             },
             role
         };
-        // Call the service to update the customer in the database
         const updatedCustomer = await customerService.updateCustomerDetails(customerId, updatedCustomerData);
 
         if (updatedCustomer) {
@@ -216,6 +207,8 @@ async function adminUpdateCustomerDetails(req, res) {
         res.status(500).json({ success: false, message: 'Server error' });
     }
 }
+
+// Render add store page.
 async function addStoresPage(req, res) {
     try {
         const user = req.session.user;
@@ -240,6 +233,5 @@ module.exports = {
     postToFacebook,
     adminUpdateCustomerDetails,
     addStoresPage,
-    updateUserPass,
-    //getAdminData
+    updateUserPass
 };

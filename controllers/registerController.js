@@ -1,11 +1,12 @@
 const registerService = require('../services/registerService');
 const customerService = require('../services/customerService');
 
-
+// Render register page.
 function getRegisterPage(req, res) {
   res.render('register', { error: null });
 }
 
+// Functio to save new customer.
 async function postRegister(req, res) {
   const { name, email, phone, password, birthdate, city, street, number, customerId } = req.body;
 
@@ -18,7 +19,7 @@ async function postRegister(req, res) {
     address: {
       city,
       street,
-      number: parseInt(number, 10) // Ensure `number` is an integer
+      number: parseInt(number, 10)
     },
     customerId
   };
@@ -41,7 +42,7 @@ async function postRegister(req, res) {
       return res.status(400).json({ message: errorMessage });
     }
 
-    const savedUser = await registerService.registerUser(newUser); // Pass newUser directly
+    const savedUser = await registerService.registerUser(newUser);
     res.status(201).json({ message: 'Registration successful' });
   } catch (error) {
     console.error('Registration error:', error);

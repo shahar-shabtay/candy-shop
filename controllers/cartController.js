@@ -3,6 +3,7 @@ const ordersService = require('../services/ordersService');
 const cartService = require('../services/cartService');
 const customerService = require('../services/customerService');
 
+// Functio to add new product to user cart
 async function addToCart(req, res) {
     const productId = req.body.productId.toString();
     const quantity = parseInt(req.body.quantity) || 1;
@@ -27,6 +28,7 @@ async function addToCart(req, res) {
     }
 }
 
+// Render the user cart.
 async function showCart (req, res) {
     try {
         const currency = req.session.currency || 'ILS';
@@ -55,28 +57,20 @@ async function showCart (req, res) {
     }
 };
 
-// Remvoves item from cart
+// Function to remove product from user cart.
 async function removeFromCart(req, res) {
     const productId = req.body.productId;
     const user = req.session.user;
 
     try {
-        // שליפת העגלה מהדאטהבייס
         let cart = await customerService.getCustomerCart(user.customerId);
         cart = cart || [];
-
-        // מציאת המוצר בעגלה לפי ה־productId
         const cartItemIndex = cart.findIndex(item => item.productId.toString() === productId);
-
-        // אם המוצר נמצא בעגלה, מסירים אותו
         if (cartItemIndex > -1) {
             cart.splice(cartItemIndex, 1);
-
-            // עדכון העגלה בדאטהבייס לאחר ההסרה
             await customerService.updateCustomerCart(user.customerId, cart);
         }
 
-        // הפניה לדף העגלה לאחר העדכון
         res.redirect('/cart');
     } catch (err) {
         console.error("Failed to update cart:", err);
@@ -84,45 +78,31 @@ async function removeFromCart(req, res) {
     }
 }
 
-// Updates item quantity in the cart
+// Functio to update the choosen quantity of the products in the cart.
 async function updateCart(req, res) {
     try {
         const productId = req.body.productId;
         let newQuantity = parseInt(req.body.newQuantity);
-
-        // ולידציה בסיסית על הקלט
         if (!productId || isNaN(newQuantity)) {
             return res.status(400).json({ success: false, message: 'Product ID and valid quantity are required.' });
         }
-
-        // הגבלת הכמות בין 1 ל-50
         newQuantity = Math.max(1, Math.min(newQuantity, 50));
-
-        // שליפת העגלה מהדאטהבייס
         const user = req.session.user;
         let cart = await customerService.getCustomerCart(user.customerId);
         cart = cart || [];
-
-        // בדיקה אם המוצר קיים בעגלה
         const cartItemIndex = cart.findIndex(item => item.productId.toString() === productId);
 
         if (cartItemIndex > -1) {
-            // עדכון הכמות של המוצר בעגלה
             cart[cartItemIndex].quantity = newQuantity;
         } else {
             return res.status(404).json({ success: false, message: 'Product not found in the cart.' });
         }
 
-        // שמירת העגלה המעודכנת בדאטהבייס
         await customerService.updateCustomerCart(user.customerId, cart);
-
-        // שליפת המחיר מהמוצר
         const product = await productsService.getProductById(productId);
         if (!product) {
             return res.status(404).json({ success: false, message: 'Product not found in database.' });
         }
-
-        // תגובת JSON מוצלחת עם המחיר
         res.json({ success: true, price: product.price });
     } catch (error) {
         console.error("Error updating cart:", error);
@@ -130,8 +110,7 @@ async function updateCart(req, res) {
     }
 }
 
-
-// Checkout
+// Functio to place new order.
 async function checkout(req, res) {
     const user = req.session.user;
     let orderProducts = [];
@@ -139,31 +118,24 @@ async function checkout(req, res) {
     let skippedProducts = [];
 
     try {
-        // Fetch cart from the database using the service
         const cart = await customerService.getCustomerCart(user.customerId);
 
         if (!cart || cart.length === 0) {
             return res.status(400).json({ success: false, message: 'Your cart is empty.' });
         }
-
-        // Check inventory for each product
         for (let item of cart) {
             const product = await productsService.getProductById(item.productId);
 
             if (product) {
-                // If inventory is 0, skip the product but continue processing other items
                 if (product.inventory === 0) {
-                    skippedProducts.push(product.name);  // Keep track of skipped products for the response message
+                    skippedProducts.push(product.name);
                     continue;
                 }
 
-                // Check if inventory is sufficient
                 if (product.inventory >= item.quantity) {
-                    // Add product to order if inventory is sufficient
                     orderProducts.push({ productId: item.productId, quantity: item.quantity });
                     totalPrice += product.price * item.quantity;
 
-                    // Reduce the product inventory in the database
                     product.inventory -= item.quantity;
                     await productsService.updateProductInventory(product.productId, product.inventory);
                 } else {

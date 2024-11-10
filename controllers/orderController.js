@@ -2,6 +2,7 @@ const productService = require('../services/productsService');
 const orderService = require('../services/ordersService');
 const customerService = require('../services/customerService');
 
+// Render All orders page.
 async function getAllOrders(req, res) {
     try {
         const user = req.session.user;  
@@ -19,13 +20,14 @@ async function getAllOrders(req, res) {
                 order.createdAtFormatted = 'N/A';
             }
         });
-        res.render('allOrders', { orders, user, currency, rates}); // Render the view and pass customers
+        res.render('allOrders', { orders, user, currency, rates});
     } catch (err) {
         console.error('Error fetching customers:', err);
         res.status(500).send('Server Error (adminController - getAllOrders)');
     }
 }
 
+// Render customer orders page.
 async function getCustomerOrders (req, res) {
     try {
         const user = req.session.user;
@@ -36,7 +38,7 @@ async function getCustomerOrders (req, res) {
             if (order.createdAt) {
                 const date = new Date(order.createdAt);
                 const day = String(date.getDate()).padStart(2, '0');
-                const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+                const month = String(date.getMonth() + 1).padStart(2, '0');
                 const year = date.getFullYear();
                 order.createdAtFormatted = `${day}/${month}/${year}`;
             } else {
@@ -49,14 +51,13 @@ async function getCustomerOrders (req, res) {
     }
 }
 
+// Render customer order details page.
 async function getCustomerOrderDetailsById (req, res) {
   try {
         const user = req.session.user;
-        const orderId = req.params.orderId; // Get orderId from the request
+        const orderId = req.params.orderId;
         const currency = req.session.currency || 'ILS';
         const rates = req.session.rates || {};
-
-        // Fetch the order from the service
         const order = await orderService.getOrderById(orderId);
         if (!order) {
             return res.status(404).json({ message: 'Order not found' });
@@ -65,7 +66,6 @@ async function getCustomerOrderDetailsById (req, res) {
         if (!customer) {
             return res.status(404).json({ message: 'Customer not found' });
         }   
-        // Prepare an array to hold products with full details
         const fullProductDetails = await Promise.all(order.products.map(async (product) => {
         const productDetails = await productService.getProductById(product.productId);
             
@@ -106,14 +106,13 @@ async function getCustomerOrderDetailsById (req, res) {
     }
 }
 
+// Render order details page.
 async function getOrderDetailsById (req, res) {
     try {
         const user = req.session.user;
-        const orderId = req.params.orderId; // Get orderId from the request
+        const orderId = req.params.orderId;
         const currency = req.session.currency || 'ILS';
         const rates = req.session.rates || {};
-
-        // Fetch the order from the service
         const order = await orderService.getOrderById(orderId);
         if (!order) {
           return res.status(404).json({ message: 'Order not found' });
@@ -122,10 +121,9 @@ async function getOrderDetailsById (req, res) {
         if (!customer) {
             return res.status(404).json({ message: 'Customer not found' });
         }  
-        // Prepare an array to hold products with full details
         const fullProductDetails = await Promise.all(order.products.map(async (product) => {
-          const productDetails = await productService.getProductById(product.productId);
-          if (!productDetails) {
+        const productDetails = await productService.getProductById(product.productId);
+        if (!productDetails) {
             console.warn(`Product with ID ${product.productId} not found`);
             return {
                 name: 'We dont have this product right now', 
@@ -141,10 +139,7 @@ async function getOrderDetailsById (req, res) {
             quantity: product.quantity, 
             image: productDetails.imageUrl,
         };
-        }));
-        // Retrieve user from the session
-        
-        // Pass the data to the view
+    }));
         res.render('orderDetails', {
           orderDetails: {
             orderId: order.orderId,
@@ -157,7 +152,7 @@ async function getOrderDetailsById (req, res) {
           },
           user: user,
           currency: currency,
-          rates: rates, // Pass the user from the session
+          rates: rates,
         });
       } catch (error) {
         console.error(error);
@@ -165,6 +160,7 @@ async function getOrderDetailsById (req, res) {
       }
 }
 
+// Function to update order status.
 async function updateOrderStatus(req,res) {
     try {
         const orderId = req.params.orderId;
@@ -186,6 +182,7 @@ async function updateOrderStatus(req,res) {
     }
 }
 
+// Functio to delete order fromm the db.
 async function deleteOrder (req, res) {
     try {
         const orderId = req.params.orderId;

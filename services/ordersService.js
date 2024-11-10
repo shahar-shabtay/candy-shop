@@ -21,14 +21,14 @@ async function getAllOrders () {
 
 async function getOrderDetailsById (orderId) {
     try {
-      // Fetch the order by ID and populate the products
+      
       const order = await Orders.findOne({orderId: orderId}).populate('products.productId');
   
       if (!order) {
-        return null; // Return null if the order is not found
+        return null;
       }
   
-      // Fetch details of each product
+      
       const productsDetails = await Promise.all(order.products.map(async (product) => {
         const productDetails = await Product.findById(product.productId);
         return {
@@ -38,7 +38,6 @@ async function getOrderDetailsById (orderId) {
         };
       }));
   
-      // Add the products details to the order object
       order.productsDetails = productsDetails;
   
       return order;
@@ -59,11 +58,10 @@ async function getOrderById(orderId) {
 
 async function updateOrderStatus (orderId, newStatus) {
   try {
-    // Find the order by ID and update the status
     const updatedOrder = await Orders.findOneAndUpdate(
         {orderId :orderId}, 
         { status: newStatus }, 
-        { new: true } // Returns the updated order
+        { new: true }
     );
     return updatedOrder;
 } catch (error) {
@@ -85,7 +83,6 @@ async function deleteOrder(orderId) {
 }
 
 async function createOrder(orderDetails) {
-  // Debugging: Check if products are correctly passed
   const order = new Orders(orderDetails);
   return await order.save();
 }
